@@ -9,6 +9,7 @@
 #include "input.h"
 #include "camera.h"
 #include "shadow.h"
+#include "model.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -40,6 +41,8 @@ PLAYER playerWk[1];
 //AnimationModel* PlayerModel;
 //UINT Idle;
 
+CModel* PlayerModel;
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -65,13 +68,15 @@ HRESULT InitPlayer(int type)
 	//PlayerAnimation->Load_xFile(PLAYER_XFILE);
 	//PlayerModel->InitController(PlayerAnimation);
 
+	PlayerModel->CModel::CModel(pDevice, PLAYER_XFILE, 0);
+
 	//複数アニメーション
 	//PlayerModel->ChangeAnimation(Idle);
 
 	if (type == 0)
 	{
 		// Xファイルの読み込み
-		LoadXFile();
+		//LoadXFile();
 
 		// メモリの動的確保
 		playerWk->D3DTexture = (LPDIRECT3DTEXTURE9 *)malloc(playerWk->NumMat * sizeof(LPDIRECT3DTEXTURE9));

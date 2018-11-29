@@ -27,52 +27,52 @@ using namespace std;
 // フレームのクラス
 class CModelFrame {
 public:
-	D3DXMATRIXA16 TransformMatrix;				// 変換行列
-	D3DXMATRIXA16 OffsetMatrix;					// オフセット行列
-	D3DXMATRIXA16 CombinedMatrix;				// 合成行列
-	D3DXMATRIXA16 SkinningMatrix;				// スキニング行列
-	D3DXMATRIXA16 SmootherMatrix;				// 平滑化行列
-	char* Name;									// フレーム名
-	vector<CModelFrame*> Child;					// 小フレームの配列
-	size_t Index;								// フレーム番号
+	D3DXMATRIXA16 TransformMatrix;								// 変換行列
+	D3DXMATRIXA16 OffsetMatrix;									// オフセット行列
+	D3DXMATRIXA16 CombinedMatrix;								// 合成行列
+	D3DXMATRIXA16 SkinningMatrix;								// スキニング行列
+	D3DXMATRIXA16 SmootherMatrix;								// 平滑化行列
+	char* Name;													// フレーム名
+	vector<CModelFrame*> Child;									// 小フレームの配列
+	size_t Index;												// フレーム番号
 
-	CModelFrame(vector<CModelFrame*>* frame);	// コンストラクタ
-	void Animate(D3DXMATRIXA16* parent);		// 合成行列の計算
+	CModelFrame(vector<CModelFrame*>* frame);					// コンストラクタ
+	void Animate(D3DXMATRIXA16* parent);						// 合成行列の計算
 };
 
 // サブセットのクラス
 class CModelSubset {
 public:
-	DWORD MaterialIndex;						// サブセットに適応するマテリアル番号
-	DWORD FaceIndex;							// サブセットを開始する面番号
-	DWORD FaceCount;							// サブセットに含まれる面数
+	DWORD MaterialIndex;										// サブセットに適応するマテリアル番号
+	DWORD FaceIndex;											// サブセットを開始する面番号
+	DWORD FaceCount;											// サブセットに含まれる面数
 };
 
 // マテリアルのクラス
 class CModelMaterial {
 public:
-	D3DXVECTOR4 Color;							// 色
-	IDirect3DTexture9* Texture;					// テクスチャ
+	D3DXVECTOR4 Color;											// 色
+	IDirect3DTexture9* Texture;									// テクスチャ
 };
 
 // アニメーションキーのクラス
 class CModelAnimationKey {
 public:
-	vector<float> Time;
-	vector<D3DXMATRIXA16*> Matrix;
-	char* FrameName;
-	size_t FrameIndex;
+	vector<float> Time;											// 時間の配列
+	vector<D3DXMATRIXA16*> Matrix;								// 行列の配列
+	char* FrameName;											// フレーム名
+	size_t FrameIndex;											// フレーム番号
 };
 
 // アニメーションのクラス
 class CModelAnimation {
 public:
-	char* Name;
-	vector<CModelAnimationKey*> Key;
-	float Time;
-	float Weight;
+	char* Name;													// 名前
+	vector<CModelAnimationKey*> Key;							// キーの配列
+	float Time;													// 現在の時間
+	float Weight;												// ウェイト
 
-	float GetMaxTime() { return Key.front()->Time.back(); }
+	float GetMaxTime() { return Key.front()->Time.back(); }		// アニメーションの長さを返す
 	bool IsOver() { return Time >= GetMaxTime(); }
 	CModelAnimation() {}
 	CModelAnimation(const CModelAnimation* anim);
