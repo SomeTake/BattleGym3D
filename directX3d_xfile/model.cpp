@@ -197,9 +197,9 @@ static void SkipNode(void)
 // モデル読み込み
 //=============================================================================
 CModel::CModel(IDirect3DDevice9* device, const char* file_name, bool anim_only)
-	: Device(device),
-	OriginalVertexBuffer(NULL), AnimatedVertexBuffer(NULL), VertexCount(0),
-	IndexBuffer(NULL), FaceCount(0), SmootherWeight(0)
+	//: Device(device),
+	//OriginalVertexBuffer(NULL), AnimatedVertexBuffer(NULL), VertexCount(0),
+	//IndexBuffer(NULL), FaceCount(0), SmootherWeight(0)
 {
 	// ファイルを開く
 	HANDLE file = CreateFile(

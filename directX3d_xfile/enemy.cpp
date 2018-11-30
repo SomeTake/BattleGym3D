@@ -11,6 +11,7 @@
 #include "shadow.h"
 //#include "D3DXAnimation.h"
 //#include "AnimationModel.h"
+//#include "model.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -25,7 +26,16 @@ ENEMY enemyWk[1];
 //// オブジェクトの作成
 //D3DXAnimation* EnemyAnimation;
 //AnimationModel* EnemyModel;
+
+//CModelFrame* EnemyFrame;
+//CModelSubset* EnemySubset;
+//CModelMaterial* EnemyMaterial;
+//CModelAnimationKey* EnemyAnimationKey;
+//CModelAnimation* EnemyAnimation;
+//CModel* EnemyModel;
 //
+//int ModelIndex;							// モデル更新のためのインデックス
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -34,9 +44,16 @@ HRESULT InitEnemy(int type)
 	ENEMY *enemyWk = GetEnemy(0);
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
+	//ModelIndex = 0;
+
 	////オブジェクトの初期化
 	//EnemyAnimation = new D3DXAnimation(pDevice);
 	//EnemyModel = new AnimationModel();
+
+	// コンストラクタ
+	//EnemyFrame = new CModelFrame();
+	//EnemyModel = new CModel(pDevice, ENEMY_XFILE, 0);
+	//EnemyAnimation = new CModelAnimation();
 
 	// 位置・回転・スケールの初期設定
 	enemyWk->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -58,6 +75,9 @@ HRESULT InitEnemy(int type)
 
 	if (type == 0)
 	{
+		// Xファイルの読み込み
+		//EnemyModel->CModel::CModel(pDevice, ENEMY_XFILE, 0);
+
 		// Xファイルの読み込み
 		if (FAILED(D3DXLoadMeshFromX(ENEMY_XFILE,			// 読み込むモデルファイル名(Xファイル)
 			D3DXMESH_SYSTEMMEM,		// メッシュの作成オプションを指定
@@ -106,26 +126,11 @@ void UninitEnemy(void)
 {
 	ENEMY *enemyWk = GetEnemy(0);
 
-	for (int i = 0; i < (signed)enemyWk->NumMat; i++)
-	{
-		if (enemyWk->D3DTexture != NULL)
-		{// テクスチャの開放
-			enemyWk->D3DTexture[i]->Release();
-			enemyWk->D3DTexture[i] = NULL;
-		}
-	}
+	// デストラクタ
+	SAFE_RELEASE(*enemyWk->D3DTexture) {if(*enemyWk->D3DTexture){(*enemyWk->D3DTexture)->Release();(*enemyWk->D3DTexture)=NULL;}}
+	SAFE_DELETE(enemyWk->D3DXMesh)	{if(enemyWk->D3DXMesh){delete (enemyWk->D3DXMesh); (enemyWk->D3DXMesh) = NULL;}}
+	SAFE_DELETE(enemyWk->D3DXBuffMat) { if (enemyWk->D3DXBuffMat) { delete (enemyWk->D3DXBuffMat); (enemyWk->D3DXBuffMat) = NULL; } }
 
-	if (enemyWk->D3DXMesh != NULL)
-	{// メッシュの開放
-		enemyWk->D3DXMesh->Release();
-		enemyWk->D3DXMesh = NULL;
-	}
-
-	if (enemyWk->D3DXBuffMat != NULL)
-	{// マテリアルの開放
-		enemyWk->D3DXBuffMat->Release();
-		enemyWk->D3DXBuffMat = NULL;
-	}
 }
 
 //=============================================================================
@@ -139,6 +144,8 @@ void UpdateEnemy(void)
 
 	////モデルの更新
 	//EnemyModel->AdvanceTime(1.0f / 60);
+	
+	//ModelIndex++;
 
 	//モデルの移動
 	// D：右( → )
@@ -289,6 +296,34 @@ void DrawEnemy(void)
 
 	ENEMY *enemyWk = GetEnemy(0);
 	CAMERA *cameraWk = GetCamera(0);
+
+	// ワールド行列の作成
+	//D3DXMATRIXA16 world;
+	//float Yaw = 0.0f;
+	//D3DXMatrixRotationY(&world, Yaw);
+
+	//// ビュー行列の作成
+	//D3DXMATRIXA16 view;
+	//D3DXVECTOR3 from(0, 2, -4);
+	//D3DXVECTOR3 lookat(0, 1, 0);
+	//D3DXVECTOR3 up(0, 1, 0);
+	//D3DXMatrixLookAtLH(&view, &from, &lookat, &up);
+
+	//// 射影行列の作成
+	//D3DXMATRIXA16 proj;
+	//float w = SCREEN_WIDTH, h = SCREEN_HEIGHT;
+	//D3DXMatrixPerspectiveLH(&proj, 1, h / w, 1, 1000);
+
+	//// アニメーションの適用
+	//EnemyModel[ModelIndex].AnimateFrame(&world);
+	//// 頂点座標の変換
+	//EnemyModel[ModelIndex].AnimateVertex();
+	//// 固定機能パイプラインを使って描画
+	//EnemyModel[ModelIndex].Draw(&view, &proj);
+
+	// シェーダを使う場合
+	//Effect->SetTechnique("Basic");
+	//Model[ModelIndex]->Draw(Effect, &view, &proj);
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&matrix.world);
