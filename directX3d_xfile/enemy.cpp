@@ -9,9 +9,8 @@
 #include "input.h"
 #include "camera.h"
 #include "shadow.h"
-//#include "D3DXAnimation.h"
-//#include "AnimationModel.h"
-//#include "model.h"
+#include "D3DXAnimation.h"
+#include "AnimationModel.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -20,21 +19,11 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-
 ENEMY enemyWk[1];
 
-//// オブジェクトの作成
-//D3DXAnimation* EnemyAnimation;
-//AnimationModel* EnemyModel;
-
-//CModelFrame* EnemyFrame;
-//CModelSubset* EnemySubset;
-//CModelMaterial* EnemyMaterial;
-//CModelAnimationKey* EnemyAnimationKey;
-//CModelAnimation* EnemyAnimation;
-//CModel* EnemyModel;
-//
-//int ModelIndex;							// モデル更新のためのインデックス
+// オブジェクトの作成
+D3DXAnimation* EnemyAnimation;
+AnimationModel* EnemyModel;
 
 //=============================================================================
 // 初期化処理
@@ -46,14 +35,9 @@ HRESULT InitEnemy(int type)
 
 	//ModelIndex = 0;
 
-	////オブジェクトの初期化
-	//EnemyAnimation = new D3DXAnimation(pDevice);
-	//EnemyModel = new AnimationModel();
-
-	// コンストラクタ
-	//EnemyFrame = new CModelFrame();
-	//EnemyModel = new CModel(pDevice, ENEMY_XFILE, 0);
-	//EnemyAnimation = new CModelAnimation();
+	//オブジェクトの初期化
+	EnemyAnimation = new D3DXAnimation(pDevice);
+	EnemyModel = new AnimationModel();
 
 	// 位置・回転・スケールの初期設定
 	enemyWk->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -67,35 +51,32 @@ HRESULT InitEnemy(int type)
 	enemyWk->NumMat = 0;
 
 	enemyWk->jump = false;
-	enemyWk->speed = JUMP_SPEED;
-
-	////Xファイルの読み込み
-	//EnemyAnimation->Load_xFile(ENEMY_XFILE);
-	//EnemyModel->InitController(EnemyAnimation);
+	enemyWk->speed = ENEMY_JUMP_SPEED;
 
 	if (type == 0)
 	{
-		// Xファイルの読み込み
-		//EnemyModel->CModel::CModel(pDevice, ENEMY_XFILE, 0);
+		//Xファイルの読み込み
+		EnemyAnimation->Load_xFile(ENEMY_XFILE);
+		EnemyModel->InitController(EnemyAnimation);
 
 		// Xファイルの読み込み
-		if (FAILED(D3DXLoadMeshFromX(ENEMY_XFILE,			// 読み込むモデルファイル名(Xファイル)
-			D3DXMESH_SYSTEMMEM,		// メッシュの作成オプションを指定
-			pDevice,				// IDirect3DDevice9インターフェイスへのポインタ
-			NULL,					// 隣接性データを含むバッファへのポインタ
-			&enemyWk->D3DXBuffMat,	// マテリアルデータを含むバッファへのポインタ
-			NULL,					// エフェクトインスタンスの配列を含むバッファへのポインタ
-			&enemyWk->NumMat,		// D3DXMATERIAL構造体の数
-			&enemyWk->D3DXMesh)))	// ID3DXMeshインターフェイスへのポインタのアドレス=頂点情報の結果が入る
-		{
-			return E_FAIL;
-		}
+		//if (FAILED(D3DXLoadMeshFromX(ENEMY_XFILE,			// 読み込むモデルファイル名(Xファイル)
+		//	D3DXMESH_SYSTEMMEM,		// メッシュの作成オプションを指定
+		//	pDevice,				// IDirect3DDevice9インターフェイスへのポインタ
+		//	NULL,					// 隣接性データを含むバッファへのポインタ
+		//	&enemyWk->D3DXBuffMat,	// マテリアルデータを含むバッファへのポインタ
+		//	NULL,					// エフェクトインスタンスの配列を含むバッファへのポインタ
+		//	&enemyWk->NumMat,		// D3DXMATERIAL構造体の数
+		//	&enemyWk->D3DXMesh)))	// ID3DXMeshインターフェイスへのポインタのアドレス=頂点情報の結果が入る
+		//{
+		//	return E_FAIL;
+		//}
 
 		// メモリの動的確保
 		enemyWk->D3DTexture = (LPDIRECT3DTEXTURE9 *)malloc(enemyWk->NumMat * sizeof(LPDIRECT3DTEXTURE9));
 		enemyWk->MeshMaterial = (D3DMATERIAL9 *)malloc(enemyWk->NumMat * sizeof(D3DMATERIAL9));
 
-#if 1
+#if 0
 		D3DXMATERIAL *pD3DXMat;
 
 		pD3DXMat = (D3DXMATERIAL*)enemyWk->D3DXBuffMat->GetBufferPointer();
@@ -142,11 +123,9 @@ void UpdateEnemy(void)
 	CAMERA *camera = GetCamera(1);
 	float fDiffRotY;
 
-	////モデルの更新
-	//EnemyModel->AdvanceTime(1.0f / 60);
+	//モデルの更新
+	EnemyModel->AdvanceTime(1.0f / 60);
 	
-	//ModelIndex++;
-
 	//モデルの移動
 	// D：右( → )
 	if (GetKeyboardPress(DIK_L))
@@ -272,7 +251,7 @@ void UpdateEnemy(void)
 		enemyWk->speed -= 0.98f;
 		if (enemyWk->pos.y <= 0.0f)
 		{
-			enemyWk->speed = JUMP_SPEED;
+			enemyWk->speed = ENEMY_JUMP_SPEED;
 			enemyWk->pos.y = 0.0f;
 			enemyWk->jump = false;
 		}
@@ -290,40 +269,11 @@ void UpdateEnemy(void)
 void DrawEnemy(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	D3DXMATERIAL *pD3DXMat;
 	D3DMATERIAL9 matDef;
-	MATRIX matrix;
+	MATRIX matrix = *GetMatrix();
 
 	ENEMY *enemyWk = GetEnemy(0);
 	CAMERA *cameraWk = GetCamera(0);
-
-	// ワールド行列の作成
-	//D3DXMATRIXA16 world;
-	//float Yaw = 0.0f;
-	//D3DXMatrixRotationY(&world, Yaw);
-
-	//// ビュー行列の作成
-	//D3DXMATRIXA16 view;
-	//D3DXVECTOR3 from(0, 2, -4);
-	//D3DXVECTOR3 lookat(0, 1, 0);
-	//D3DXVECTOR3 up(0, 1, 0);
-	//D3DXMatrixLookAtLH(&view, &from, &lookat, &up);
-
-	//// 射影行列の作成
-	//D3DXMATRIXA16 proj;
-	//float w = SCREEN_WIDTH, h = SCREEN_HEIGHT;
-	//D3DXMatrixPerspectiveLH(&proj, 1, h / w, 1, 1000);
-
-	//// アニメーションの適用
-	//EnemyModel[ModelIndex].AnimateFrame(&world);
-	//// 頂点座標の変換
-	//EnemyModel[ModelIndex].AnimateVertex();
-	//// 固定機能パイプラインを使って描画
-	//EnemyModel[ModelIndex].Draw(&view, &proj);
-
-	// シェーダを使う場合
-	//Effect->SetTechnique("Basic");
-	//Model[ModelIndex]->Draw(Effect, &view, &proj);
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&matrix.world);
@@ -346,11 +296,12 @@ void DrawEnemy(void)
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
 
-	//// エネミーのレンダリング
-	//EnemyModel->SetMatrix(&matrix.world);
-	//EnemyModel->Render();
+	// エネミーのレンダリング
+	EnemyModel->SetMatrix(&matrix.world);
+	EnemyModel->Render();
 
-#if 1
+#if 0
+	D3DXMATERIAL *pD3DXMat;
 
 	// マテリアル情報に対するポインタを取得
 	pD3DXMat = (D3DXMATERIAL*)enemyWk->D3DXBuffMat->GetBufferPointer();
@@ -375,7 +326,7 @@ void DrawEnemy(void)
 }
 
 //=============================================================================
-//プレイヤーの情報を取得する
+//エネミーの情報を取得する
 //=============================================================================
 ENEMY *GetEnemy(int pno)
 {

@@ -11,10 +11,10 @@
 // マクロ定義
 //*****************************************************************************
 //#define	ENEMY_XFILE		"data/MODEL/Rare.x"						// 読み込むモデル名(ファイルパス名)
-#define ENEMY_XFILE		"data/MODEL/Mariel.x"
+#define ENEMY_XFILE		"data/MODEL/punching/punching.x"
 #define TEXTURE_FILENAME	"data/TEXTURE/00tex_master.BMP"				// テクスチャの名前
 
-#define JUMP_SPEED	(10.0f)	//ジャンプの初速
+#define ENEMY_JUMP_SPEED	(10.0f)	//ジャンプの初速
 
 //*****************************************************************************
 // グローバル変数

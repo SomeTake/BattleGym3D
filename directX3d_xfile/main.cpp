@@ -15,7 +15,6 @@
 #include "debugproc.h"
 #include "particle.h"
 #include "score.h"
-#include "model.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -52,23 +51,18 @@ static LPD3DXFONT	g_pD3DXFont = NULL;				// フォントへのポインタ
 int					g_nCountFPS;					// FPSカウンタ
 #endif
 
-// 画面分割
+													// 画面分割
 struct MY_VERTEX {
 	float px, py, pz;
 	DWORD color;
 };
-
-MY_VERTEX v1[] = { { -2.0f, 2.0f, 0.0f, 0xffff0000 },
-{ 2.0f, 2.0f, 0.0f, 0xff00ff00 },
-{ -2.0f,-2.0f, 0.0f, 0xff0000ff },
-{ 2.0f,-2.0f, 0.0f, 0xffffffff }, };
 
 // 分割サイズ指定
 // 4分割
 D3DVIEWPORT9 g_port4[] = { { 0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,0.0f,1.0f },
 { SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,0.0f,1.0f },
 { 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,0.0f,1.0f },
-{ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,0.0f,1.0f } 
+{ SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,0.0f,1.0f }
 };
 
 // 横２分割
@@ -79,19 +73,6 @@ D3DVIEWPORT9 g_port2[] = { { 0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT,0.0f,1.0f },
 // そのまま
 D3DVIEWPORT9 g_port1[] = { { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,0.0f,1.0f }
 };
-
-//struct MY_VIEW {
-//	D3DXVECTOR3 vEyePt;
-//	D3DXVECTOR3 vLookatPt;
-//	D3DXVECTOR3 vUpVec;
-//	D3DXMATRIXA16 matView;
-//};
-//
-//MY_VIEW g_view[] = { { D3DXVECTOR3(0.0f, 4.0f,-6.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f) },
-//{ D3DXVECTOR3(0.0f, 0.0f, -6.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f) },
-//{ D3DXVECTOR3(0.0f, 0.0f, -5.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f) },
-//{ D3DXVECTOR3(0.0f,-6.0f, -8.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f) }
-//};
 
 //=============================================================================
 // メイン関数
@@ -205,15 +186,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				// 更新処理
 				Update();
 				
-				//static int n = 0;
-				//static int degree = 0;
-
-				//if ((n = (n + 1) % 5) == 0) {
-				//	degree = (degree + 1) % 360;
-				//}
-				//D3DXMatrixRotationY(&mat, D3DXToRadian(degree));
-				//g_pD3DDevice->SetTransform(D3DTS_WORLD, &mat);
-
 				// プレイ人数分描画
 				for (int i = 0; i < PlayerMode; i++)
 				{
@@ -233,8 +205,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 						g_pD3DDevice->SetViewport(&g_port4[i]);
 						break;
 					}
-					//カメラの座標を変更（ビュー行列）
-					//g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_view[i].matView);
 
 					// 描画処理
 					Draw(i);
@@ -264,7 +234,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// 変数宣言
 	static HANDLE Thread_Handle;
-	//DWORD Parameter;
 
 	switch(uMsg)
 	{
@@ -282,43 +251,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
-	//	// ウインドウ作成
-	//case WM_CREATE:
-	//	InitializeCriticalSection(&CriticalSection);
-	//	break;
-	// その他
 	default:
-		//if (Switch[SWITCH_TYPE_CREATE_THREAD] == true)
-		//{
-		//	//スレッドの作成
-		//	Thread_Handle = CreateThread(
-		//		NULL,						// セキュリティ属性構造体へのポインタを指定（NULL=デフォルト）
-		//		0,							// 新しいスレッドが保有するスタックサイズを指定
-		//		Thread_Load,				// 作成されたスレッドの実行開始アドレスを指定
-		//		hWnd,						// スレッドに渡す追加情報を指定
-		//		0,							// スレッドの状態を表すフラグを指定
-		//		&Parameter					// フラグのIDを格納する
-		//	);
-		//	//スイッチの切替
-		//	Switch[SWITCH_TYPE_CREATE_THREAD] = false;
-		//	break;
-		//}
-		//if (Switch[SWITCH_TYPE_LOADING] == true)
-		//{
-		//	if (!Thread_Handle)
-		//	{
-		//		break;
-		//	}
-		//	//スレッドの状態を確認（あるかどうか）
-		//	GetExitCodeThread(Thread_Handle, &Parameter);
-		//	if (Parameter != STILL_ACTIVE)
-		//	{
-		//		CloseHandle(Thread_Handle);
-		//	}
-		//	break;
-		//}
-		//return DefWindowProc(hWnd, uMsg, wParam, lParam);
-
 		break;
 	}
 
@@ -422,18 +355,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	g_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	g_pD3DDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 
-	////ビュー行列作成
-	//for (int i = 0, count = sizeof(g_view) / sizeof(g_view[0]); i < count; i++)
-	//{
-	//	D3DXMatrixLookAtLH(&g_view[i].matView, &g_view[i].vEyePt, &g_view[i].vLookatPt, &g_view[i].vUpVec);
-	//}
-	//g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_view[0].matView);
-
-	////射影行列作成
-	//D3DXMATRIXA16 matProj;
-	//D3DXMatrixPerspectiveFovLH(&matProj, D3DXToRadian(45.0f), (float)640 / 480, 1.0f, 100.0f);
-	//g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
-
 #ifdef _DEBUG
 	// 情報表示用フォントを設定
 	D3DXCreateFont(g_pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
@@ -456,8 +377,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitEnemy(0);
 	InitParticle(0);
 	InitScore(0);
-
-	//HRESULT Initialize_Load_Screen(0);
 
 	return S_OK;
 }
@@ -526,40 +445,33 @@ void Update(void)
 		PlayerMode = 4;
 	}
 
-	//if (Switch[SWITCH_TYPE_LOADING] == false)
-	//{
-		// 入力更新
-		UpdateInput();
+	// 入力更新
+	UpdateInput();
 
-		switch (ePhase)
-		{
-		case PhaseTitle:
+	switch (ePhase)
+	{
+	case PhaseTitle:
 
-			break;
+		break;
 
-		case PhaseGame:
-			// モデルの更新処理
-			UpdateMeshField();
+	case PhaseGame:
+		// モデルの更新処理
+		UpdateMeshField();
 
-			UpdatePlayer();
+		UpdatePlayer();
 
-			UpdateEnemy();
+		UpdateEnemy();
 
-			UpdateCamera();
+		UpdateCamera();
 
-			UpdateShadow();
+		UpdateShadow();
 
-			UpdateParticle();
+		UpdateParticle();
 
-			UpdateScore();
-			break;
+		UpdateScore();
+		break;
 
-		}
-	//}
-	//else
-	//{
-	//	Update_Load_Screen();
-	//}
+	}
 }
 
 //=============================================================================
@@ -575,34 +487,27 @@ void Draw(int no)
 	{
 		SetCamera(no);
 
-		//if (Switch[SWITCH_TYPE_LOADING] == false)
-		//{
-			switch (ePhase)
-			{
-			case PhaseTitle:
+		switch (ePhase)
+		{
+		case PhaseTitle:
 
-				break;
+			break;
 
-			case PhaseGame:
-				DrawMeshField();
+		case PhaseGame:
+			DrawMeshField();
 
-				DrawShadow();
+			DrawShadow();
 
-				DrawParticle();
+			DrawParticle();
 
-				// モデルの描画処理
-				DrawPlayer();
+			// モデルの描画処理
+			DrawPlayer();
 
-				DrawEnemy();
+			DrawEnemy();
 
-				DrawScore();
-				break;
-			}
-		//}
-		//else
-		//{
-		//	Draw_Load_Screen();
-		//}
+			DrawScore();
+			break;
+		}
 
 #ifdef _DEBUG
 		// FPS表示
@@ -702,30 +607,6 @@ float GetAspect(void)
 		return VIEW_ASPECT;
 	}
 }
-
-////=====================================================================================================
-//// クリティカルセクションのゲッター
-////=====================================================================================================
-//CRITICAL_SECTION *GetCriticalSection(void)
-//{
-//	return &CriticalSection;
-//}
-//
-////=====================================================================================================
-//// スイッチのゲッター
-////=====================================================================================================
-//bool *GetSwitch(int no)
-//{
-//	return &Switch[no];
-//}
-//
-////=====================================================================================================
-//// アセンブリのゲッター
-////=====================================================================================================
-//float *GetAssembly(void)
-//{
-//	return &Assembly;
-//}
 
 //=====================================================================================================
 // ウインドウの表示位置を画面中央に

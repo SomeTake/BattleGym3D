@@ -137,7 +137,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationModel.h" />
+    <ClInclude Include="CAllocateHierarchy.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="D3DXAnimation.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="field.h" />
@@ -145,14 +148,16 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="meshfield.h" />
-    <ClInclude Include="model.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="shadow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationModel.cpp" />
+    <ClCompile Include="CAllocateHierarchy.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="D3DXAnimation.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="field.cpp" />
@@ -160,7 +165,6 @@
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meshfield.cpp" />
-    <ClCompile Include="model.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="score.cpp" />
