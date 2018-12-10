@@ -1,0 +1,3 @@
+#include "Icon.h"
+IDI_ICON1 ICON "icon001.ico"
+IDI_ICON2 ICON "icon002.ico"

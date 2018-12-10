@@ -52,6 +52,8 @@ HRESULT InitEnemy(int type)
 
 	enemyWk->jump = false;
 	enemyWk->speed = ENEMY_JUMP_SPEED;
+	enemyWk->HP = 1000;
+	enemyWk->HPzan = enemyWk->HP;
 
 	if (type == 0)
 	{

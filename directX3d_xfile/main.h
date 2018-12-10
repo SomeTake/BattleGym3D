@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <tchar.h>
 
 #define DIRECTINPUT_VERSION (0x0800)	// 警告対策
 #include "dinput.h"
@@ -64,7 +65,17 @@
 #define	RATE_ROTATE_MODEL	(0.20f)										// 回転慣性係数
 
 #define MAX_SEPARATE	(4)												// 画面分割数の最大
+#define TRANSPARENCY	(0.3f)											// 透明度の設定
 
+//タイトル画面
+#define MODESELECT_POS_X					(450)						// 表示位置
+#define MODESELECT_POS_Y					(434)						// 表示位置
+
+//ポーズ画面
+#define PAUSESELECT_POS_X					(450)						// 表示位置
+#define PAUSESELECT_POS_Y					(223)						// 表示位置
+
+// デストラクタ
 #define SAFE_DELETE(object)	{if(object){delete (object); (object) = NULL;}}
 #define SAFE_DELETE_ARRAY(object)	{if(object){delete[] (object); (object) = NULL;}}
 #define SAFE_RELEASE(ptr) {if(ptr){(ptr)->Release();(ptr)=NULL;}}

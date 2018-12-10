@@ -51,6 +51,8 @@ HRESULT InitPlayer(int type)
 
 	playerWk->jump = false;
 	playerWk->speed = PLAYER_JUMP_SPEED;
+	playerWk->HP = 1000;
+	playerWk->HPzan = playerWk->HP;
 
 	if (type == 0)
 	{

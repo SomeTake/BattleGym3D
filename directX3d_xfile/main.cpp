@@ -15,12 +15,39 @@
 #include "debugproc.h"
 #include "particle.h"
 #include "score.h"
+#include "Icon.h"
+#include "blackscreen.h"
+#include "company.h"
+#include "countdown.h"
+#include "drawgame.h"
+#include "eguage.h"
+#include "eredguage.h"
+#include "escore.h"
+#include "espguage.h"
+#include "evaluation.h"
+#include "frame.h"
+#include "framespguage.h"
+#include "guage.h"
+#include "knockout.h"
+#include "modeselect.h"
+#include "pause.h"
+#include "redguage.h"
+#include "result.h"
+#include "resultstar.h"
+#include "spguage.h"
+#include "spmax.h"
+#include "timer.h"
+#include "title.h"
+#include "tutorial.h"
+#include "winner.h"
+#include "sound.h"
+
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define CLASS_NAME		"AppClass"			// ウインドウのクラス名
-#define WINDOW_NAME		"Ｘファイル表示"		// ウインドウのキャプション名
+#define WINDOW_NAME		"BattleGym3D"		// ウインドウのキャプション名
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -85,28 +112,28 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	DWORD dwExecLastTime;					// 最終実行時間
-	DWORD dwFPSLastTime;					// 現在フレーム
-	DWORD dwCurrentTime;					// 現在時刻
-	DWORD dwFrameCount;						// フレームカウント
+	DWORD dwExecLastTime;							// 最終実行時間
+	DWORD dwFPSLastTime;							// 現在フレーム
+	DWORD dwCurrentTime;							// 現在時刻
+	DWORD dwFrameCount;								// フレームカウント
 
 	WNDCLASSEX wcex =
 	{
-		sizeof(WNDCLASSEX),					// 構造体のサイズ
-		CS_CLASSDC,							// ウインドウスタイル：CS_HREDRAW / CS_VREDRAW
-		WndProc,							// ウインドウプロシージャのアドレス
-		0,									// 予備メモリ
-		0,									// ウインドウオブジェクト作成時に確保されるメモリサイズ
-		hInstance,							// インスタンスハンドル
-		NULL,								// アプリのショートカットなどで使用（アイコンの設定）
-		LoadCursor(NULL, IDC_ARROW),		// ウインドウのクライアント上のマウスカーソル
-		(HBRUSH)(COLOR_WINDOW + 1),			// ウインドウのクライアント領域の背景色
-		NULL,								// メニュー名
-		CLASS_NAME,							// ウインドウクラスの名前
-		NULL								// ウインドウのアイコン
+		sizeof(WNDCLASSEX),							// 構造体のサイズ
+		CS_CLASSDC,									// ウインドウスタイル：CS_HREDRAW / CS_VREDRAW
+		WndProc,									// ウインドウプロシージャのアドレス
+		0,											// 予備メモリ
+		0,											// ウインドウオブジェクト作成時に確保されるメモリサイズ
+		hInstance,									// インスタンスハンドル
+		LoadIcon(hInstance, (LPCTSTR)IDI_ICON1),	// アプリのショートカットなどで使用（アイコンの設定）
+		LoadCursor(NULL, IDC_ARROW),				// ウインドウのクライアント上のマウスカーソル
+		(HBRUSH)(COLOR_WINDOW + 1),					// ウインドウのクライアント領域の背景色
+		NULL,										// メニュー名
+		CLASS_NAME,									// ウインドウクラスの名前
+		LoadIcon(hInstance, (LPCTSTR)IDI_ICON2)		// ウインドウのアイコン
 	};
-	HWND hWnd;								// ウインドウハンドル
-	MSG msg;								// ウインドウプロシージャに渡すメッセージ
+	HWND hWnd;										// ウインドウハンドル
+	MSG msg;										// ウインドウプロシージャに渡すメッセージ
 	
 	// ウィンドウクラスの登録
 	if (RegisterClassEx(&wcex) == 0)
@@ -363,16 +390,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
-
 	InitCamera();
-
 	InitLight();
-
-	// ゲーム開始時に読み込むべきもの
+	// フィールドの大きさ指定
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 0);
-
 	InitShadow(0);
-	// モデルの初期化
 	InitPlayer(0);
 	InitEnemy(0);
 	InitParticle(0);

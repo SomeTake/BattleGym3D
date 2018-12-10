@@ -35,6 +35,8 @@ typedef struct {
 	D3DXCOLOR			ColShadow;		// 影の色
 	bool				jump;			// ジャンプフラグ
 	float				speed;			// ジャンプのスピード
+	int					HP;				// 体力
+	int					HPzan;			// 残り体力
 }ENEMY;
 
 //*****************************************************************************

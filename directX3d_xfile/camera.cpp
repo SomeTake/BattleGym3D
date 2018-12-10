@@ -35,7 +35,7 @@ void InitCamera(void)
 		cameraWk->pos = D3DXVECTOR3(POS_X_CAM, POS_Y_CAM, POS_Z_CAM);
 		if (i == 0)
 		{
-			cameraWk->at = (playerWk->pos + enemyWk->pos) / 2 + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);
+			cameraWk->at = playerWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);
 		}
 		else if (i == 1)
 		{
