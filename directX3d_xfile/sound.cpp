@@ -23,22 +23,22 @@
 // サウンドファイルのパス（hの通しナンバーと合わせること）
 const TCHAR* c_soundFilename[] = {
 	// SE
-	_T("data/SOUND/SE/Defend0.wav"),
-	_T("data/SOUND/SE/Hit0.wav"),
-	_T("data/SOUND/SE/Hit1.wav"),
-	_T("data/SOUND/SE/Swing0.wav"),
-	_T("data/SOUND/SE/Select0.wav"),
-	_T("data/SOUND/SE/Select1.wav"),
-	_T("data/SOUND/SE/yattaze0.wav"),
-	_T("data/SOUND/SE/KO.wav"),
-	_T("data/SOUND/SE/effect0.wav"),
-	_T("data/SOUND/SE/cutin0.wav"),
-	_T("data/SOUND/SE/countdown0.wav"),
+	_T("data/SE/Defend0.wav"),
+	_T("data/SE/Hit0.wav"),
+	_T("data/SE/Hit1.wav"),
+	_T("data/SE/Swing0.wav"),
+	_T("data/SE/Select0.wav"),
+	_T("data/SE/Select1.wav"),
+	_T("data/SE/yattaze0.wav"),
+	_T("data/SE/KO.wav"),
+	_T("data/SE/effect0.wav"),
+	_T("data/SE/cutin0.wav"),
+	_T("data/SE/countdown0.wav"),
 	// BGM
-	_T("data/SOUND/BGM/title.wav"),
-	_T("data/SOUND/BGM/tutorial.wav"),
-	_T("data/SOUND/BGM/training.wav"),
-	_T("data/SOUND/BGM/battle.wav"),
+	_T("data/BGM/title.wav"),
+	_T("data/BGM/tutorial.wav"),
+	_T("data/BGM/training.wav"),
+	_T("data/BGM/battle.wav"),
 };
 
 //*****************************************************************************
@@ -211,7 +211,6 @@ LPDIRECTSOUNDBUFFER8 Load_Sound( int no )
 //=============================================================================
 // 音を鳴らす
 //=============================================================================
-// pBuffer:音を鳴らしたいサウンドデータのセカンダリバッファ
 // flag   :1(E_DS8_FLAG_LOOP)ならループ再生
 void Play_Sound(  int no, int type, int flag/*=0*/ )
 {	// 続きから鳴らすので、最初から鳴らしたい場合はSetCurrentPosition(0)をすること
@@ -235,7 +234,6 @@ void Play_Sound(  int no, int type, int flag/*=0*/ )
 //=============================================================================
 void Stop_Sound( int no, int type)
 {
-
 	DWORD status;
 
 	sound[no]->GetStatus(&status);

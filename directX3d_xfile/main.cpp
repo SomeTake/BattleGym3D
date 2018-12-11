@@ -68,7 +68,7 @@ bool SetWindowCenter(HWND hWnd);
 LPDIRECT3D9			g_pD3D = NULL;					// Direct3D オブジェクト
 LPDIRECT3DDEVICE9	g_pD3DDevice = NULL;			// Deviceオブジェクト(描画に必要)
 
-int ePhase = PhaseGame;							// ゲームの開始位置&シーン遷移
+int ePhase = PhaseGame;						// ゲームの開始位置&シーン遷移
 int PlayerMode = 1;									// プレイヤー人数
 
 MATRIX MatrixState;									// マトリクス
@@ -180,6 +180,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	// --------------------------------------  メッセージループ---------------------------------------------
 	while(1)
 	{
+		// ゲーム終了処理
+		if (ePhase == PhaseExit)
+		{
+			break;
+		}
+
         if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT)						//アプリケーションの終了要求
@@ -399,6 +405,30 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitEnemy(0);
 	InitParticle(0);
 	InitScore(0);
+	InitEScore(0);
+	InitFrame(0);
+	InitTitle(0);
+	InitResult(0);
+	InitGuage(0);
+	InitEGuage(0);
+	InitSpGuage(0);
+	InitESpGuage(0);
+	InitTimer(0);
+	InitFrameSpguage(0);
+	InitSpmax(0);
+	InitRedGuage(0);
+	InitERedGuage(0);
+	InitCountdown(0);
+	InitKnockout(0);
+	InitResultstar(0);
+	InitWinner(0);
+	InitEvaluation(0);
+	InitTutorial(0);
+	InitModeselect(0);
+	InitBlackscreen(0);
+	InitPause(0);
+	InitDrawgame(0);
+	InitCompany(0);
 
 	return S_OK;
 }
@@ -430,18 +460,40 @@ void Uninit(void)
 	// 入力処理の終了処理
 	UninitInput();
 
+	Uninit_Sound();
+
 	// モデルの終了処理
 	UninitPlayer();
-
 	UninitEnemy();
-
 	UninitMeshField();
-
 	UninitShadow();
-
 	UninitParticle();
-
 	UninitScore();
+	UninitEScore();
+	UninitFrame();
+	UninitTitle();
+	UninitResult();
+	UninitGuage();
+	UninitEGuage();
+	UninitSpGuage();
+	UninitESpGuage();
+	UninitTimer();
+	UninitFrameSpguage();
+	UninitSpmax();
+	UninitRedGuage();
+	UninitERedGuage();
+	UninitCountdown();
+	UninitKnockout();
+	UninitResultstar();
+	UninitWinner();
+	UninitEvaluation();
+	UninitTutorial();
+	UninitModeselect();
+	UninitBlackscreen();
+	UninitPause();
+	UninitDrawgame();
+	UninitCompany();
+
 }
 
 //=============================================================================
@@ -449,6 +501,9 @@ void Uninit(void)
 //=============================================================================
 void Update(void)
 {
+	PLAYER *playerWk = GetPlayer(0);
+	ENEMY *enemyWk = GetEnemy(0);
+
 	//画面分割数の入力
 	if (GetKeyboardTrigger(DIK_1))
 	{
@@ -472,25 +527,164 @@ void Update(void)
 
 	switch (ePhase)
 	{
+	case PhaseCompanyLogo:
+		UpdateBlackscreen();
+		UpdateCompany();
+		break;
+
 	case PhaseTitle:
+		UpdateBlackscreen();
+		UpdateModeselect();
+		UpdateTitle();
+
+		break;
+
+	case PhaseTutorial:
+		UpdatePlayer();
+		UpdateEnemy();
+		UpdateGuage();
+		UpdateEGuage();
+		UpdateFrame();
+		UpdateSpGuage();
+		UpdateESpGuage();
+		UpdateFrameSpguage();
+		UpdateSpmax();
+		UpdateRedGuage();
+		UpdateERedGuage();
+		UpdateTutorial();
+		UpdateMeshField();
+		UpdatePlayer();
+		UpdateEnemy();
+		UpdateCamera();
+		UpdateShadow();
+		UpdateParticle();
+
+		break;
+
+	case PhaseTraining:
+		UpdatePlayer();
+		UpdateEnemy();
+		UpdateGuage();
+		UpdateEGuage();
+		UpdateFrame();
+		UpdateSpGuage();
+		UpdateESpGuage();
+		UpdateFrameSpguage();
+		UpdateSpmax();
+		UpdateRedGuage();
+		UpdateERedGuage();
+		UpdateMeshField();
+		UpdatePlayer();
+		UpdateEnemy();
+		UpdateCamera();
+		UpdateShadow();
+		UpdateParticle();
+
+		break;
+
+	case PhasePause:
+		UpdateBlackscreen();
+		UpdateModeselect();
+		UpdatePause();
+		break;
+
+	case PhaseTrainingPause:
+		UpdateBlackscreen();
+		UpdateModeselect();
+		UpdatePause();
+		break;
+
+	case PhaseCountdown:
+		UpdatePlayer();
+		UpdateEnemy();
+		UpdateScore();
+		UpdateEScore();
+		UpdateGuage();
+		UpdateEGuage();
+		UpdateFrame();
+		UpdateSpGuage();
+		UpdateESpGuage();
+		UpdateTimer();
+		UpdateFrameSpguage();
+		UpdateSpmax();
+		UpdateRedGuage();
+		UpdateERedGuage();
+		UpdateCountdown();
+		UpdateMeshField();
+		UpdateCamera();
+		UpdateShadow();
+		UpdateParticle();
 
 		break;
 
 	case PhaseGame:
-		// モデルの更新処理
 		UpdateMeshField();
-
 		UpdatePlayer();
-
 		UpdateEnemy();
-
 		UpdateCamera();
-
 		UpdateShadow();
+		UpdateParticle();
+		UpdateScore();
+		UpdateEScore();
+		UpdateGuage();
+		UpdateEGuage();
+		UpdateFrame();
+		UpdateSpGuage();
+		UpdateESpGuage();
+		UpdateTimer();
+		UpdateFrameSpguage();
+		UpdateSpmax();
+		UpdateRedGuage();
+		UpdateERedGuage();
 
+		break;
+
+	case PhaseFinish:
+		UpdatePlayer();
+		UpdateEnemy();
+		UpdateScore();
+		UpdateEScore();
+		UpdateGuage();
+		UpdateEGuage();
+		UpdateFrame();
+		UpdateSpGuage();
+		UpdateESpGuage();
+		UpdateTimer();
+		UpdateFrameSpguage();
+		UpdateSpmax();
+		UpdateRedGuage();
+		UpdateERedGuage();
+		UpdateKnockout();
+		UpdateMeshField();
+		UpdateCamera();
+		UpdateShadow();
 		UpdateParticle();
 
-		UpdateScore();
+		break;
+
+	case PhaseResult:
+		//ドローゲームの場合
+		if (playerWk->HPzan == enemyWk->HPzan)
+		{
+			UpdateDrawgame();
+		}
+		else
+		{
+			UpdateResult();
+			UpdateResultstar();
+			UpdateWinner();
+			UpdateEvaluation();
+			//プレイヤー勝利の場合
+			if (playerWk->HPzan > enemyWk->HPzan)
+			{
+				UpdateScore();
+			}
+			//エネミー勝利の場合
+			else if (enemyWk->HPzan > playerWk->HPzan)
+			{
+				UpdateEScore();
+			}
+		}
 		break;
 
 	}
@@ -501,6 +695,9 @@ void Update(void)
 //=============================================================================
 void Draw(int no)
 {
+	PLAYER *playerWk = GetPlayer(0);
+	ENEMY *enemyWk = GetEnemy(0);
+
 	// バックバッファ＆Ｚバッファのクリア
 	g_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
@@ -511,23 +708,253 @@ void Draw(int no)
 
 		switch (ePhase)
 		{
+		case PhaseCompanyLogo:
+			DrawBlackscreen();
+			DrawCompany();
+			break;
+
 		case PhaseTitle:
+			DrawBlackscreen();
+			DrawModeselect();
+			DrawTitle();
+			break;
+
+		case PhaseTraining:
+			//BG
+			DrawMeshField();
+
+			//画面上のUI
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//エフェクト
+			DrawParticle();
+
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
 
 			break;
 
-		case PhaseGame:
+		case PhaseTutorial:
+			//BG
 			DrawMeshField();
 
-			DrawShadow();
+			//画面上のUI
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
 
-			DrawParticle();
-
-			// モデルの描画処理
+			// キャラクター等
+			DrawEnemy();
 			DrawPlayer();
 
-			DrawEnemy();
+			//エフェクト
+			DrawParticle();
 
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
+
+			DrawTutorial();
+			break;
+
+		case PhasePause:
+			//BG
+			DrawMeshField();
+
+			//画面上のUI
 			DrawScore();
+			DrawEScore();
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
+			DrawTimer();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//エフェクト
+			DrawParticle();
+
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
+
+			//ポーズ画面
+			DrawBlackscreen();
+			DrawModeselect();
+			DrawPause();
+
+			break;
+
+		case PhaseTrainingPause:
+			//BG
+			DrawMeshField();
+
+			//画面上のUI
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//エフェクト
+			DrawParticle();
+
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
+
+			//ポーズ画面
+			DrawBlackscreen();
+			DrawModeselect();
+			DrawPause();
+
+			break;
+
+		case PhaseCountdown:
+			//BGなど
+			DrawMeshField();
+
+			//画面上のUI
+			DrawScore();
+			DrawEScore();
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
+			DrawTimer();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//エフェクト
+			DrawParticle();
+
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
+
+			DrawCountdown();
+			break;
+
+		case PhaseGame:
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//BG
+			DrawMeshField();
+
+			//画面上のUI
+			DrawScore();
+			DrawEScore();
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
+			DrawTimer();
+
+			//エフェクト
+			DrawParticle();
+
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
+
+			break;
+
+		case PhaseFinish:
+			//BG
+			DrawMeshField();
+
+			//画面上のUI
+			DrawScore();
+			DrawEScore();
+			DrawRedGuage();
+			DrawERedGuage();
+			DrawGuage();
+			DrawEGuage();
+			DrawFrame();
+			DrawTimer();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//エフェクト
+			DrawParticle();
+
+			//画面下のUI
+			DrawSpGuage();
+			DrawESpGuage();
+			DrawFrameSpguage();
+			DrawSpmax();
+
+			DrawKnockout();
+			break;
+
+		case PhaseResult:
+			//BG
+			DrawMeshField();
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
+			//ドローゲームの場合
+			if (playerWk->HPzan == enemyWk->HPzan)
+			{
+				DrawDrawgame();
+			}
+			else
+			{
+				DrawResult();
+				//プレイヤー勝利の場合
+				if (playerWk->HPzan > enemyWk->HPzan)
+				{
+					DrawScore();
+				}
+				//エネミー勝利の場合
+				else if (enemyWk->HPzan > playerWk->HPzan)
+				{
+					DrawEScore();
+				}
+				DrawResultstar();
+				DrawWinner();
+				DrawEvaluation();
+			}
 			break;
 		}
 
@@ -582,17 +1009,36 @@ MATRIX *GetMatrix(void)
 void ReInit(void)
 {
 	InitShadow(1);
-
 	// モデルの初期化
 	InitPlayer(1);
-
 	InitEnemy(1);
-
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 1);
-
 	InitParticle(1);
-
 	InitScore(1);
+	InitEScore(1);
+	InitFrame(1);
+	InitTitle(1);
+	InitResult(1);
+	InitGuage(1);
+	InitEGuage(1);
+	InitSpGuage(1);
+	InitESpGuage(1);
+	InitTimer(1);
+	InitFrameSpguage(1);
+	InitSpmax(1);
+	InitERedGuage(1);
+	InitRedGuage(1);
+	InitCountdown(1);
+	InitKnockout(1);
+	InitResultstar(1);
+	InitWinner(1);
+	InitEvaluation(1);
+	InitTutorial(1);
+	InitModeselect(1);
+	InitBlackscreen(1);
+	InitPause(1);
+	InitDrawgame(1);
+	InitCompany(1);
 
 }
 
@@ -601,6 +1047,13 @@ void ReInit(void)
 //=====================================================================================================
 void SetPhase(int phase)
 {
+	MODESELECT *modeselect = GetModeselect(0);
+
+	if (phase == PhasePause || phase == PhaseTrainingPause)
+	{
+		modeselect->pos.y = PAUSESELECT_POS_Y;
+	}
+
 	ePhase = phase;
 }
 
