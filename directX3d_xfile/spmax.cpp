@@ -13,9 +13,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexSpmax(void);
-void SetTextureSpmax(void);
-void SetVertexSpmax(void);
 
 //*****************************************************************************
 // グローバル変数
@@ -96,7 +93,7 @@ void UpdateSpmax(void)
 		//MAXになった瞬間音を鳴らす
 		if (soundflag == false && phase == PhaseGame)
 		{
-			Play_Sound(SE_EFFECT0, 0, 0);
+			PlaySound(SE_EFFECT0, 0, 0);
 			soundflag = true;
 		}
 	}
@@ -116,7 +113,7 @@ void UpdateSpmax(void)
 		//MAXになった瞬間音を鳴らす
 		if (esoundflag == false && phase == PhaseGame)
 		{
-			Play_Sound(SE_EFFECT0, 0, 0);
+			PlaySound(SE_EFFECT0, 0, 0);
 			esoundflag = true;
 		}
 	}

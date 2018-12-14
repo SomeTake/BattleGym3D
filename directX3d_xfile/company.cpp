@@ -12,8 +12,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexCompany(void);
-void SetReflectCompany(float per);
 
 //*****************************************************************************
 // グローバル変数
@@ -91,14 +89,14 @@ void UpdateCompany(void)
 	if (frame == CLEAR_UP)
 	{
 		SetPhase(PhaseTitle);
-		Play_Sound(BGM_TITLE, 0, 1);
+		PlaySound(BGM_TITLE, 0, 1);
 	}
 
 	//ボタンでタイトル画面へ
 	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(0, BUTTON_M))
 	{
 		SetPhase(PhaseTitle);
-		Play_Sound(BGM_TITLE, 0, 1);
+		PlaySound(BGM_TITLE, 0, 1);
 	}
 
 	SetReflectCompany(i);

@@ -23,5 +23,7 @@ HRESULT InitBlackscreen(int type);
 void UninitBlackscreen(void);
 void UpdateBlackscreen(void);
 void DrawBlackscreen(void);
+HRESULT MakeVertexBlackscreen(void);
+void SetReflectBlackscreen(float per);		// ìßñæìxïœçXóp
 
 #endif

@@ -152,7 +152,6 @@
     <ClInclude Include="escore.h" />
     <ClInclude Include="espguage.h" />
     <ClInclude Include="evaluation.h" />
-    <ClInclude Include="field.h" />
     <ClInclude Include="frame.h" />
     <ClInclude Include="framespguage.h" />
     <ClInclude Include="guage.h" />
@@ -195,7 +194,6 @@
     <ClCompile Include="escore.cpp" />
     <ClCompile Include="espguage.cpp" />
     <ClCompile Include="evaluation.cpp" />
-    <ClCompile Include="field.cpp" />
     <ClCompile Include="frame.cpp" />
     <ClCompile Include="framespguage.cpp" />
     <ClCompile Include="guage.cpp" />

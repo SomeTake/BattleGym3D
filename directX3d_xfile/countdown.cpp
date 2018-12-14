@@ -16,10 +16,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexCountdown(int cno);
-void SetTextureCountdown(int cntPattern, int cno);
-void SetVertexCountdown(int cno);
-
 
 //*****************************************************************************
 // グローバル変数
@@ -36,10 +32,7 @@ COUNTDOWN countdown[COUNTDOWN_MAX];
 //=============================================================================
 HRESULT InitCountdown(int type)
 {
-	int i;
-
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	COUNTDOWN *countdown = GetCountdown(0);
 
 	if (type == 0)
 	{
@@ -54,17 +47,14 @@ HRESULT InitCountdown(int type)
 	CountdownSecond = 0;
 	CountdownFrame = 0;
 
-	for (i = 0; i < COUNTDOWN_MAX; i++, countdown++)
-	{
-		countdown->use = true;
-		countdown->pos = D3DXVECTOR3(COUNTDOWN_POS_X, COUNTDOWN_POS_Y, 0.0f);
-		countdown->CountAnim = 0;
-		countdown->PatternAnim = 0;
+	countdown->use = true;
+	countdown->pos = D3DXVECTOR3(COUNTDOWN_POS_X, COUNTDOWN_POS_Y, 0.0f);
+	countdown->CountAnim = 0;
+	countdown->PatternAnim = 0;
 
-		// 頂点情報の作成
-		MakeVertexCountdown(i);
+	// 頂点情報の作成
+	MakeVertexCountdown();
 
-	}
 	return S_OK;
 }
 
@@ -73,16 +63,10 @@ HRESULT InitCountdown(int type)
 //=============================================================================
 void UninitCountdown(void)
 {
-	int i;
-	COUNTDOWN *countdown = GetCountdown(0);
-
-	for (i = 0; i < COUNTDOWN_MAX; i++, countdown++)
-	{
-		if (g_pD3DTextureCountdown != NULL)	//
-		{	// テクスチャの開放
-			g_pD3DTextureCountdown->Release();
-			g_pD3DTextureCountdown = NULL;
-		}
+	if (g_pD3DTextureCountdown != NULL)	//
+	{	// テクスチャの開放
+		g_pD3DTextureCountdown->Release();
+		g_pD3DTextureCountdown = NULL;
 	}
 }
 
@@ -91,15 +75,12 @@ void UninitCountdown(void)
 //=============================================================================
 void UpdateCountdown(void)
 {
-	int i;
-	COUNTDOWN *countdown = GetCountdown(0);
-
 	static bool flag = false;
 
 	//カウントダウン音
 	if (flag == false)
 	{
-		Play_Sound(SE_COUNTDOWN, 0, 0);
+		PlaySound(SE_COUNTDOWN, 0, 0);
 		flag = true;
 	}
 
@@ -107,31 +88,28 @@ void UpdateCountdown(void)
 	CountdownFrame++;
 	CountdownSecond = CountdownFrame / 60;
 
-	for (i = 0; i < COUNTDOWN_MAX; i++, countdown++)
+	if (countdown->use == true)
 	{
-		if (countdown->use == true)
+		// アニメーション
+		countdown->CountAnim++;
+
+		//アニメーションwaitチェック
+		if ((countdown->CountAnim % TIME_ANIMATION_COUNTDOWN) == 0)
 		{
-			// アニメーション
-			countdown->CountAnim++;
+			//パターンの切り替え
+			countdown->PatternAnim = CountdownSecond;
 
-			//アニメーションwaitチェック
-			if ((countdown->CountAnim % TIME_ANIMATION_COUNTDOWN) == 0)
-			{
-				//パターンの切り替え
-				countdown->PatternAnim = CountdownSecond;
-
-				//テクスチャ座標をセット
-				SetTextureCountdown(countdown->PatternAnim, i);
-			}
-
+			//テクスチャ座標をセット
+			SetTextureCountdown(countdown->PatternAnim);
 		}
-		SetVertexCountdown(i);
+
 	}
+	SetVertexCountdown();
 
 	// 秒数が0になったらバトル開始
 	if (CountdownSecond > FULL_COUNTDOWN - 1)
 	{
-		Play_Sound(BGM_BATTLE, 1, 1);
+		PlaySound(BGM_BATTLE, 1, 1);
 		SetPhase(PhaseGame);
 		flag = false;
 	}
@@ -147,32 +125,26 @@ void DrawCountdown(void)
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
-	int i;
-	COUNTDOWN *countdown = GetCountdown(0);
-	for (i = 0; i < COUNTDOWN_MAX; i++, countdown++)
+	if (countdown->use == true)
 	{
-		if (countdown->use == true)
-		{
-			// テクスチャの設定(ポリゴンの描画前に読み込んだテクスチャのセットを行う)
-			// テクスチャのセットをしないと前にセットされたテクスチャが貼られる→何もはらないことを指定するpDevide->SetTexture(0, NULL);
-			pDevice->SetTexture(0, g_pD3DTextureCountdown);
+		// テクスチャの設定(ポリゴンの描画前に読み込んだテクスチャのセットを行う)
+		// テクスチャのセットをしないと前にセットされたテクスチャが貼られる→何もはらないことを指定するpDevide->SetTexture(0, NULL);
+		pDevice->SetTexture(0, g_pD3DTextureCountdown);
 
-			// ポリゴンの描画
-			pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, countdown->vertexWk, sizeof(VERTEX_2D));
-		}
+		// ポリゴンの描画
+		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, countdown->vertexWk, sizeof(VERTEX_2D));
 	}
 }
 
 //=============================================================================
 // 頂点の作成
 //=============================================================================
-HRESULT MakeVertexCountdown(int cno)
+HRESULT MakeVertexCountdown(void)
 {
-	COUNTDOWN *countdown = GetCountdown(cno);
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
 	// 頂点座標の設定
-	SetVertexCountdown(cno);
+	SetVertexCountdown();
 
 	// rhwの設定
 	countdown->vertexWk[0].rhw =
@@ -198,9 +170,8 @@ HRESULT MakeVertexCountdown(int cno)
 //=============================================================================
 // テクスチャ座標の設定
 //=============================================================================
-void SetTextureCountdown(int cntPattern, int cno)
+void SetTextureCountdown(int cntPattern)
 {
-	COUNTDOWN *countdown = GetCountdown(cno);
 	int x = cntPattern % TEXTURE_PATTERN_DIVIDE_COUNTDOWN_X;
 	int y = cntPattern / TEXTURE_PATTERN_DIVIDE_COUNTDOWN_X;
 	float sizeX = 1.0f / TEXTURE_PATTERN_DIVIDE_COUNTDOWN_X;
@@ -216,20 +187,11 @@ void SetTextureCountdown(int cntPattern, int cno)
 //=============================================================================
 // 頂点座標の設定
 //=============================================================================
-void SetVertexCountdown(int cno)
+void SetVertexCountdown(void)
 {
-	COUNTDOWN *countdown = GetCountdown(cno);
 	// 頂点座標の設定
-	countdown->vertexWk[0].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X * cno), countdown->pos.y, countdown->pos.z);
-	countdown->vertexWk[1].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X * (cno + 1)), countdown->pos.y, countdown->pos.z);
-	countdown->vertexWk[2].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X * cno), countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
-	countdown->vertexWk[3].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X * (cno + 1)), countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
-}
-
-//=============================================================================
-//カウントダウンの情報を取得する
-//=============================================================================
-COUNTDOWN *GetCountdown(int cno)
-{
-	return &countdown[cno];
+	countdown->vertexWk[0].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y, countdown->pos.z);
+	countdown->vertexWk[1].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y, countdown->pos.z);
+	countdown->vertexWk[2].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
+	countdown->vertexWk[3].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
 }

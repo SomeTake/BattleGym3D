@@ -35,11 +35,12 @@ HRESULT InitShadow(int type);
 void UninitShadow(void);
 void UpdateShadow(void);
 void DrawShadow(void);
+HRESULT MakeVertexShadow(LPDIRECT3DDEVICE9 pDevice);
 
-int CreateShadow(D3DXVECTOR3 pos, float fSizeX, float fSizeZ);
-void ReleaseShadow(int nIdxShadow);
-void SetPositionShadow(int nIdxShadow, D3DXVECTOR3 pos);
-void SetVertexShadow(int nIdxShadow, float fSizeX, float fSizeZ);
-void SetColorShadow(int nIdxShadow, D3DXCOLOR col);
+int CreateShadow(D3DXVECTOR3 pos, float fSizeX, float fSizeZ);		// 影の生成処理
+void ReleaseShadow(int nIdxShadow);									// 影の消去処理
+void SetPositionShadow(int nIdxShadow, D3DXVECTOR3 pos);			// 影を作る場所を指定
+void SetVertexShadow(int nIdxShadow, float fSizeX, float fSizeZ);	// 影のサイズを指定
+void SetColorShadow(int nIdxShadow, D3DXCOLOR col);					// 影の色を指定
 
 #endif

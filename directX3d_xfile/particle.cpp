@@ -14,29 +14,20 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_PARTICLE		"data/TEXTURE/effect000.jpg"		// 読み込むテクスチャファイル名
-#define	PARTICLE_WIDTH			(10.0f)							// 木の幅
-#define	PARTICLE_HEIGHT			(10.0f)							// 木の高さ
-#define	VALUE_MOVE_PARTICLE		(3.00f)							// 移動速度
-#define RAND_RANGE				(500)							// ランダムの範囲
-#define CIRCLE_RADIUS			(100.0f)						// 円の半径
 
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexParticle(LPDIRECT3DDEVICE9 pDevice);
-void SetVertexParticle(int nIdxParticle, float fWidth, float fHeight);
-void SetColorParticle(int nIdxParticle, D3DXCOLOR col);
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 LPDIRECT3DTEXTURE9		pD3DTextureParticle = {};		// テクスチャへのポインタ
-LPDIRECT3DVERTEXBUFFER9 pD3DVtxBuffParticle = NULL;					// 頂点バッファインターフェースへのポインタ
+LPDIRECT3DVERTEXBUFFER9 pD3DVtxBuffParticle = NULL;		// 頂点バッファインターフェースへのポインタ
 
 PARTICLE				Particle[MAX_PARTICLE];			// パーティクルワーク
-static bool				g_bAlpaTest;						// アルファテストON/OFF
-static int				g_nAlpha;							// アルファテストの閾値
+static bool				g_bAlpaTest;					// アルファテストON/OFF
+static int				g_nAlpha;						// アルファテストの閾値
 D3DXVECTOR3 centerpos;
 
 //=============================================================================

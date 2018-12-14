@@ -12,7 +12,13 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	MAX_PARTICLE			(8192)	// パーティクル最大数
+#define	TEXTURE_PARTICLE		"data/TEXTURE/effect000.jpg"		// 読み込むテクスチャファイル名
+#define	PARTICLE_WIDTH			(10.0f)								// 木の幅
+#define	PARTICLE_HEIGHT			(10.0f)								// 木の高さ
+#define	VALUE_MOVE_PARTICLE		(3.00f)								// 移動速度
+#define RAND_RANGE				(500)								// ランダムの範囲
+#define CIRCLE_RADIUS			(100.0f)							// 円の半径
+#define	MAX_PARTICLE			(8192)								// パーティクル最大数
 
 //*****************************************************************************
 // 構造体定義
@@ -38,9 +44,11 @@ HRESULT InitParticle(int type);
 void UninitParticle(void);
 void UpdateParticle(void);
 void DrawParticle(void);
+HRESULT MakeVertexParticle(LPDIRECT3DDEVICE9 pDevice);
+void SetVertexParticle(int nIdxParticle, float fWidth, float fHeight);
+void SetColorParticle(int nIdxParticle, D3DXCOLOR col);
 
-int SetParticle(D3DXVECTOR3 pos, float fWidth, float fHeight, D3DXCOLOR col);
-
-PARTICLE *GetParticle(int no);
+int SetParticle(D3DXVECTOR3 pos, float fWidth, float fHeight, D3DXCOLOR col);	// パーティクル発生用(場所, 幅, 高さ, 色)
+PARTICLE *GetParticle(int no);													// パーティクル構造体のゲッター
 
 #endif

@@ -1,8 +1,6 @@
 //=============================================================================
 // サウンド処理 [sound.cpp]
-//
-// Author : GP11B341 24　中込和輝
-// 作成日 : 2018/8/1
+// Author : HAL東京 GP11B341-17 80277 染谷武志
 //=============================================================================
 
 //*****************************************************************************
@@ -52,7 +50,7 @@ LPDIRECTSOUNDBUFFER8 sound[SOUND_MAX];			// サウンド用バッファ
 // 初期化処理
 //=============================================================================
 // hWnd:ウィンドウハンドル
-HRESULT Init_Sound( HWND hWnd )
+HRESULT InitSound( HWND hWnd )
 {
 	// DirectSoundオブジェクトの作成
 	if (FAILED(DirectSoundCreate8(NULL, &g_pDirectSound, NULL)))
@@ -66,7 +64,7 @@ HRESULT Init_Sound( HWND hWnd )
 	int i;
 	for (i = 0; i < SOUND_MAX; i++)
 	{
-		sound[i] = Load_Sound(i);
+		sound[i] = LoadSound(i);
 	}
 
 
@@ -77,7 +75,7 @@ HRESULT Init_Sound( HWND hWnd )
 //=============================================================================
 // 終了処理
 //=============================================================================
-void Uninit_Sound()
+void UninitSound()
 {
 	// サウンド用バッファの解放
 	int i;
@@ -100,7 +98,7 @@ void Uninit_Sound()
 // サウンドのロード
 //=============================================================================
 // no:サウンドナンバー（ヘッダに定義された列挙型定数）
-LPDIRECTSOUNDBUFFER8 Load_Sound( int no )
+LPDIRECTSOUNDBUFFER8 LoadSound( int no )
 {
 	// MMIO = マルチメディア入出力、の略。
 	LPDIRECTSOUNDBUFFER  pBaseBuffer = NULL;	// 曲データの総合バッファ
@@ -212,7 +210,7 @@ LPDIRECTSOUNDBUFFER8 Load_Sound( int no )
 // 音を鳴らす
 //=============================================================================
 // flag   :1(E_DS8_FLAG_LOOP)ならループ再生
-void Play_Sound(  int no, int type, int flag/*=0*/ )
+void PlaySound(  int no, int type, int flag/*=0*/ )
 {	// 続きから鳴らすので、最初から鳴らしたい場合はSetCurrentPosition(0)をすること
 
 	if (type == 0)
@@ -232,7 +230,7 @@ void Play_Sound(  int no, int type, int flag/*=0*/ )
 //=============================================================================
 // 音を止める
 //=============================================================================
-void Stop_Sound( int no, int type)
+void StopSound( int no, int type)
 {
 	DWORD status;
 
@@ -259,7 +257,7 @@ void Stop_Sound( int no, int type)
 // 再生中かどうか調べる
 //=============================================================================
 // pBuffer:音を鳴らしたいサウンドデータのセカンダリバッファ
-bool Is_Playing( LPDIRECTSOUNDBUFFER8 pBuffer)
+bool IsPlaying( LPDIRECTSOUNDBUFFER8 pBuffer)
 {
 	DWORD status;
 
@@ -278,16 +276,16 @@ bool Is_Playing( LPDIRECTSOUNDBUFFER8 pBuffer)
 // [戻り値]	: LPDIRECTSOUNDBUFFER8型　サウンド用バッファへのポインタ
 // [引数]	: SOUND_NAME型 サウンドネームの番号, int型 サウンドのセッティング
 //=============================================================================
-LPDIRECTSOUNDBUFFER8 Get_Sound(SOUND_NAME sound_name)
+LPDIRECTSOUNDBUFFER8 GetSound(SOUND_NAME sound_name)
 {
 	return	sound[sound_name];
 }
 
 
-void Reset_Sound(SOUND_NAME sound_name)
+void ResetSound(SOUND_NAME sound_name)
 {
 
-	LPDIRECTSOUNDBUFFER8 buffer = Get_Sound(sound_name);
+	LPDIRECTSOUNDBUFFER8 buffer = GetSound(sound_name);
 	// 再生位置を先頭に戻す
 	// 同じサウンドを無音時間なく連続再生するため
 	buffer->SetCurrentPosition(0);

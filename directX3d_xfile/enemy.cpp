@@ -35,10 +35,6 @@ HRESULT InitEnemy(int type)
 
 	//ModelIndex = 0;
 
-	//オブジェクトの初期化
-	EnemyAnimation = new D3DXAnimation(pDevice);
-	EnemyModel = new AnimationModel();
-
 	// 位置・回転・スケールの初期設定
 	enemyWk->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	enemyWk->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -57,6 +53,10 @@ HRESULT InitEnemy(int type)
 
 	if (type == 0)
 	{
+		//オブジェクトの初期化
+		EnemyAnimation = new D3DXAnimation(pDevice);
+		EnemyModel = new AnimationModel();
+
 		//Xファイルの読み込み
 		EnemyAnimation->Load_xFile(ENEMY_XFILE);
 		EnemyModel->InitController(EnemyAnimation);
@@ -265,6 +265,13 @@ void UpdateEnemy(void)
 	SetColorShadow(enemyWk->IdxShadow, enemyWk->ColShadow);
 }
 
+D3DXMATRIX g_scale;		// スケールマトリクス
+D3DXMATRIX g_rotation;	// ローテーションマトリクス
+D3DXMATRIX g_translation;	// トランスレーションマトリクス
+D3DXMATRIX g_view;		// ビューマトリクス
+D3DXMATRIX g_projection;	// プロジェクションマトリクス
+D3DXMATRIX g_world;		// ワールドマトリクス
+
 //=============================================================================
 // 描画処理
 //=============================================================================
@@ -272,34 +279,34 @@ void DrawEnemy(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 	D3DMATERIAL9 matDef;
-	MATRIX matrix = *GetMatrix();
+	//MATRIX matrix = *GetMatrix();
 
 	ENEMY *enemyWk = GetEnemy(0);
 	CAMERA *cameraWk = GetCamera(0);
 
 	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&matrix.world);
+	D3DXMatrixIdentity(&g_world);
 
 	// スケールを反映
-	D3DXMatrixScaling(&matrix.scale, enemyWk->scl.x, enemyWk->scl.y, enemyWk->scl.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
+	D3DXMatrixScaling(&g_scale, enemyWk->scl.x, enemyWk->scl.y, enemyWk->scl.z);
+	D3DXMatrixMultiply(&g_world, &g_world, &g_scale);
 
 	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&matrix.scale, enemyWk->rot.y, enemyWk->rot.x, enemyWk->rot.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
+	D3DXMatrixRotationYawPitchRoll(&g_scale, enemyWk->rot.y, enemyWk->rot.x, enemyWk->rot.z);
+	D3DXMatrixMultiply(&g_world, &g_world, &g_scale);
 
 	// 移動を反映
-	D3DXMatrixTranslation(&matrix.translation, enemyWk->pos.x, enemyWk->pos.y, enemyWk->pos.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.translation);
+	D3DXMatrixTranslation(&g_translation, enemyWk->pos.x, enemyWk->pos.y, enemyWk->pos.z);
+	D3DXMatrixMultiply(&g_world, &g_world, &g_translation);
 
 	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &matrix.world);
+	pDevice->SetTransform(D3DTS_WORLD, &g_world);
 
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
 
 	// エネミーのレンダリング
-	EnemyModel->SetMatrix(&matrix.world);
+	EnemyModel->SetMatrix(&g_world);
 	EnemyModel->Render();
 
 #if 0

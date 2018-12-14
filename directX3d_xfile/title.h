@@ -24,5 +24,6 @@ HRESULT InitTitle(int type);
 void UninitTitle(void);
 void UpdateTitle(void);
 void DrawTitle(void);
+HRESULT MakeVertexTitle(void);
 
 #endif

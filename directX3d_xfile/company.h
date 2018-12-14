@@ -10,7 +10,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_COMPANY	_T("data/TEXTURE/company000.png")			// 読み込むテクスチャファイル名
+#define	TEXTURE_COMPANY	_T("data/TEXTURE/company000.png")			// 会社ロゴ用画像
 #define	COMPANY_SIZE_X	(500)										// 会社ロゴの幅
 #define	COMPANY_SIZE_Y	(500)										// 会社ロゴの高さ
 #define	COMPANY_POS_X	(SCREEN_WIDTH / 2 - COMPANY_SIZE_X / 2)		// 会社ロゴの表示位置
@@ -27,5 +27,7 @@ HRESULT InitCompany(int type);
 void UninitCompany(void);
 void UpdateCompany(void);
 void DrawCompany(void);
+HRESULT MakeVertexCompany(void);
+void SetReflectCompany(float per);		// 透明度変更用
 
 #endif

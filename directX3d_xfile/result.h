@@ -10,7 +10,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_RESULT		_T("data/TEXTURE/result000.png")			// 読み込むテクスチャファイル名
+#define	TEXTURE_RESULT		_T("data/TEXTURE/result000.png")			// リザルト画面の画像
 #define	RESULT_POS_X			(0)										// リザルトの表示位置
 #define	RESULT_POS_Y			(0)										// リザルトの表示位置
 #define	RESULT_SIZE_X		(1280)										// リザルトの幅
@@ -23,5 +23,6 @@ HRESULT InitResult(int type);
 void UninitResult(void);
 void UpdateResult(void);
 void DrawResult(void);
+HRESULT MakeVertexResult(void);
 
 #endif

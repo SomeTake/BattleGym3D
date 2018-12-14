@@ -17,10 +17,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexModeselect(int no);
-void SetTextureModeselect(int cntPattern);
-void SetVertexModeselect(void);
-void SetReflectModeselect(float per);
 
 //*****************************************************************************
 // グローバル変数
@@ -93,13 +89,13 @@ void UpdateModeselect(void)
 		//カーソル上下移動
 		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, BUTTON_UE))
 		{
-			Play_Sound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0, 0, 0);
 			titleselect = (titleselect == 0) ? TITLESELECT_MAX - 1 : titleselect - 1;
 			modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
 		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, BUTTON_SHITA))
 		{
-			Play_Sound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0, 0, 0);
 			titleselect = (titleselect == TITLESELECT_MAX - 1) ? 0 : titleselect + 1;
 			modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
@@ -113,7 +109,7 @@ void UpdateModeselect(void)
 			}
 			if (buttoncount >= BUTTON_TIMER)
 			{
-				Play_Sound(SE_SELECT0, 0, 0);
+				PlaySound(SE_SELECT0, 0, 0);
 				titleselect = (titleselect == 0) ? TITLESELECT_MAX - 1 : titleselect - 1;
 				modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
@@ -126,7 +122,7 @@ void UpdateModeselect(void)
 			}
 			if (buttoncount >= BUTTON_TIMER)
 			{
-				Play_Sound(SE_SELECT0, 0, 0);
+				PlaySound(SE_SELECT0, 0, 0);
 				titleselect = (titleselect == TITLESELECT_MAX - 1) ? 0 : titleselect + 1;
 				modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
@@ -141,30 +137,30 @@ void UpdateModeselect(void)
 		{
 			if (titleselect == 0)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				ReInit();
 				SetPhase(PhaseTutorial);
-				Stop_Sound(BGM_TITLE, 0);
-				Play_Sound(BGM_TUTORIAL, 1, 1);
+				StopSound(BGM_TITLE, 0);
+				PlaySound(BGM_TUTORIAL, 1, 1);
 			}
 			else if (titleselect == 1)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
-				Stop_Sound(BGM_TITLE, 0);
-				Play_Sound(BGM_TRAINING, 1, 1);
+				PlaySound(SE_SELECT1, 0, 0);
+				StopSound(BGM_TITLE, 0);
+				PlaySound(BGM_TRAINING, 1, 1);
 				ReInit();
 				SetPhase(PhaseTraining);
 			}
 			else if (titleselect == 2)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
-				Stop_Sound(BGM_TITLE, 0);
+				PlaySound(SE_SELECT1, 0, 0);
+				StopSound(BGM_TITLE, 0);
 				ReInit();
 				SetPhase(PhaseCountdown);
 			}
 			else if (titleselect == 3)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				SetPhase(PhaseExit);
 			}
 		}
@@ -176,13 +172,13 @@ void UpdateModeselect(void)
 		//カーソル上下移動
 		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, BUTTON_UE))
 		{
-			Play_Sound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
 		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, BUTTON_SHITA))
 		{
-			Play_Sound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
@@ -193,7 +189,7 @@ void UpdateModeselect(void)
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
 			{
-				Play_Sound(SE_SELECT0, 0, 0);
+				PlaySound(SE_SELECT0, 0, 0);
 				pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
@@ -203,7 +199,7 @@ void UpdateModeselect(void)
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
 			{
-				Play_Sound(SE_SELECT0, 0, 0);
+				PlaySound(SE_SELECT0, 0, 0);
 				pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
@@ -218,29 +214,29 @@ void UpdateModeselect(void)
 		{
 			if (pauseselect == 0)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				SetPhase(PhaseGame);
-				Play_Sound(BGM_BATTLE, 1, 1);
+				PlaySound(BGM_BATTLE, 1, 1);
 			}
 			else if (pauseselect == 1)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				ReInit();
 				SetPhase(PhaseCountdown);
 			}
 			else if (pauseselect == 2)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				ReInit();
 				SetPhase(PhaseTitle);
-				Play_Sound(BGM_TITLE, 1, 1);
+				PlaySound(BGM_TITLE, 1, 1);
 			}
 		}
 		if (IsButtonTriggered(0, BUTTON_M))
 		{
-			Play_Sound(SE_SELECT1, 0, 0);
+			PlaySound(SE_SELECT1, 0, 0);
 			SetPhase(PhaseGame);
-			Play_Sound(BGM_BATTLE, 1, 1);
+			PlaySound(BGM_BATTLE, 1, 1);
 		}
 	}
 
@@ -250,13 +246,13 @@ void UpdateModeselect(void)
 		//カーソル上下移動
 		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, BUTTON_UE))
 		{
-			Play_Sound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
 		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, BUTTON_SHITA))
 		{
-			Play_Sound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
@@ -267,7 +263,7 @@ void UpdateModeselect(void)
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
 			{
-				Play_Sound(SE_SELECT0, 0, 0);
+				PlaySound(SE_SELECT0, 0, 0);
 				pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
@@ -277,7 +273,7 @@ void UpdateModeselect(void)
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
 			{
-				Play_Sound(SE_SELECT0, 0, 0);
+				PlaySound(SE_SELECT0, 0, 0);
 				pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
@@ -292,30 +288,30 @@ void UpdateModeselect(void)
 		{
 			if (pauseselect == 0)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				SetPhase(PhaseTraining);
-				Play_Sound(BGM_TRAINING, 1, 1);
+				PlaySound(BGM_TRAINING, 1, 1);
 			}
 			else if (pauseselect == 1)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				ReInit();
 				SetPhase(PhaseTraining);
-				Play_Sound(BGM_TRAINING, 0, 1);
+				PlaySound(BGM_TRAINING, 0, 1);
 			}
 			else if (pauseselect == 2)
 			{
-				Play_Sound(SE_SELECT1, 0, 0);
+				PlaySound(SE_SELECT1, 0, 0);
 				ReInit();
 				SetPhase(PhaseTitle);
-				Play_Sound(BGM_TITLE, 0, 1);
+				PlaySound(BGM_TITLE, 0, 1);
 			}
 		}
 		if (IsButtonTriggered(0, BUTTON_M))
 		{
-			Play_Sound(SE_SELECT1, 0, 0);
+			PlaySound(SE_SELECT1, 0, 0);
 			SetPhase(PhaseTraining);
-			Play_Sound(BGM_TRAINING, 1, 1);
+			PlaySound(BGM_TRAINING, 1, 1);
 		}
 	}
 

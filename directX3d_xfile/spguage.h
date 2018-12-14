@@ -39,7 +39,10 @@ HRESULT InitSpGuage(int type);
 void UninitSpGuage(void);
 void UpdateSpGuage(void);
 void DrawSpGuage(void);
-SPGUAGE *GetSpGuage(int gno);
-void AddSpGuage(int add);
+HRESULT MakeVertexSpGuage(void);
+void SetTextureSpGuage(int cntPattern);
+void SetVertexSpGuage(void);
+SPGUAGE *GetSpGuage(int gno);				// SPGAUGE構造体のゲッター
+void AddSpGuage(int add);					// SPゲージを増やすときに使用
 
 #endif

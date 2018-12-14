@@ -12,7 +12,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexDrawgame(void);
 
 //*****************************************************************************
 // グローバル変数
@@ -31,7 +30,7 @@ HRESULT InitDrawgame(int type)
 	if (type == 0)
 	{
 		// テクスチャの読み込み
-		D3DXCreateTextureFromFile(pDevice,						// デバイスへのポインタ
+		D3DXCreateTextureFromFile(pDevice,	// デバイスへのポインタ
 			TEXTURE_DRAWGAME,				// ファイルの名前
 			&g_pD3DTextureDrawgame);		// 読み込むメモリー
 
@@ -61,7 +60,7 @@ void UninitDrawgame(void)
 //=============================================================================
 void UpdateDrawgame(void)
 {
-	Stop_Sound(BGM_BATTLE, 0);
+	StopSound(BGM_BATTLE, 0);
 
 	if (GetKeyboardTrigger(DIK_RETURN))
 	{// Enter押したら、ステージを切り替える

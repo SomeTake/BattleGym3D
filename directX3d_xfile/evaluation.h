@@ -11,13 +11,10 @@
 #define TEXTURE_GAME_EVALUATION		_T("data/TEXTURE/evaluation000.png")	// 画像
 #define TEXTURE_EVALUATION_SIZE_X	(150)			// テクスチャサイズ
 #define TEXTURE_EVALUATION_SIZE_Y	(150)			// 同上
-
 #define TEXTURE_PATTERN_DIVIDE_X_EVALUATION	(1)		// アニメパターンのテクスチャ内分割数（X)
 #define TEXTURE_PATTERN_DIVIDE_Y_EVALUATION	(3)		// アニメパターンのテクスチャ内分割数（Y)
 #define ANIM_PATTERN_NUM_EVALUATION			(TEXTURE_PATTERN_DIVIDE_X_EVALUATION*TEXTURE_PATTERN_DIVIDE_Y_EVALUATION)	// アニメーションパターン数
-
 #define EVALUATION_MAX						(1)		// 評価の数
-
 #define EVALUATION_POS_X					(1040)	//表示位置
 #define EVALUATION_POS_Y					(490)	//表示位置
 
@@ -40,8 +37,6 @@ typedef struct	// エネミー構造体
 
 } EVALUATION;
 
-
-
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -49,7 +44,8 @@ HRESULT InitEvaluation(int type);
 void UninitEvaluation(void);
 void UpdateEvaluation(void);
 void DrawEvaluation(void);
-EVALUATION *GetEvaluation(int no);
-
+HRESULT MakeVertexEvaluation(void);
+void SetTextureEvaluation(int cntPattern);
+void SetVertexEvaluation(void);
 
 #endif

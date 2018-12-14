@@ -10,11 +10,11 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_PAUSE	_T("data/TEXTURE/pause000.png")		// 読み込むテクスチャファイル名
-#define	PAUSE_POS_X		(0)								// タイトルロゴの表示位置
-#define	PAUSE_POS_Y		(0)								// タイトルロゴの表示位置
-#define	PAUSE_SIZE_X	(1280)							// タイトルロゴの幅
-#define	PAUSE_SIZE_Y	(720)							// タイトルロゴの高さ
+#define	TEXTURE_PAUSE	_T("data/TEXTURE/pause000.png")		// ポーズ画面用画像
+#define	PAUSE_POS_X		(0)									// ポーズ画面の表示位置
+#define	PAUSE_POS_Y		(0)									// ポーズ画面の表示位置
+#define	PAUSE_SIZE_X	(1280)								// ポーズ画面の幅
+#define	PAUSE_SIZE_Y	(720)								// ポーズ画面の高さ
 
 
 //*****************************************************************************
@@ -24,5 +24,6 @@ HRESULT InitPause(int type);
 void UninitPause(void);
 void UpdatePause(void);
 void DrawPause(void);
+HRESULT MakeVertexPause(void);
 
 #endif

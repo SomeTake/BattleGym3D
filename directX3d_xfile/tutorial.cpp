@@ -16,16 +16,13 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexTutorial(int no);
-void SetTextureTutorial(int cntPattern);
-void SetVertexTutorial(void);
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 LPDIRECT3DTEXTURE9 g_pD3DTextureTutorial = NULL;		// テクスチャへのポリゴン
 
-TUTORIAL tutorialWk[TUTORIAL_MAX];				// 構造体
+TUTORIAL tutorialWk[TUTORIAL_MAX];						// 構造体
 
 //=============================================================================
 // 初期化処理
@@ -33,7 +30,6 @@ TUTORIAL tutorialWk[TUTORIAL_MAX];				// 構造体
 HRESULT InitTutorial(int type)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	TUTORIAL *tutorial = tutorialWk;
 
 	// テクスチャーの初期化を行う？
 	if (type == 0)
@@ -45,15 +41,12 @@ HRESULT InitTutorial(int type)
 	}
 
 	// 初期化処理
-	for (int i = 0; i < TUTORIAL_MAX; i++, tutorial++)
-	{
-		tutorialWk->pos = D3DXVECTOR3(TUTORIAL_POS_X, TUTORIAL_POS_Y, 0.0f);	// 座標データを初期化
-		tutorialWk->PatternAnim = 0;									// アニメパターン番号をランダムで初期化
-		tutorialWk->CountAnim = 0;									// アニメカウントを初期化
+	tutorialWk->pos = D3DXVECTOR3(TUTORIAL_POS_X, TUTORIAL_POS_Y, 0.0f);	// 座標データを初期化
+	tutorialWk->PatternAnim = 0;									// アニメパターン番号をランダムで初期化
+	tutorialWk->CountAnim = 0;									// アニメカウントを初期化
 
-		tutorialWk->Texture = g_pD3DTextureTutorial;				// テクスチャ情報
-		MakeVertexTutorial(i);										// 頂点情報の作成
-	}
+	tutorialWk->Texture = g_pD3DTextureTutorial;				// テクスチャ情報
+	MakeVertexTutorial();										// 頂点情報の作成
 
 
 	return S_OK;
@@ -76,21 +69,16 @@ void UninitTutorial(void)
 //=============================================================================
 void UpdateTutorial(void)
 {
-	TUTORIAL *tutorial = tutorialWk;
-
-	for (int i = 0; i < TUTORIAL_MAX; i++, tutorial++)
+	if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(0, BUTTON_Z))
 	{
-		if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(0, BUTTON_Z))
-		{
-			SetTextureTutorial(1);
-		}
-		else
-		{
-			SetTextureTutorial(0);
-		}
-
-		SetVertexTutorial();	// 移動後の座標で頂点を設定
+		SetTextureTutorial(1);
 	}
+	else
+	{
+		SetTextureTutorial(0);
+	}
+
+	SetVertexTutorial();	// 移動後の座標で頂点を設定
 
 }
 
@@ -100,25 +88,21 @@ void UpdateTutorial(void)
 void DrawTutorial(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	TUTORIAL *tutorial = tutorialWk;
 
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
-	for (int i = 0; i < TUTORIAL_MAX; i++, tutorial++)
-	{
-		// テクスチャの設定
-		pDevice->SetTexture(0, tutorialWk->Texture);
+	// テクスチャの設定
+	pDevice->SetTexture(0, tutorialWk->Texture);
 
-		// ポリゴンの描画
-		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, tutorialWk->vertexWk, sizeof(VERTEX_2D));
-	}
+	// ポリゴンの描画
+	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, tutorialWk->vertexWk, sizeof(VERTEX_2D));
 }
 
 //=============================================================================
 // 頂点の作成
 //=============================================================================
-HRESULT MakeVertexTutorial(int no)
+HRESULT MakeVertexTutorial(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
@@ -173,12 +157,4 @@ void SetVertexTutorial(void)
 	tutorialWk->vertexWk[1].vtx = D3DXVECTOR3(tutorialWk->pos.x + TEXTURE_TUTORIAL_SIZE_X, tutorialWk->pos.y, tutorialWk->pos.z);
 	tutorialWk->vertexWk[2].vtx = D3DXVECTOR3(tutorialWk->pos.x, tutorialWk->pos.y + TEXTURE_TUTORIAL_SIZE_Y, tutorialWk->pos.z);
 	tutorialWk->vertexWk[3].vtx = D3DXVECTOR3(tutorialWk->pos.x + TEXTURE_TUTORIAL_SIZE_X, tutorialWk->pos.y + TEXTURE_TUTORIAL_SIZE_Y, tutorialWk->pos.z);
-}
-
-//=============================================================================
-// エネミー取得関数
-//=============================================================================
-TUTORIAL *GetTutorial(int no)
-{
-	return(&tutorialWk[no]);
 }

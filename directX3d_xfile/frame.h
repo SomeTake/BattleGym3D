@@ -1,15 +1,14 @@
 //=============================================================================
 //
-// バトルフレーム表示処理 [frame.h]
+// バトル画面フレーム表示処理 [frame.h]
 // Author : HAL東京 GP11B341 17 染谷武志
 //
 //=============================================================================
 #ifndef _FRAME_H_
 #define _FRAME_H_
 
-
 // マクロ定義
-#define TEXTURE_GAME_FRAME00	_T("data/TEXTURE/frame000.png")	// サンプル用画像
+#define TEXTURE_GAME_FRAME00	_T("data/TEXTURE/frame000.png")	// フレーム用画像
 #define TEXTURE_FRAME00_SIZE_X	(1280)							// テクスチャサイズ
 #define TEXTURE_FRAME00_SIZE_Y	(720)							// 同上
 
@@ -39,6 +38,9 @@ HRESULT InitFrame(int type);
 void UninitFrame(void);
 void UpdateFrame(void);
 void DrawFrame(void);
-void FrameSway(void);
+void FrameSway(void);					// フレームを揺らすためのフラグをONにする関数
+HRESULT MakeVertexFrame(void);
+void SetTextureFrame(int cntPattern);
+void SetVertexFrame(void);
 
 #endif

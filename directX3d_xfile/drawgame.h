@@ -10,7 +10,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_DRAWGAME		_T("data/TEXTURE/drawgame000.png")		// 読み込むテクスチャファイル名
+#define	TEXTURE_DRAWGAME		_T("data/TEXTURE/drawgame000.png")		// 引き分け画面用の画像
 #define	DRAWGAME_POS_X			(0)										// 引き分け画面の表示位置
 #define	DRAWGAME_POS_Y			(0)										// 引き分け画面の表示位置
 #define	DRAWGAME_SIZE_X		(1280)										// 引き分け画面の幅
@@ -23,5 +23,6 @@ HRESULT InitDrawgame(int type);
 void UninitDrawgame(void);
 void UpdateDrawgame(void);
 void DrawDrawgame(void);
+HRESULT MakeVertexDrawgame(void);
 
 #endif

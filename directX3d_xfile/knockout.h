@@ -9,7 +9,7 @@
 
 
 // マクロ定義
-#define TEXTURE_GAME_KNOCKOUT00	_T("data/TEXTURE/knockout000.png")	// サンプル用画像
+#define TEXTURE_GAME_KNOCKOUT00	_T("data/TEXTURE/knockout000.png")	// ノックアウト画面よう画像
 #define TEXTURE_KNOCKOUT00_SIZE_X	(1000)							// テクスチャサイズ
 #define TEXTURE_KNOCKOUT00_SIZE_Y	(500)							// 同上
 
@@ -38,5 +38,8 @@ HRESULT InitKnockout(int type);
 void UninitKnockout(void);
 void UpdateKnockout(void);
 void DrawKnockout(void);
+HRESULT MakeVertexKnockout(void);
+void SetTextureKnockout(int cntPattern);
+void SetVertexKnockout(void);
 
 #endif

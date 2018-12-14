@@ -44,7 +44,8 @@ HRESULT InitTutorial(int type);
 void UninitTutorial(void);
 void UpdateTutorial(void);
 void DrawTutorial(void);
-TUTORIAL *GetTutorial(int no);
-
+HRESULT MakeVertexTutorial(void);
+void SetTextureTutorial(int cntPattern);
+void SetVertexTutorial(void);
 
 #endif

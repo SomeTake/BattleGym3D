@@ -11,9 +11,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexERedGuage(void);
-void SetTextureERedGuage(int cntPattern);
-void SetVertexERedGuage(void);
 
 //*****************************************************************************
 // グローバル変数
@@ -43,7 +40,7 @@ HRESULT InitERedGuage(int type)
 	// ゲージの初期化
 	eredguage->use = true;
 	eredguage->pos = D3DXVECTOR3(EREDGUAGE_POS_X, EREDGUAGE_POS_Y, 0.0f);
-	eredguage->red = enemy->HPzan;
+	eredguage->value = enemy->HPzan;
 
 	// 頂点情報の作成
 	MakeVertexERedGuage();
@@ -141,15 +138,15 @@ void SetTextureERedGuage(int cntPattern)
 {
 	ENEMY *enemy = GetEnemy(0);
 
-	if (eredguage->red > enemy->HPzan)
+	if (eredguage->value > enemy->HPzan)
 	{
-		eredguage->red -= 5;
+		eredguage->value -= 5;
 	}
 
 	//トレーニングモードなどで回復した時用
-	if (enemy->HPzan > eredguage->red)
+	if (enemy->HPzan > eredguage->value)
 	{
-		eredguage->red = enemy->HPzan;
+		eredguage->value = enemy->HPzan;
 	}
 
 	int x = cntPattern % EREDGUAGE_PATTERN_DIVIDE_X;
@@ -159,9 +156,9 @@ void SetTextureERedGuage(int cntPattern)
 
 	// テクスチャ座標の設定
 	eredguage->vertexWk[0].tex = D3DXVECTOR2((float)(x)* sizeX, (float)(y)* sizeY);
-	eredguage->vertexWk[1].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)eredguage->red / (float)enemy->HP), (float)(y)* sizeY);
+	eredguage->vertexWk[1].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)eredguage->value / (float)enemy->HP), (float)(y)* sizeY);
 	eredguage->vertexWk[2].tex = D3DXVECTOR2((float)(x)* sizeX, (float)(y)* sizeY + sizeY);
-	eredguage->vertexWk[3].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)eredguage->red / (float)enemy->HP), (float)(y)* sizeY + sizeY);
+	eredguage->vertexWk[3].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)eredguage->value / (float)enemy->HP), (float)(y)* sizeY + sizeY);
 }
 
 //=============================================================================
@@ -173,9 +170,9 @@ void SetVertexERedGuage(void)
 
 	// 頂点座標の設定
 	eredguage->vertexWk[0].vtx = D3DXVECTOR3(eredguage->pos.x, eredguage->pos.y, eredguage->pos.z);
-	eredguage->vertexWk[1].vtx = D3DXVECTOR3(eredguage->pos.x + EREDGUAGE_SIZE_X * ((float)eredguage->red / (float)enemy->HP), eredguage->pos.y, eredguage->pos.z);
+	eredguage->vertexWk[1].vtx = D3DXVECTOR3(eredguage->pos.x + EREDGUAGE_SIZE_X * ((float)eredguage->value / (float)enemy->HP), eredguage->pos.y, eredguage->pos.z);
 	eredguage->vertexWk[2].vtx = D3DXVECTOR3(eredguage->pos.x, eredguage->pos.y + EREDGUAGE_SIZE_Y, eredguage->pos.z);
-	eredguage->vertexWk[3].vtx = D3DXVECTOR3(eredguage->pos.x + EREDGUAGE_SIZE_X * ((float)eredguage->red / (float)enemy->HP), eredguage->pos.y + EREDGUAGE_SIZE_Y, eredguage->pos.z);
+	eredguage->vertexWk[3].vtx = D3DXVECTOR3(eredguage->pos.x + EREDGUAGE_SIZE_X * ((float)eredguage->value / (float)enemy->HP), eredguage->pos.y + EREDGUAGE_SIZE_Y, eredguage->pos.z);
 }
 
 EREDGUAGE *GetERedGuage(int eno)

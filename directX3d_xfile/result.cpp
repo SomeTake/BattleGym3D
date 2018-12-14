@@ -12,7 +12,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexResult(void);
 
 //*****************************************************************************
 // グローバル変数
@@ -66,7 +65,7 @@ void UpdateResult(void)
 	 //ゲームループのための再初期化
 		ReInit();
 		SetPhase(PhaseTitle);
-		Play_Sound(BGM_TITLE, 1, 1);
+		PlaySound(BGM_TITLE, 1, 1);
 	}
 	// ゲームパッドで移動処理
 	else if (IsButtonTriggered(0, BUTTON_M))
@@ -74,7 +73,7 @@ void UpdateResult(void)
 		//ゲームループのための再初期化
 		ReInit();
 		SetPhase(PhaseTitle);
-		Play_Sound(BGM_TITLE, 1, 1);
+		PlaySound(BGM_TITLE, 1, 1);
 	}
 }
 

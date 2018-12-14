@@ -43,13 +43,13 @@
 
 #define MY_VERTEX_FVF  (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 
-#define SCREEN_WIDTH	(1280)				// ウインドウの幅
-#define SCREEN_HEIGHT	(720)				// ウインドウの高さ
-#define SCREEN_CENTER_X	(SCREEN_WIDTH / 2)	// ウインドウの中心Ｘ座標
-#define SCREEN_CENTER_Y	(SCREEN_HEIGHT / 2)	// ウインドウの中心Ｙ座標
+#define SCREEN_WIDTH	(1280)											// ウインドウの幅
+#define SCREEN_HEIGHT	(720)											// ウインドウの高さ
+#define SCREEN_CENTER_X	(SCREEN_WIDTH / 2)								// ウインドウの中心Ｘ座標
+#define SCREEN_CENTER_Y	(SCREEN_HEIGHT / 2)								// ウインドウの中心Ｙ座標
 
-#define	NUM_VERTEX		(4)		// 頂点数
-#define	NUM_POLYGON		(2)		// ポリゴン数
+#define	NUM_VERTEX		(4)												// 頂点数
+#define	NUM_POLYGON		(2)												// ポリゴン数
 
 #define	VIEW_ANGLE		(D3DXToRadian(45.0f))							// ビュー平面の視野角
 #define	VIEW_ASPECT		((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT)	// ビュー平面のアスペクト比	
@@ -125,24 +125,14 @@ enum
 	PhaseExit,					// ゲーム終了
 };
 
-// スレッドをロードしているかどうか
-enum SWITCH_TYPE {
-	SWITCH_TYPE_CREATE_THREAD,
-	SWITCH_TYPE_LOADING,
-	SWITCH_TYPE_MAX
-};
-
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-LPDIRECT3DDEVICE9 GetDevice(void);
-MATRIX *GetMatrix(void);
-int *GetPhase(void);
-void SetPhase(int phase);
-void ReInit(void);
-float GetAspect(void);
-CRITICAL_SECTION *GetCriticalSection(void);
-bool *GetSwitch(int no);
-float *GetAssembly(void);
+LPDIRECT3DDEVICE9 GetDevice(void);	// デバイスを取得する
+MATRIX *GetMatrix(void);			// 3D→2D変換に必要なマトリクスをまとめて取得する
+int *GetPhase(void);				// 現在のゲームフェーズを取得する
+void SetPhase(int phase);			// ゲームフェーズを変更する
+void ReInit(void);					// ゲームループのための最初期化処理
+float GetAspect(void);				// アスペクト比を取得する
 
 #endif

@@ -11,14 +11,9 @@
 // マクロ定義
 //*****************************************************************************
 
-
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexFrame(void);
-void SetTextureFrame(int cntPattern );
-void SetVertexFrame(void);
-
 
 //*****************************************************************************
 // グローバル変数
@@ -27,7 +22,7 @@ static LPDIRECT3DTEXTURE9		g_pD3DTextureFrame = NULL;		// テクスチャへのポリゴン
 
 FRAME frame[FRAME_MAX];
 
-//ゲージを揺らす
+//フレームを揺らす
 int fcount = 0;
 int fcounttable[SWAY_MAX] = {
 	0, 2, -2, 4, -4, 8, -8, 16, -16, 32, -32, 16, -16, 8, -8, 4, -4, 2, -2, 0,
@@ -188,7 +183,7 @@ void SetTextureFrame(int cntPattern)
 //=============================================================================
 void SetVertexFrame(void)
 {
-	int fno = fcount % 18;
+	int fno = fcount % SWAY_MAX;
 
 	// 頂点座標の設定
 	frame->vertexWk[0].vtx = D3DXVECTOR3(frame->pos.x, fcounttable[fno] + frame->pos.y, frame->pos.z);

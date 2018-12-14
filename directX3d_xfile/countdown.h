@@ -40,6 +40,8 @@ HRESULT InitCountdown(int type);
 void UninitCountdown(void);
 void UpdateCountdown(void);
 void DrawCountdown(void);
-COUNTDOWN *GetCountdown(int cno);
+HRESULT MakeVertexCountdown(void);
+void SetTextureCountdown(int cntPattern);
+void SetVertexCountdown(void);
 
 #endif

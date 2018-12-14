@@ -11,9 +11,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexRedGuage(void);
-void SetTextureRedGuage(int cntPattern);
-void SetVertexRedGuage(void);
 
 //*****************************************************************************
 // グローバル変数
@@ -43,7 +40,7 @@ HRESULT InitRedGuage(int type)
 	// ゲージの初期化
 	redguage->use = true;
 	redguage->pos = D3DXVECTOR3(REDGUAGE_POS_X, REDGUAGE_POS_Y, 0.0f);
-	redguage->red = player->HPzan;
+	redguage->value = player->HPzan;
 
 	// 頂点情報の作成
 	MakeVertexRedGuage();
@@ -141,15 +138,15 @@ void SetTextureRedGuage(int cntPattern)
 {
 	PLAYER *player = GetPlayer(0);
 
-	if (redguage->red > player->HPzan)
+	if (redguage->value > player->HPzan)
 	{
-		redguage->red -= 5;
+		redguage->value -= 5;
 	}
 
 	//トレーニングモードなどで回復した時用
-	if (player->HPzan > redguage->red)
+	if (player->HPzan > redguage->value)
 	{
-		redguage->red = player->HPzan;
+		redguage->value = player->HPzan;
 	}
 
 	int x = cntPattern % REDGUAGE_PATTERN_DIVIDE_X;
@@ -158,9 +155,9 @@ void SetTextureRedGuage(int cntPattern)
 	float sizeY = 1.0f / REDGUAGE_PATTERN_DIVIDE_Y;
 
 	// テクスチャ座標の設定
-	redguage->vertexWk[0].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)(player->HP - redguage->red) / (float)player->HP), (float)(y)* sizeY);
+	redguage->vertexWk[0].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)(player->HP - redguage->value) / (float)player->HP), (float)(y)* sizeY);
 	redguage->vertexWk[1].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX, (float)(y)* sizeY);
-	redguage->vertexWk[2].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)(player->HP - redguage->red) / (float)player->HP), (float)(y)* sizeY + sizeY);
+	redguage->vertexWk[2].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX * ((float)(player->HP - redguage->value) / (float)player->HP), (float)(y)* sizeY + sizeY);
 	redguage->vertexWk[3].tex = D3DXVECTOR2((float)(x)* sizeX + sizeX, (float)(y)* sizeY + sizeY);
 }
 
@@ -172,13 +169,8 @@ void SetVertexRedGuage(void)
 	PLAYER *player = GetPlayer(0);
 
 	// 頂点座標の設定
-	redguage->vertexWk[0].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X * ((float)(player->HP - redguage->red) / player->HP), redguage->pos.y, redguage->pos.z);
+	redguage->vertexWk[0].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X * ((float)(player->HP - redguage->value) / player->HP), redguage->pos.y, redguage->pos.z);
 	redguage->vertexWk[1].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X, redguage->pos.y, redguage->pos.z);
-	redguage->vertexWk[2].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X * ((float)(player->HP - redguage->red) / player->HP), redguage->pos.y + REDGUAGE_SIZE_Y, redguage->pos.z);
+	redguage->vertexWk[2].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X * ((float)(player->HP - redguage->value) / player->HP), redguage->pos.y + REDGUAGE_SIZE_Y, redguage->pos.z);
 	redguage->vertexWk[3].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X, redguage->pos.y + REDGUAGE_SIZE_Y, redguage->pos.z);
-}
-
-REDGUAGE *GetRedGuage(int eno)
-{
-	return &redguage[eno];
 }

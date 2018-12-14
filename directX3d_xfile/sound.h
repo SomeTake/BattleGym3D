@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // サウンド処理 [sound.h]
-// Author : GP11B341 24　中込和輝
+// Author : HAL東京 GP11B341-17 80277 染谷武志
 //
 //=============================================================================
 #ifndef ___SOUND_H___
@@ -59,19 +59,19 @@ enum
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT					Init_Sound( HWND hWnd );			// サウンドの初期化処理
-void					Uninit_Sound();						// サウンドの終了処理
-LPDIRECTSOUNDBUFFER8	Load_Sound( int no );				// サウンドのロード
+HRESULT					InitSound( HWND hWnd );			// サウンドの初期化処理
+void					UninitSound();						// サウンドの終了処理
+LPDIRECTSOUNDBUFFER8	LoadSound( int no );				// サウンドのロード
 // 音ごとに再生する
-void Play_Sound( int no, int type, int flag);
+void PlaySound( int no, int type, int flag);
 
 // 音を止める
-void Stop_Sound(int no, int type);
+void StopSound(int no, int type);
 
 // 再生中かどうか調べる
-bool Is_Playing( LPDIRECTSOUNDBUFFER8 pBuffer );
+bool IsPlaying( LPDIRECTSOUNDBUFFER8 pBuffer );
 // サウンドを取得する
-LPDIRECTSOUNDBUFFER8 Get_Sound(SOUND_NAME sound_name);
+LPDIRECTSOUNDBUFFER8 GetSound(SOUND_NAME sound_name);
 
-void Reset_Sound(SOUND_NAME sound_name);
+void ResetSound(SOUND_NAME sound_name);
 #endif

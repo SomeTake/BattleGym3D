@@ -25,5 +25,8 @@ HRESULT InitSpmax(int type);
 void UninitSpmax(void);
 void UpdateSpmax(void);
 void DrawSpmax(void);
+HRESULT MakeVertexSpmax(void);
+void SetTextureSpmax(void);
+void SetVertexSpmax(void);
 
 #endif

@@ -41,5 +41,8 @@ void UninitTimer(void);
 void UpdateTimer(void);
 void DrawTimer(void);
 TIMER *GetTimer(int tno);
+HRESULT MakeVertexTimer(int tno);
+void SetTextureTimer(int cntPattern, int tno);
+void SetVertexTimer(int tno);
 
 #endif

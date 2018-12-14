@@ -34,10 +34,6 @@ HRESULT InitPlayer(int type)
 	PLAYER *playerWk = GetPlayer(0);
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
-	//オブジェクトの初期化
-	PlayerAnimation = new D3DXAnimation(pDevice);
-	PlayerModel = new AnimationModel();
-
 	// 位置・回転・スケールの初期設定
 	playerWk->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	playerWk->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -56,6 +52,10 @@ HRESULT InitPlayer(int type)
 
 	if (type == 0)
 	{
+		//オブジェクトの初期化
+		PlayerAnimation = new D3DXAnimation(pDevice);
+		PlayerModel = new AnimationModel();
+
 		//Xファイルの読み込み
 		PlayerAnimation->Load_xFile(PLAYER_XFILE);
 		PlayerModel->InitController(PlayerAnimation);

@@ -27,5 +27,8 @@ HRESULT InitWinner(int type);
 void UninitWinner(void);
 void UpdateWinner(void);
 void DrawWinner(void);
+HRESULT MakeVertexWinner(void);
+void SetTextureWinner(int cntPattern);
+void SetVertexWinner(void);
 
 #endif

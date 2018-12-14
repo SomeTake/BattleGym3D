@@ -9,9 +9,9 @@
 
 
 // マクロ定義
-#define STAR00	_T("data/TEXTURE/star000.png")				// サンプル用画像
-#define STAR_SIZE_X	(300) // テクスチャサイズ
-#define STAR_SIZE_Y	(300) // 同上
+#define STAR00	_T("data/TEXTURE/star000.png")				// スター用画像
+#define STAR_SIZE_X	(300)									// テクスチャサイズ
+#define STAR_SIZE_Y	(300)									// 同上
 
 #define TEXTURE_PATTERN_DIVIDE_STAR_X	(1)					// アニメパターンのテクスチャ内分割数（X)
 #define TEXTURE_PATTERN_DIVIDE_STAR_Y	(1)					// アニメパターンのテクスチャ内分割数（Y)
@@ -42,6 +42,8 @@ HRESULT InitResultstar(int type);
 void UninitResultstar(void);
 void UpdateResultstar(void);
 void DrawResultstar(void);
-RESULTSTAR *GetResultstar(int sno);
+HRESULT MakeVertexResultstar(void);
+void SetTextureResultstar(int cntPattern);
+void SetVertexResultstar(void);
 
 #endif

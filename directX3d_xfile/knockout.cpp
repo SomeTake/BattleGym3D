@@ -19,10 +19,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexKnockout(void);
-void SetTextureKnockout(int cntPattern);
-void SetVertexKnockout(void);
-
 
 //*****************************************************************************
 // グローバル変数
@@ -81,18 +77,18 @@ void UpdateKnockout(void)
 	PLAYER *player = GetPlayer(0);
 	ENEMY *enemy = GetEnemy(0);
 
-	Stop_Sound(BGM_BATTLE, 0);
+	StopSound(BGM_BATTLE, 0);
 
 	if (GetKeyboardTrigger(DIK_RETURN))
 	{// Enter押したら、ステージを切り替える
 		SetPhase(PhaseResult);
-		Play_Sound(SE_WINNER0, 1, 0);
+		PlaySound(SE_WINNER0, 1, 0);
 	}
 	// ゲームパッドで移動処理
 	else if (IsButtonTriggered(0, BUTTON_M))
 	{
 		SetPhase(PhaseResult);
-		Play_Sound(SE_WINNER0, 1, 0);
+		PlaySound(SE_WINNER0, 1, 0);
 	}
 
 	if (knockout->use == true)

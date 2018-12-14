@@ -11,9 +11,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexESpGuage(void);
-void SetTextureESpGuage(int cntPattern);
-void SetVertexESpGuage(void);
 
 //*****************************************************************************
 // グローバル変数
@@ -113,7 +110,6 @@ void DrawESpGuage(void)
 //=============================================================================
 HRESULT MakeVertexESpGuage(void)
 {
-
 	// 頂点座標の設定
 	SetVertexESpGuage();
 
@@ -143,7 +139,6 @@ HRESULT MakeVertexESpGuage(void)
 //=============================================================================
 void SetTextureESpGuage(int cntPattern)
 {
-
 	int x = cntPattern % ESPGUAGE_PATTERN_DIVIDE_X;
 	int y = cntPattern / ESPGUAGE_PATTERN_DIVIDE_X;
 	float sizeX = 1.0f / ESPGUAGE_PATTERN_DIVIDE_X;

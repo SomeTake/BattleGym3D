@@ -398,6 +398,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitInput(hInstance, hWnd);
 	InitCamera();
 	InitLight();
+	InitSound(hWnd);
 	// フィールドの大きさ指定
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 0);
 	InitShadow(0);
@@ -459,8 +460,7 @@ void Uninit(void)
 
 	// 入力処理の終了処理
 	UninitInput();
-
-	Uninit_Sound();
+	UninitSound();
 
 	// モデルの終了処理
 	UninitPlayer();
@@ -720,6 +720,13 @@ void Draw(int no)
 			break;
 
 		case PhaseTraining:
+			//エフェクト
+			DrawParticle();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
 			//BG
 			DrawMeshField();
 
@@ -729,13 +736,6 @@ void Draw(int no)
 			DrawGuage();
 			DrawEGuage();
 			DrawFrame();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
 
 			//画面下のUI
 			DrawSpGuage();
@@ -746,6 +746,13 @@ void Draw(int no)
 			break;
 
 		case PhaseTutorial:
+			//エフェクト
+			DrawParticle();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
 			//BG
 			DrawMeshField();
 
@@ -755,13 +762,6 @@ void Draw(int no)
 			DrawGuage();
 			DrawEGuage();
 			DrawFrame();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
 
 			//画面下のUI
 			DrawSpGuage();
@@ -773,6 +773,13 @@ void Draw(int no)
 			break;
 
 		case PhasePause:
+			//エフェクト
+			DrawParticle();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
 			//BG
 			DrawMeshField();
 
@@ -785,13 +792,6 @@ void Draw(int no)
 			DrawEGuage();
 			DrawFrame();
 			DrawTimer();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
 
 			//画面下のUI
 			DrawSpGuage();
@@ -807,6 +807,13 @@ void Draw(int no)
 			break;
 
 		case PhaseTrainingPause:
+			//エフェクト
+			DrawParticle();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
 			//BG
 			DrawMeshField();
 
@@ -816,13 +823,6 @@ void Draw(int no)
 			DrawGuage();
 			DrawEGuage();
 			DrawFrame();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
 
 			//画面下のUI
 			DrawSpGuage();
@@ -838,6 +838,13 @@ void Draw(int no)
 			break;
 
 		case PhaseCountdown:
+			//エフェクト
+			DrawParticle();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
 			//BGなど
 			DrawMeshField();
 
@@ -851,13 +858,6 @@ void Draw(int no)
 			DrawFrame();
 			DrawTimer();
 
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
-
 			//画面下のUI
 			DrawSpGuage();
 			DrawESpGuage();
@@ -868,6 +868,9 @@ void Draw(int no)
 			break;
 
 		case PhaseGame:
+			//エフェクト
+			DrawParticle();
+
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
@@ -884,9 +887,6 @@ void Draw(int no)
 			DrawEGuage();
 			DrawFrame();
 			DrawTimer();
-
-			//エフェクト
-			DrawParticle();
 
 			//画面下のUI
 			DrawSpGuage();
@@ -897,6 +897,13 @@ void Draw(int no)
 			break;
 
 		case PhaseFinish:
+			//エフェクト
+			DrawParticle();
+
+			// キャラクター等
+			DrawEnemy();
+			DrawPlayer();
+
 			//BG
 			DrawMeshField();
 
@@ -909,13 +916,6 @@ void Draw(int no)
 			DrawEGuage();
 			DrawFrame();
 			DrawTimer();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
 
 			//画面下のUI
 			DrawSpGuage();
@@ -927,11 +927,12 @@ void Draw(int no)
 			break;
 
 		case PhaseResult:
-			//BG
-			DrawMeshField();
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			//BG
+			DrawMeshField();
 
 			//ドローゲームの場合
 			if (playerWk->HPzan == enemyWk->HPzan)

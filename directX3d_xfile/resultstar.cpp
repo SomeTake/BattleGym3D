@@ -15,10 +15,6 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT MakeVertexResultstar(int bno);
-void SetTextureResultstar(int cntPattern, int bno);
-void SetVertexResultstar(int bno);
-
 
 //*****************************************************************************
 // グローバル変数
@@ -32,8 +28,6 @@ RESULTSTAR resultstar[STAR_MAX];
 //=============================================================================
 HRESULT InitResultstar(int type)
 {
-	int i;
-	RESULTSTAR *resultstar = GetResultstar(0);	//0番からSTAR_MAX-1番までの弾をセット
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
 	if (type == 0)
@@ -47,21 +41,18 @@ HRESULT InitResultstar(int type)
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	// リザルトスターの初期化
-	for (i = 0; i < STAR_MAX; i++, resultstar++)
-	{
-		resultstar->use = true;
-		resultstar->pos = D3DXVECTOR3(STAR_SIZE_X / 2, STAR_SIZE_Y / 2, 0.0f);
-		resultstar->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		resultstar->angle = atan2f(resultstar->pos.y - 0.0f, resultstar->pos.x - 0.0f);
-		D3DXVECTOR2 temp = D3DXVECTOR2(STAR_SIZE_X / 2, STAR_SIZE_Y / 2);
-		resultstar->radius = D3DXVec2Length(&temp);
-		resultstar->CountAnim = 0;
-		resultstar->PatternAnim = 0;
+	resultstar->use = true;
+	resultstar->pos = D3DXVECTOR3(STAR_SIZE_X / 2, STAR_SIZE_Y / 2, 0.0f);
+	resultstar->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	resultstar->angle = atan2f(resultstar->pos.y - 0.0f, resultstar->pos.x - 0.0f);
+	D3DXVECTOR2 temp = D3DXVECTOR2(STAR_SIZE_X / 2, STAR_SIZE_Y / 2);
+	resultstar->radius = D3DXVec2Length(&temp);
+	resultstar->CountAnim = 0;
+	resultstar->PatternAnim = 0;
 
-		// 頂点情報の作成
-		MakeVertexResultstar(i);
+	// 頂点情報の作成
+	MakeVertexResultstar();
 
-	}
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	return S_OK;
@@ -72,16 +63,10 @@ HRESULT InitResultstar(int type)
 //=============================================================================
 void UninitResultstar(void)
 {
-	int i;
-	RESULTSTAR *resultstar = GetResultstar(0);
-
-	for (i = 0; i < STAR_MAX; i++, resultstar++)
-	{
-		if (g_pD3DTextureResultstar != NULL)	//
-		{	// テクスチャの開放
-			g_pD3DTextureResultstar->Release();
-			g_pD3DTextureResultstar = NULL;
-		}
+	if (g_pD3DTextureResultstar != NULL)
+	{	// テクスチャの開放
+		g_pD3DTextureResultstar->Release();
+		g_pD3DTextureResultstar = NULL;
 	}
 }
 
@@ -90,32 +75,26 @@ void UninitResultstar(void)
 //=============================================================================
 void UpdateResultstar(void)
 {
-	int i;
-	RESULTSTAR *resultstar = GetResultstar(0);
-
-	for (i = 0; i < STAR_MAX; i++, resultstar++)
+	if (resultstar->use == true)
 	{
-		if (resultstar->use == true)
+		// アニメーション
+		resultstar->CountAnim++;
+
+		//アニメーションwaitチェック
+		if ((resultstar->CountAnim % TIME_ANIMATION_STAR) == 0)
 		{
-			// アニメーション
-			resultstar->CountAnim++;
+			//パターンの切り替え
+			resultstar->PatternAnim = 1;
 
-			//アニメーションwaitチェック
-			if ((resultstar->CountAnim % TIME_ANIMATION_STAR) == 0)
-			{
-				//パターンの切り替え
-				resultstar->PatternAnim = 1;
-
-				//テクスチャ座標をセット
-				SetTextureResultstar(resultstar->PatternAnim, i);
-			}
-
-			//回転処理
-			resultstar->rot.z += 0.01f;
-
+			//テクスチャ座標をセット
+			SetTextureResultstar(resultstar->PatternAnim);
 		}
-		SetVertexResultstar(i);
+
+		//回転処理
+		resultstar->rot.z += 0.01f;
+
 	}
+	SetVertexResultstar();
 }
 
 //=============================================================================
@@ -128,28 +107,22 @@ void DrawResultstar(void)
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
-	int i;
-	RESULTSTAR *resultstar = GetResultstar(0);
-	for (i = 0; i < STAR_MAX; i++, resultstar++)
+	if (resultstar->use == true)
 	{
-		if (resultstar->use == true)
-		{
-			// テクスチャの設定(ポリゴンの描画前に読み込んだテクスチャのセットを行う)
-			// テクスチャのセットをしないと前にセットされたテクスチャが貼られる→何もはらないことを指定するpDevide->SetTexture(0, NULL);
-			pDevice->SetTexture(0, g_pD3DTextureResultstar);
+		// テクスチャの設定(ポリゴンの描画前に読み込んだテクスチャのセットを行う)
+		// テクスチャのセットをしないと前にセットされたテクスチャが貼られる→何もはらないことを指定するpDevide->SetTexture(0, NULL);
+		pDevice->SetTexture(0, g_pD3DTextureResultstar);
 
-			// ポリゴンの描画
-			pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, resultstar->vertexWk, sizeof(VERTEX_2D));
-		}
+		// ポリゴンの描画
+		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, resultstar->vertexWk, sizeof(VERTEX_2D));
 	}
 }
 
 //=============================================================================
 // 頂点の作成
 //=============================================================================
-HRESULT MakeVertexResultstar(int sno)
+HRESULT MakeVertexResultstar(void)
 {
-	RESULTSTAR *resultstar = GetResultstar(sno);
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
 	// 頂点座標の設定
@@ -182,9 +155,8 @@ HRESULT MakeVertexResultstar(int sno)
 //=============================================================================
 // テクスチャ座標の設定
 //=============================================================================
-void SetTextureResultstar(int cntPattern, int sno)
+void SetTextureResultstar(int cntPattern)
 {
-	RESULTSTAR *resultstar = GetResultstar(sno);
 	int x = cntPattern % TEXTURE_PATTERN_DIVIDE_STAR_X;
 	int y = cntPattern / TEXTURE_PATTERN_DIVIDE_STAR_X;
 	float sizeX = 1.0f / TEXTURE_PATTERN_DIVIDE_STAR_X;
@@ -200,10 +172,8 @@ void SetTextureResultstar(int cntPattern, int sno)
 //=============================================================================
 // 頂点座標の設定
 //=============================================================================
-void SetVertexResultstar(int sno)
+void SetVertexResultstar(void)
 {
-	RESULTSTAR *resultstar = GetResultstar(sno);
-
 	// 頂点座標の設定
 	resultstar->vertexWk[0].vtx.x = resultstar->pos.x - cosf(resultstar->angle + resultstar->rot.z) * resultstar->radius + STAR_POS_X;
 	resultstar->vertexWk[0].vtx.y = resultstar->pos.y - sinf(resultstar->angle + resultstar->rot.z) * resultstar->radius + STAR_POS_Y;
@@ -217,10 +187,4 @@ void SetVertexResultstar(int sno)
 	resultstar->vertexWk[3].vtx.x = resultstar->pos.x + cosf(resultstar->angle + resultstar->rot.z) * resultstar->radius + STAR_POS_X;
 	resultstar->vertexWk[3].vtx.y = resultstar->pos.y + sinf(resultstar->angle + resultstar->rot.z) * resultstar->radius + STAR_POS_Y;
 
-}
-
-//スターの情報を取得する
-RESULTSTAR *GetResultstar(int sno)
-{
-	return &resultstar[sno];
 }

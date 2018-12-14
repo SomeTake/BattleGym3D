@@ -10,7 +10,6 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_FILENAME	"data/TEXTURE/field004.jpg"		// 読み込むテクスチャファイル名
 
 //*****************************************************************************
 // グローバル変数
@@ -46,7 +45,7 @@ HRESULT InitMeshField(D3DXVECTOR3 pos, D3DXVECTOR3 rot,
 	{
 		// テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,					// デバイスへのポインタ
-			TEXTURE_FILENAME,		// ファイルの名前
+			TEXTURE_MESHFIELD,		// ファイルの名前
 			&g_pD3DTextureField);	// 読み込むメモリー
 	}
 
@@ -193,14 +192,7 @@ void UninitMeshField(void)
 //=============================================================================
 void UpdateMeshField(void)
 {
-	//bool *Switch = GetSwitch(0);
 
-	//if (GetKeyboardTrigger(DIK_RETURN))
-	//{
-	//	//ロードをするたび呼び出すぜ
-	//	Switch[SWITCH_TYPE_LOADING] = true;
-	//	Switch[SWITCH_TYPE_CREATE_THREAD] = true;
-	//}
 }
 
 //=============================================================================

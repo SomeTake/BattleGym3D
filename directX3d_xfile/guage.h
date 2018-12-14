@@ -10,9 +10,9 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_GUAGE			_T("data/TEXTURE/hpguage000.png")			// 読み込むテクスチャファイル名
-#define	GUAGE_POS_X				(100)										// ゲージの表示位置
-#define	GUAGE_POS_Y				(50)										// ゲージの表示位置
+#define	TEXTURE_GUAGE			_T("data/TEXTURE/hpguage000.png")		// 読み込むテクスチャファイル名
+#define	GUAGE_POS_X				(100)									// ゲージの表示位置
+#define	GUAGE_POS_Y				(50)									// ゲージの表示位置
 #define	GUAGE_SIZE_X			(500)									// ゲージの幅
 #define	GUAGE_SIZE_Y			(50)									// ゲージの高さ
 #define GUAGE_PATTERN_DIVIDE_X	(1)										// アニメパターンのテクスチャ内分割数（X)
@@ -37,5 +37,8 @@ HRESULT InitGuage(int type);
 void UninitGuage(void);
 void UpdateGuage(void);
 void DrawGuage(void);
+HRESULT MakeVertexGuage(void);
+void SetTextureGuage(int cntPattern);
+void SetVertexGuage(void);
 
 #endif

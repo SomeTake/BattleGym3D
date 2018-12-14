@@ -28,7 +28,7 @@ typedef struct {
 	int						CountAnim;						// アニメーションカウント
 	int						PatternAnim;					// アニメーションパターンナンバー
 	bool					use;							// プレイヤーの使用判定
-	int						red;							// 赤ゲージ
+	int						value;							// 赤ゲージをHPゲージと合わせるときに増減させる
 }EREDGUAGE;
 
 //*****************************************************************************
@@ -38,6 +38,9 @@ HRESULT InitERedGuage(int type);
 void UninitERedGuage(void);
 void UpdateERedGuage(void);
 void DrawERedGuage(void);
-EREDGUAGE *GetERedGuage(int eno);
+HRESULT MakeVertexERedGuage(void);
+void SetTextureERedGuage(int cntPattern);
+void SetVertexERedGuage(void);
+EREDGUAGE *GetERedGuage(int eno);		// EREDGAUGE構造体のゲッター
 
 #endif
