@@ -11,7 +11,7 @@
 // マクロ定義
 //*****************************************************************************
 #define	PLAYER_XFILE		"data/MODEL/kicking/kicking.x"			// 読み込むモデル名(ファイルパス名)
-#define TEXTURE_FILENAME	"data/TEXTURE/00tex_master.BMP"				// テクスチャの名前
+//#define TEXTURE_FILENAME	"data/TEXTURE/00tex_master.BMP"				// テクスチャの名前
 
 #define PLAYER_JUMP_SPEED	(10.0f)										// ジャンプの初速
 

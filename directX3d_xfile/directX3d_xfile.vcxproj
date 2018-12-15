@@ -161,6 +161,7 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="meshfield.h" />
+    <ClInclude Include="meshwall.h" />
     <ClInclude Include="modeselect.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="pause.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meshfield.cpp" />
+    <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="modeselect.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />

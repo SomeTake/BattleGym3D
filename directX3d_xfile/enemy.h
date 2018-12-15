@@ -12,7 +12,7 @@
 //*****************************************************************************
 //#define	ENEMY_XFILE		"data/MODEL/Rare.x"						// 読み込むモデル名(ファイルパス名)
 #define ENEMY_XFILE		"data/MODEL/punching/punching.x"
-#define TEXTURE_FILENAME	"data/TEXTURE/00tex_master.BMP"				// テクスチャの名前
+//#define TEXTURE_FILENAME	"data/TEXTURE/00tex_master.BMP"				// テクスチャの名前
 
 #define ENEMY_JUMP_SPEED	(10.0f)	//ジャンプの初速
 

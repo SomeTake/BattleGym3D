@@ -41,6 +41,7 @@
 #include "tutorial.h"
 #include "winner.h"
 #include "sound.h"
+#include "meshwall.h"
 
 
 //*****************************************************************************
@@ -401,6 +402,27 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitSound(hWnd);
 	// フィールドの大きさ指定
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 0);
+	
+	// 壁の初期化
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 640.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(-640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -640.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
+
+	// 壁(裏側用)
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 640.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(-640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -640.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	
 	InitShadow(0);
 	InitPlayer(0);
 	InitEnemy(0);
@@ -466,6 +488,7 @@ void Uninit(void)
 	UninitPlayer();
 	UninitEnemy();
 	UninitMeshField();
+	UninitMeshWall();
 	UninitShadow();
 	UninitParticle();
 	UninitScore();
@@ -553,6 +576,7 @@ void Update(void)
 		UpdateERedGuage();
 		UpdateTutorial();
 		UpdateMeshField();
+		UpdateMeshWall();
 		UpdatePlayer();
 		UpdateEnemy();
 		UpdateCamera();
@@ -574,6 +598,7 @@ void Update(void)
 		UpdateRedGuage();
 		UpdateERedGuage();
 		UpdateMeshField();
+		UpdateMeshWall();
 		UpdatePlayer();
 		UpdateEnemy();
 		UpdateCamera();
@@ -611,6 +636,7 @@ void Update(void)
 		UpdateERedGuage();
 		UpdateCountdown();
 		UpdateMeshField();
+		UpdateMeshWall();
 		UpdateCamera();
 		UpdateShadow();
 		UpdateParticle();
@@ -619,6 +645,7 @@ void Update(void)
 
 	case PhaseGame:
 		UpdateMeshField();
+		UpdateMeshWall();
 		UpdatePlayer();
 		UpdateEnemy();
 		UpdateCamera();
@@ -656,6 +683,7 @@ void Update(void)
 		UpdateERedGuage();
 		UpdateKnockout();
 		UpdateMeshField();
+		UpdateMeshWall();
 		UpdateCamera();
 		UpdateShadow();
 		UpdateParticle();
@@ -720,15 +748,16 @@ void Draw(int no)
 			break;
 
 		case PhaseTraining:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//画面上のUI
 			DrawRedGuage();
@@ -746,15 +775,16 @@ void Draw(int no)
 			break;
 
 		case PhaseTutorial:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//画面上のUI
 			DrawRedGuage();
@@ -773,15 +803,16 @@ void Draw(int no)
 			break;
 
 		case PhasePause:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//画面上のUI
 			DrawScore();
@@ -807,15 +838,16 @@ void Draw(int no)
 			break;
 
 		case PhaseTrainingPause:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//画面上のUI
 			DrawRedGuage();
@@ -838,15 +870,16 @@ void Draw(int no)
 			break;
 
 		case PhaseCountdown:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BGなど
-			DrawMeshField();
 
 			//画面上のUI
 			DrawScore();
@@ -868,15 +901,16 @@ void Draw(int no)
 			break;
 
 		case PhaseGame:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//画面上のUI
 			DrawScore();
@@ -897,15 +931,16 @@ void Draw(int no)
 			break;
 
 		case PhaseFinish:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			//エフェクト
 			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//画面上のUI
 			DrawScore();
@@ -927,12 +962,13 @@ void Draw(int no)
 			break;
 
 		case PhaseResult:
+			//BG
+			DrawMeshField();
+			DrawMeshWall();
+
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
-
-			//BG
-			DrawMeshField();
 
 			//ドローゲームの場合
 			if (playerWk->HPzan == enemyWk->HPzan)
