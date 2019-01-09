@@ -69,15 +69,17 @@ void UninitTutorial(void)
 //=============================================================================
 void UpdateTutorial(void)
 {
-	if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(0, BUTTON_Z))
+	for (int ControllerCount = 0; ControllerCount < GAMEPADMAX; ControllerCount++)
 	{
-		SetTextureTutorial(1);
+		if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(ContorllerCount, BUTTON_Z))
+		{
+			SetTextureTutorial(1);
+		}
+		else
+		{
+			SetTextureTutorial(0);
+		}
 	}
-	else
-	{
-		SetTextureTutorial(0);
-	}
-
 	SetVertexTutorial();	// ˆÚ“®Œã‚ÌÀ•W‚Å’¸“_‚ðÝ’è
 
 }

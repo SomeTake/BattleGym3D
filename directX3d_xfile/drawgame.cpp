@@ -62,18 +62,21 @@ void UpdateDrawgame(void)
 {
 	StopSound(BGM_BATTLE, 0);
 
-	if (GetKeyboardTrigger(DIK_RETURN))
-	{// Enter押したら、ステージを切り替える
-	 //ゲームループのための再初期化
-		ReInit();
-		SetPhase(PhaseCountdown);
-	}
-	// ゲームパッドで移動処理
-	else if (IsButtonTriggered(0, BUTTON_M))
+	for (int ControllerCount = 0; ControllerCount < 2; ControllerCount++)
 	{
-		//ゲームループのための再初期化
-		ReInit();
-		SetPhase(PhaseCountdown);
+		if (GetKeyboardTrigger(DIK_RETURN))
+		{// Enter押したら、ステージを切り替える
+		 //ゲームループのための再初期化
+			ReInit();
+			SetPhase(PhaseCountdown);
+		}
+		// ゲームパッドで移動処理
+		else if (IsButtonTriggered(ControllerCount, BUTTON_M))
+		{
+			//ゲームループのための再初期化
+			ReInit();
+			SetPhase(PhaseCountdown);
+		}
 	}
 }
 

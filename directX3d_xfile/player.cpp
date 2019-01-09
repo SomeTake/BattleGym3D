@@ -335,8 +335,8 @@ void UpdatePlayer(void)
 	switch (playerWk.NextAction)
 	{
 	case Idle_P:
-		// ボタンリリースで待機状態に戻るアクション
-		if (playerWk.Action != Idle_P/* || playerWk.Action == Frontwalk_P || playerWk.Action == Backwalk_P*/)
+		// 他アクションからボタンリリースで待機状態に戻る
+		if (playerWk.Action != Idle_P)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 0.1f);
 			playerWk.Action = Idle_P;

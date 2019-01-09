@@ -79,16 +79,19 @@ void UpdateKnockout(void)
 
 	StopSound(BGM_BATTLE, 0);
 
-	if (GetKeyboardTrigger(DIK_RETURN))
-	{// Enter押したら、ステージを切り替える
-		SetPhase(PhaseResult);
-		PlaySound(SE_WINNER0, 1, 0);
-	}
-	// ゲームパッドで移動処理
-	else if (IsButtonTriggered(0, BUTTON_M))
+	for (int ControllerCount = 0; ControllerCount < GAMEPADMAX; ControllerCount++)
 	{
-		SetPhase(PhaseResult);
-		PlaySound(SE_WINNER0, 1, 0);
+		if (GetKeyboardTrigger(DIK_RETURN))
+		{// Enter押したら、ステージを切り替える
+			SetPhase(PhaseResult);
+			PlaySound(SE_WINNER0, 1, 0);
+		}
+		// ゲームパッドで移動処理
+		else if (IsButtonTriggered(ControllerCount, BUTTON_M))
+		{
+			SetPhase(PhaseResult);
+			PlaySound(SE_WINNER0, 1, 0);
+		}
 	}
 
 	if (knockout->use == true)
