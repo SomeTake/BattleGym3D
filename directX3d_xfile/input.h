@@ -43,7 +43,7 @@
 #define BUTTON_R		0x00000800l	// Ｒボタン(.rgbButtons[7]&0x80) PS4コンR2ボタン
 #define BUTTON_START	0x00001000l	// ＳＴＡＲＴボタン(.rgbButtons[8]&0x80) PS4コンSHAREボタン
 #define BUTTON_M		0x00002000l	// Ｍボタン(.rgbButtons[9]&0x80) PS4コンOPTIONSボタン
-#define GAMEPADMAX		4			// 同時に接続するジョイパッドの最大数をセット
+#define GAMEPADMAX		2			// 同時に接続するジョイパッドの最大数をセット
 
 #define REPEAT_FRAME	(16)		// ボタンのリピートを有効にするまでのフレーム数
 #define REPEAT_TIME		(6)			// リピートが有効になってからのフレーム数

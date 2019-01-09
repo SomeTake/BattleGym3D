@@ -56,7 +56,7 @@ static DIMOUSESTATE2   mouseTrigger;	// 押された瞬間だけON
 
 										//--------------------------------- game pad
 
-static LPDIRECTINPUTDEVICE8	pGamePad[GAMEPADMAX] = { NULL,NULL,NULL,NULL };// パッドデバイス
+static LPDIRECTINPUTDEVICE8	pGamePad[GAMEPADMAX] = { NULL,NULL };// パッドデバイス
 
 static DWORD	padState[GAMEPADMAX];	// パッド情報（複数対応）
 static DWORD	padRepeat[GAMEPADMAX];

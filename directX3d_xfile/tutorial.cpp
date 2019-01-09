@@ -71,7 +71,7 @@ void UpdateTutorial(void)
 {
 	for (int ControllerCount = 0; ControllerCount < GAMEPADMAX; ControllerCount++)
 	{
-		if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(ContorllerCount, BUTTON_Z))
+		if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(ControllerCount, BUTTON_Z))
 		{
 			SetTextureTutorial(1);
 		}

@@ -9,7 +9,7 @@
 
 #include "main.h"
 
-#define	TEXTURE_MESHFIELD	"data/TEXTURE/field004.jpg"		// 読み込むテクスチャファイル名
+#define	TEXTURE_MESHFIELD	"data/TEXTURE/mokume.jpg"		// 読み込むテクスチャファイル名
 
 //*****************************************************************************
 // プロトタイプ宣言
