@@ -25,7 +25,7 @@ REDGUAGE redguage[REDGUAGE_MAX];
 HRESULT InitRedGuage(int type)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 
 	if (type == 0)
 	{
@@ -136,7 +136,7 @@ HRESULT MakeVertexRedGuage(void)
 //=============================================================================
 void SetTextureRedGuage(int cntPattern)
 {
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 
 	if (redguage->value > player->HPzan)
 	{
@@ -166,7 +166,7 @@ void SetTextureRedGuage(int cntPattern)
 //=============================================================================
 void SetVertexRedGuage(void)
 {
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 
 	// ’¸“_À•W‚ÌÝ’è
 	redguage->vertexWk[0].vtx = D3DXVECTOR3(redguage->pos.x + REDGUAGE_SIZE_X * ((float)(player->HP - redguage->value) / player->HP), redguage->pos.y, redguage->pos.z);

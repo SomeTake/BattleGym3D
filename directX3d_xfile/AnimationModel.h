@@ -9,6 +9,7 @@
 
 #include "D3DXAnimation.h"
 
+#if 0
 typedef struct 
 {
 	UINT uiAnimID;                 // アニメーションID
@@ -71,5 +72,6 @@ public:
 	LPD3DXANIMATIONSET GetAnimationSet(int index) const;
 
 };
+#endif
 
 #endif

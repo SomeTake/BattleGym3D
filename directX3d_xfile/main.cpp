@@ -524,8 +524,8 @@ void Uninit(void)
 //=============================================================================
 void Update(void)
 {
-	PLAYER *playerWk = GetPlayer(0);
-	ENEMY *enemyWk = GetEnemy(0);
+	PLAYER *playerWk = GetPlayer();
+	ENEMY *enemyWk = GetEnemy();
 
 	//画面分割数の入力
 	if (GetKeyboardTrigger(DIK_1))
@@ -723,8 +723,8 @@ void Update(void)
 //=============================================================================
 void Draw(int no)
 {
-	PLAYER *playerWk = GetPlayer(0);
-	ENEMY *enemyWk = GetEnemy(0);
+	PLAYER *playerWk = GetPlayer();
+	ENEMY *enemyWk = GetEnemy();
 
 	// バックバッファ＆Ｚバッファのクリア
 	g_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);

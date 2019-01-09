@@ -21,39 +21,30 @@
 
 CAMERA cameraWk[MAX_SEPARATE];
 
+D3DXVECTOR3 CenterPos;				// プレイヤーとエネミーの間の位置
+
 //=============================================================================
 // カメラの初期化処理
 //=============================================================================
 void InitCamera(void)
 {
-	PLAYER *playerWk = GetPlayer(0);
-	ENEMY *enemyWk = GetEnemy(0);
+	PLAYER *playerWk = GetPlayer();
+	ENEMY *enemyWk = GetEnemy();
 	CAMERA *cameraWk = GetCamera(0);
 
-	for (int i = 0; i < MAX_SEPARATE; i++, cameraWk++)
-	{
-		cameraWk->pos = D3DXVECTOR3(POS_X_CAM, POS_Y_CAM, POS_Z_CAM);
-		if (i == 0)
-		{
-			cameraWk->at = playerWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);
-		}
-		else if (i == 1)
-		{
-			cameraWk->at = enemyWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);
-		}
-		else
-		{
-			cameraWk->at = playerWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);
-		}
-	
-		cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-		cameraWk->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	CenterPos = (playerWk->pos + enemyWk->pos) * 0.5f;
+	cameraWk->pos = D3DXVECTOR3(POS_X_CAM, POS_Y_CAM, POS_Z_CAM);
+	cameraWk->at = CenterPos + D3DXVECTOR3(AT_X_CAM, AT_Y_CAM, AT_Z_CAM);
 
-		float vx, vz;
-		vx = cameraWk->pos.x - cameraWk->at.x;
-		vz = cameraWk->pos.z - cameraWk->at.z;
-		cameraWk->distance = sqrtf(vx * vx + vz * vz);
-	}
+	cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	cameraWk->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	// 注視点からカメラの位置までの距離計測
+	float vx, vz;
+	vx = cameraWk->pos.x - cameraWk->at.x;
+	vz = cameraWk->pos.z - cameraWk->at.z;
+	cameraWk->distance = sqrtf(vx * vx + vz * vz);
+
 }
 
 //=============================================================================
@@ -61,78 +52,45 @@ void InitCamera(void)
 //=============================================================================
 void UpdateCamera(void)
 {
-	PLAYER *playerWk = GetPlayer(0);
-	ENEMY *enemyWk = GetEnemy(0);
+	PLAYER *playerWk = GetPlayer();
+	ENEMY *enemyWk = GetEnemy();
 	CAMERA *cameraWk = GetCamera(0);
 
 	static float x = POS_X_CAM;
 	static float y = POS_Y_CAM;
 	static float z = POS_Z_CAM;
 
-	for (int i = 0; i < MAX_SEPARATE; i++, cameraWk++)
+	// PとEの中心位置
+	CenterPos = (playerWk->pos + enemyWk->pos) * 0.5f;
+
+	// PとEの距離計測
+	D3DXVECTOR3 unit = playerWk->pos - enemyWk->pos;	// PE間のベクトル
+	float PEdistance = D3DXVec3Length(&unit);			// PE間の距離
+	D3DXVec3Normalize(&unit, &unit);					// 正規化する
+
+	// PとEの座標の中点から、PとEの座標をそれぞれ結んだ線分に対して垂直に移動した位置をカメラ位置とする
+	D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * PEdistance, AT_Y_CAM + POS_Y_CAM, CenterPos.z + unit.x * PEdistance);
+	cameraWk->pos = ViewFrom;
+
+	// カメラの注視点と位置の距離指定
+	if (PEdistance <= POS_Z_CAM)
 	{
-		// カメラのY軸回転
-		if (GetKeyboardPress(DIK_RIGHT))
-		{
-			cameraWk->rot.y -= VALUE_ROTATE;
-			if (cameraWk->rot.y < -D3DX_PI)
-			{
-				cameraWk->rot.y = D3DX_PI;
-			}
-			x = cameraWk->distance * sinf(cameraWk->rot.y);
-			z = cameraWk->distance * cosf(cameraWk->rot.y);
-		}
-		else if (GetKeyboardPress(DIK_LEFT))
-		{
-			cameraWk->rot.y += VALUE_ROTATE;
-			if (cameraWk->rot.y > D3DX_PI)
-			{
-				cameraWk->rot.y = -D3DX_PI;
-			}
-			x = cameraWk->distance * sinf(cameraWk->rot.y);
-			z = cameraWk->distance * cosf(cameraWk->rot.y);
-		}
-
-		// カメラの注視点と視点の距離変更
-		if (GetKeyboardPress(DIK_UP))
-		{
-			if (cameraWk->distance > 5.0f)
-			{
-				cameraWk->distance -= 5.0f;
-			}
-			else if (cameraWk->distance == 5.0f)
-			{
-				cameraWk->distance = 1.0f;
-			}
-			else if (cameraWk->distance < 5.0f)
-			{
-				cameraWk->distance = 1.0f;
-			}
-			x = cameraWk->distance * sinf(cameraWk->rot.y);
-			z = cameraWk->distance * cosf(cameraWk->rot.y);
-		}
-		else if (GetKeyboardPress(DIK_DOWN))
-		{
-			cameraWk->distance += 5.0f;
-			x = cameraWk->distance * sinf(cameraWk->rot.y);
-			z = cameraWk->distance * cosf(cameraWk->rot.y);
-		}
-
-		cameraWk->pos = cameraWk->at + D3DXVECTOR3(x, y, z);				// カメラの位置（視点）
-		if (i == 0)
-		{
-			cameraWk->at = playerWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);	// カメラの注視点＝モデルの中心点
-		}
-		else if(i == 1)
-		{ 
-			cameraWk->at = enemyWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);	// カメラの注視点＝モデルの中心点
-		}
-		else
-		{
-			cameraWk->at = playerWk->pos + D3DXVECTOR3(0.0f, POS_Y_CAM, 0.0f);	// カメラの注視点＝モデルの中心点
-		}
-		cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);						// 3D空間の上方向はどちら？＝Yが＋方向が上
+		cameraWk->distance = POS_Z_CAM;
 	}
+	else
+	{
+		cameraWk->distance = PEdistance;
+	}
+
+	//x = cameraWk->distance * sinf(cameraWk->rot.y);
+	//z = cameraWk->distance * cosf(cameraWk->rot.y);
+	//x = unit.z * PEdistance;
+	//z = unit.x * PEdistance;
+
+	cameraWk->rot.y = atan2f(cameraWk->at.x - cameraWk->pos.x, cameraWk->at.z - cameraWk->pos.z) + D3DX_PI;	// カメラの回転（常に注視点を向き続ける）
+	//cameraWk->pos = cameraWk->at + D3DXVECTOR3(x, y, z);													// カメラの位置（視点）
+	cameraWk->at = CenterPos + D3DXVECTOR3(AT_X_CAM, AT_Y_CAM, AT_Z_CAM);									// カメラの注視点＝モデルの中心点
+	cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);															// 3D空間の上方向はどちら？＝Yが＋方向が上
 }
 
 //=============================================================================
@@ -177,4 +135,12 @@ void SetCamera(int no)
 CAMERA *GetCamera(int cno)
 {
 	return &cameraWk[cno];
+}
+
+//=============================================================================
+//PとEのの中心位置を取得する
+//=============================================================================
+D3DXVECTOR3 GetCenterPos(void)
+{
+	return CenterPos;
 }

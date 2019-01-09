@@ -70,8 +70,8 @@ void UninitEvaluation(void)
 //=============================================================================
 void UpdateEvaluation(void)
 {
-	PLAYER *player = GetPlayer(0);
-	ENEMY *enemy = GetEnemy(0);
+	PLAYER *player = GetPlayer();
+	ENEMY *enemy = GetEnemy();
 	ESCORE *escore = GetEScore(0);
 	SCORE *score = GetScore(0);
 

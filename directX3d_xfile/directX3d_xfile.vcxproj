@@ -137,7 +137,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationModel.h" />
     <ClInclude Include="blackscreen.h" />
     <ClInclude Include="CAllocateHierarchy.h" />
     <ClInclude Include="camera.h" />
@@ -180,7 +179,6 @@
     <ClInclude Include="winner.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationModel.cpp" />
     <ClCompile Include="blackscreen.cpp" />
     <ClCompile Include="CAllocateHierarchy.cpp" />
     <ClCompile Include="camera.cpp" />

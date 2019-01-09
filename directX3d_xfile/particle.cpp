@@ -112,7 +112,7 @@ void UninitParticle(void)
 void UpdateParticle(void)
 {
 	PARTICLE *particle = GetParticle(0);
-	PLAYER *playerWk = GetPlayer(0);
+	PLAYER *playerWk = GetPlayer();
 
 	//============================================================================
 	// ñÇñ@êwÇ¡Ç€Ç¢ÇÃ

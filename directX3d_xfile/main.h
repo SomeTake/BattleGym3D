@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <tchar.h>
+#include <stdio.h>
 
 #define DIRECTINPUT_VERSION (0x0800)	// 警告対策
 #include "dinput.h"
@@ -48,6 +49,8 @@
 #define SCREEN_CENTER_X	(SCREEN_WIDTH / 2)								// ウインドウの中心Ｘ座標
 #define SCREEN_CENTER_Y	(SCREEN_HEIGHT / 2)								// ウインドウの中心Ｙ座標
 
+#define TIME_PER_FRAME	(1/60.0f)										// 1/60秒
+
 #define	NUM_VERTEX		(4)												// 頂点数
 #define	NUM_POLYGON		(2)												// ポリゴン数
 
@@ -56,8 +59,8 @@
 #define	VIEW_NEAR_Z		(10.0f)											// ビュー平面のNearZ値
 #define	VIEW_FAR_Z		(1000.0f)										// ビュー平面のFarZ値
 
-#define	VALUE_MOVE		(2.00f)											// 移動量
-#define	VALUE_ROTATE	(D3DX_PI * 0.02f)								// 回転量
+#define	VALUE_MOVE		(1.00f)											// 移動量
+#define	VALUE_ROTATE	(D3DX_PI * 1.00f)								// 回転量
 #define VALUE_ENLARGEMENT	(0.1f)										// 拡大・縮小量
 #define	VALUE_ROTATE_MODEL	(D3DX_PI * 0.05f)							// 回転速度
 
@@ -67,18 +70,29 @@
 #define MAX_SEPARATE	(4)												// 画面分割数の最大
 #define TRANSPARENCY	(0.3f)											// 透明度の設定
 
-//タイトル画面
+// タイトル画面
 #define MODESELECT_POS_X					(450)						// 表示位置
 #define MODESELECT_POS_Y					(434)						// 表示位置
 
-//ポーズ画面
+// ポーズ画面
 #define PAUSESELECT_POS_X					(450)						// 表示位置
 #define PAUSESELECT_POS_Y					(223)						// 表示位置
 
+// ステータス関係
+#define FULL_HP								(1000)						// ゲージの最大値
+#define FULL_SPGUAGE						(1000)						// ゲージの最大値
+#define JUMP_SPEED							(30.0f)						// ジャンプの初速
+#define DAMAGE_PUNCHI						(40)						// ダメージ量
+#define DAMAGE_KICK							(50)						// ダメージ量
+#define DAMAGE_HADOU						(100)						// ダメージ量
+#define DAMAGE_SHORYU						(120)						// ダメージ量
+#define DAMAGE_SPATTACK						(400)						// ダメージ量
+#define DAMAGE_THROW						(150)						// ダメージ量
+
 // デストラクタ
-#define SAFE_DELETE(object)	{if(object){delete (object); (object) = NULL;}}
-#define SAFE_DELETE_ARRAY(object)	{if(object){delete[] (object); (object) = NULL;}}
-#define SAFE_RELEASE(ptr) {if(ptr){(ptr)->Release();(ptr)=NULL;}}
+#define SAFE_DELETE(object)			{if(object){delete (object);		(object) = NULL;}}
+#define SAFE_DELETE_ARRAY(object)	{if(object){delete[] (object);		(object) = NULL;}}
+#define SAFE_RELEASE(object)		{if(object){(object)->Release();	(object)=NULL;}}
 
 #define GetMonitorRect(rc) SystemParametersInfo(SPI_GETWORKAREA, 0, rc, 0)	// モニター矩形
 

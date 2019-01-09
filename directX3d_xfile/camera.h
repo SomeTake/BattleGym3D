@@ -11,8 +11,12 @@
 // マクロ定義
 //*****************************************************************************
 #define	POS_X_CAM		(0.0f)											// カメラの初期位置(X座標)
-#define	POS_Y_CAM		(100.0f)										// カメラの初期位置(Y座標)
-#define	POS_Z_CAM		(200.0f)										// カメラの初期位置(Z座標)
+#define	POS_Y_CAM		(10.0f)											// カメラの初期位置(Y座標)
+#define	POS_Z_CAM		(150.0f)										// カメラの初期位置(Z座標)
+
+#define AT_X_CAM		(0.0f)											// カメラの注視点(X座標)
+#define AT_Y_CAM		(50.0f)											// カメラの注視点(Y座標)
+#define AT_Z_CAM		(0.0f)											// カメラの注視点(Z座標)
 
 #define	VALUE_MOVE_CAMERA	(2.0f)										// カメラの移動量
 #define	VALUE_ROTATE_CAMERA	(D3DX_PI * 0.01f)							// カメラの回転量
@@ -45,5 +49,6 @@ void InitCamera(void);
 void UpdateCamera(void);
 CAMERA *GetCamera(int cno);
 void SetCamera(int no);
+D3DXVECTOR3 GetCenterPos(void);
 
 #endif

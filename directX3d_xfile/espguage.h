@@ -20,7 +20,6 @@
 #define ANIM_PATTERN_NUM_ESPGUAGE	(ESPGUAGE_PATTERN_DIVIDE_X*ESPGUAGE_PATTERN_DIVIDE_Y)	// アニメーションパターン数
 #define TIME_ANIMATION_ESPGUAGE		(4)										// アニメーションの切り替わるカウント
 #define ESPGUAGE_MAX				(1)										// ゲージの個数
-#define FULL_ESPGUAGE				(1000)									// ゲージの最大値
 
 //SPゲージの構造体
 typedef struct {

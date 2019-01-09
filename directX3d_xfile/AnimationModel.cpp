@@ -7,6 +7,7 @@
 
 #include "AnimationModel.h"
 
+#if 0
 
 AnimationModel::AnimationModel(void)
 {
@@ -190,3 +191,5 @@ LPD3DXANIMATIONSET AnimationModel::GetAnimationSet(int index) const
 
 	return NULL;
 }
+
+#endif

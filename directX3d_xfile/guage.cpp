@@ -65,7 +65,7 @@ void UninitGuage(void)
 //=============================================================================
 void UpdateGuage(void)
 {
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 
 	if (guage->use == true)
 	{
@@ -143,7 +143,7 @@ HRESULT MakeVertexGuage(void)
 //=============================================================================
 void SetTextureGuage(int cntPattern)
 {
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 
 	int x = cntPattern % GUAGE_PATTERN_DIVIDE_X;
 	int y = cntPattern / GUAGE_PATTERN_DIVIDE_X;
@@ -162,7 +162,7 @@ void SetTextureGuage(int cntPattern)
 //=============================================================================
 void SetVertexGuage(void)
 {
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 
 	// ’¸“_À•W‚ÌÝ’è
 	guage->vertexWk[0].vtx = D3DXVECTOR3(guage->pos.x + GUAGE_SIZE_X * ((float)(player->HP - player->HPzan) / player->HP), guage->pos.y, guage->pos.z);

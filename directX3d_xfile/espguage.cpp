@@ -69,7 +69,7 @@ void UninitESpGuage(void)
 //=============================================================================
 void UpdateESpGuage(void)
 {
-	PLAYER *player = GetPlayer(0);
+	PLAYER *player = GetPlayer();
 	ESPGUAGE *espguage = GetESpGuage(0);
 
 	if (espguage->use == true)
@@ -157,9 +157,9 @@ void SetTextureESpGuage(int cntPattern)
 void SetVertexESpGuage(void)
 {
 	// 頂点座標の設定
-	espguage->vertexWk[0].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)espguage->sp / (float)FULL_ESPGUAGE), espguage->pos.y, espguage->pos.z);
+	espguage->vertexWk[0].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)espguage->sp / (float)FULL_SPGUAGE), espguage->pos.y, espguage->pos.z);
 	espguage->vertexWk[1].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X, espguage->pos.y, espguage->pos.z);
-	espguage->vertexWk[2].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)espguage->sp / (float)FULL_ESPGUAGE), espguage->pos.y + ESPGUAGE_SIZE_Y, espguage->pos.z);
+	espguage->vertexWk[2].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)espguage->sp / (float)FULL_SPGUAGE), espguage->pos.y + ESPGUAGE_SIZE_Y, espguage->pos.z);
 	espguage->vertexWk[3].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X, espguage->pos.y + ESPGUAGE_SIZE_Y, espguage->pos.z);
 }
 
@@ -181,9 +181,9 @@ void AddESpGuage(int add)
 	espguage->sp += add;
 
 	//カンスト処理
-	if (espguage->sp > FULL_ESPGUAGE)
+	if (espguage->sp > FULL_SPGUAGE)
 	{
-		espguage->sp = FULL_ESPGUAGE;
+		espguage->sp = FULL_SPGUAGE;
 	}
 	else if (espguage->sp < 0)
 	{

@@ -11,7 +11,7 @@
 // Name: AllocateName()
 // Desc: Allocates memory for a string to hold the name of a frame or mesh
 //--------------------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::AllocateName(LPCSTR Name, LPSTR* pNewName)
+HRESULT AllocateHierarchy::AllocateName(LPCSTR Name, LPSTR* pNewName)
 {
 	UINT cbLength;
 
@@ -20,7 +20,9 @@ HRESULT CAllocateHierarchy::AllocateName(LPCSTR Name, LPSTR* pNewName)
 		cbLength = (UINT)strlen(Name) + 1;
 		*pNewName = new CHAR[cbLength];
 		if (*pNewName == NULL)
+		{
 			return E_OUTOFMEMORY;
+		}
 		memcpy(*pNewName, Name, cbLength * sizeof(CHAR));
 	}
 	else
@@ -37,7 +39,7 @@ HRESULT CAllocateHierarchy::AllocateName(LPCSTR Name, LPSTR* pNewName)
 // container to generate the desired drawable mesh and bone combination 
 // table.
 //--------------------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, D3DXMESHCONTAINER_DERIVED* pMeshContainer)
+HRESULT AllocateHierarchy::GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, D3DXMESHCONTAINER_DERIVED* pMeshContainer)
 {
 	D3DCAPS9 d3dCaps;
 	pd3dDevice->GetDeviceCaps(&d3dCaps);
@@ -51,14 +53,16 @@ HRESULT CAllocateHierarchy::GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, D3
 	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
 
 	if (FAILED(pMeshContainer->pSkinInfo->ConvertToBlendedMesh(
-		pMeshContainer->pOrigMesh,
+		pMeshContainer->pOrigMesh,						// 入力メッシュ
 		D3DXMESH_MANAGED | D3DXMESHOPT_VERTEXCACHE,
-		pMeshContainer->pAdjacency,
-		NULL, NULL, NULL,
-		&pMeshContainer->NumInfl,
-		&pMeshContainer->NumAttributeGroups,
-		&pMeshContainer->pBoneCombinationBuf,
-		&pMeshContainer->MeshData.pMesh)))
+		pMeshContainer->pAdjacency,						// メッシュの隣接データ(入力)
+		NULL, 											// メッシュの隣接データ(出力)
+		NULL, 											// ポリゴンの新規インデックスのバッファ
+		NULL,											// 頂点の新規インデックスのバッファ
+		&pMeshContainer->BoneWeightNum,					// １つの頂点に影響を及ぼす重みの数
+		&pMeshContainer->BoneNum,						// ボーンの数
+		&pMeshContainer->pBoneCombinationBuf,			// ボーンデータが格納されたバッファ
+		&pMeshContainer->MeshData.pMesh)))				// 変換後のメッシュ
 	{
 		return E_FAIL;
 	}
@@ -67,10 +71,10 @@ HRESULT CAllocateHierarchy::GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, D3
 }
 
 //--------------------------------------------------------------------------------------
-// Name: CAllocateHierarchy::CreateFrame()
-// Desc: フレームの初期化
+// Name: AllocateHierarchy::CreateFrame()
+// Desc: フレームの作成
 //--------------------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
+HRESULT AllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
 {
 	HRESULT hr = S_OK;
 	D3DXFRAME_DERIVED* pFrame;
@@ -106,10 +110,10 @@ e_Exit:
 }
 
 //--------------------------------------------------------------------------------------
-// Name: CAllocateHierarchy::CreateMeshContainer()
+// Name: AllocateHierarchy::CreateMeshContainer()
 // Desc: メッシュコンテナの作成
 //--------------------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::CreateMeshContainer(
+HRESULT AllocateHierarchy::CreateMeshContainer(
 	LPCSTR Name,
 	CONST D3DXMESHDATA *pMeshData,
 	CONST D3DXMATERIAL *pMaterials,
@@ -139,6 +143,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 
 	// get the pMesh interface pointer out of the mesh data structure
 	pMesh = pMeshData->pMesh;
+
 
 	// this sample does not FVF compatible meshes, so fail when one is found
 	if (pMesh->GetFVF() == 0)
@@ -215,9 +220,15 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
 		{
 			if (pMeshContainer->pMaterials[iMaterial].pTextureFilename != NULL)
 			{
-				if (FAILED(D3DXCreateTextureFromFile(pd3dDevice, pMeshContainer->pMaterials[iMaterial].pTextureFilename,
+				char TextureName[256];
+				ZeroMemory(TextureName, sizeof(TextureName));
+				sprintf_s(TextureName, "data/Model/%s", pMeshContainer->pMaterials[iMaterial].pTextureFilename);
+
+				if (FAILED(D3DXCreateTextureFromFile(pd3dDevice, TextureName,
 					&pMeshContainer->ppTextures[iMaterial])))
+				{
 					pMeshContainer->ppTextures[iMaterial] = NULL;
+				}
 
 				// don't remember a pointer into the dynamic memory, just forget the name after loading
 				pMeshContainer->pMaterials[iMaterial].pTextureFilename = NULL;
@@ -281,21 +292,22 @@ e_Exit:
 }
 
 //--------------------------------------------------------------------------------------
-// Name: CAllocateHierarchy::DestroyFrame()
-// Desc: フレームの開放
+// Name: AllocateHierarchy::DestroyFrame()
+// Desc: 釋放框架
 //--------------------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
+HRESULT AllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 {
 	SAFE_DELETE_ARRAY(pFrameToFree->Name);
-	SAFE_DELETE(pFrameToFree);
+	//SafeDelete(pFrameToFree);
+
 	return S_OK;
 }
 
 //--------------------------------------------------------------------------------------
-// Name: CAllocateHierarchy::DestroyMeshContainer()
-// Desc: メッシュコンテナの開放
+// Name: AllocateHierarchy::DestroyMeshContainer()
+// Desc: 釋放網格容器
 //--------------------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
+HRESULT AllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
 {
 	UINT iMaterial;
 	D3DXMESHCONTAINER_DERIVED* pMeshContainer = (D3DXMESHCONTAINER_DERIVED*)pMeshContainerBase;
@@ -303,7 +315,6 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
 	SAFE_DELETE_ARRAY(pMeshContainer->Name);
 	SAFE_DELETE_ARRAY(pMeshContainer->pAdjacency);
 	SAFE_DELETE_ARRAY(pMeshContainer->pMaterials);
-	SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
 
 	// release all the allocated textures
 	if (pMeshContainer->ppTextures != NULL)
@@ -315,12 +326,14 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
 	}
 
 	SAFE_DELETE_ARRAY(pMeshContainer->ppTextures);
-	SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrixPtrs);
-	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
-	SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
 	SAFE_RELEASE(pMeshContainer->pSkinInfo);
+	SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
+	SAFE_DELETE_ARRAY(pMeshContainer->ppBoneMatrix);
+	SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
+	SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
 	SAFE_RELEASE(pMeshContainer->pOrigMesh);
 	SAFE_DELETE(pMeshContainer);
+	//SafeDelete(pMeshContainerBase);
 
 	return S_OK;
 }

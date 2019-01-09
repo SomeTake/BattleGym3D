@@ -25,7 +25,7 @@ EREDGUAGE eredguage[EREDGUAGE_MAX];
 HRESULT InitERedGuage(int type)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	ENEMY *enemy = GetEnemy(0);
+	ENEMY *enemy = GetEnemy();
 
 	if (type == 0)
 	{
@@ -136,7 +136,7 @@ HRESULT MakeVertexERedGuage(void)
 //=============================================================================
 void SetTextureERedGuage(int cntPattern)
 {
-	ENEMY *enemy = GetEnemy(0);
+	ENEMY *enemy = GetEnemy();
 
 	if (eredguage->value > enemy->HPzan)
 	{
@@ -166,7 +166,7 @@ void SetTextureERedGuage(int cntPattern)
 //=============================================================================
 void SetVertexERedGuage(void)
 {
-	ENEMY *enemy = GetEnemy(0);
+	ENEMY *enemy = GetEnemy();
 
 	// ’¸“_À•W‚ÌÝ’è
 	eredguage->vertexWk[0].vtx = D3DXVECTOR3(eredguage->pos.x, eredguage->pos.y, eredguage->pos.z);

@@ -7,8 +7,8 @@
 #ifndef _CALLOCATEHIERARCHY_H_
 #define _CALLOCATEHIERARCHY_H_
 
+#include "main.h"
 #include <d3dx9.h>
-
 
 //--------------------------------------------------------------------------------------
 // Name: struct D3DXFRAME_DERIVED
@@ -33,20 +33,16 @@ struct D3DXFRAME_DERIVED : public D3DXFRAME
 struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER
 {
 	// array of textures, entries are NULL if no texture specified    
-	LPDIRECT3DTEXTURE9*		ppTextures;
-							
-	// SkinMesh info		     
-	LPD3DXMESH				pOrigMesh;
-	LPD3DXATTRIBUTERANGE	pAttributeTable;
-	DWORD					NumAttributeGroups;
-	DWORD					NumInfl;
-	LPD3DXBUFFER			pBoneCombinationBuf;
-	D3DXMATRIX**			ppBoneMatrixPtrs;
-	D3DXMATRIX*				pBoneOffsetMatrices;
-	DWORD					NumPaletteEntries;
-	bool					UseSoftwareVP;
-	// used to denote the split between SW and HW if necessary for non-indexed skinning
-	DWORD					iAttributeSW;
+	LPDIRECT3DTEXTURE9*		ppTextures;				// テクスチャ情報
+
+													// SkinMesh info
+	LPD3DXMESH				pOrigMesh;				// オリジナルメッシュ
+	DWORD					BoneNum;				// ボーンの数
+	DWORD					BoneWeightNum;			// １つの頂点に影響を及ぼす重みの数
+	LPD3DXBUFFER			pBoneCombinationBuf;	// ボーン情報のバッファ
+	D3DXMATRIX**			ppBoneMatrix;			// 全ボーンのマトリックスのポインタの配列
+	D3DXMATRIX*				pBoneOffsetMatrices;	// ボーンのオフセット行列
+	DWORD					NumPaletteEntries;		// パレットサイズ
 };
 
 //--------------------------------------------------------------------------------------
@@ -54,7 +50,7 @@ struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER
 // Desc: Custom version of ID3DXAllocateHierarchy with custom methods to create
 //       frames and meshcontainers.
 //--------------------------------------------------------------------------------------
-class CAllocateHierarchy : public ID3DXAllocateHierarchy
+struct AllocateHierarchy : public ID3DXAllocateHierarchy
 {
 private:
 	HRESULT AllocateName(LPCSTR Name, LPSTR* pNewName);
@@ -73,8 +69,7 @@ public:
 	STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pFrameToFree);
 	STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerBase);
 
-
-	CAllocateHierarchy()
+	AllocateHierarchy()
 	{
 	}
 
