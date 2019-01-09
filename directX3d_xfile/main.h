@@ -60,6 +60,8 @@
 #define	VIEW_FAR_Z		(1000.0f)										// ビュー平面のFarZ値
 
 #define	VALUE_MOVE		(1.00f)											// 移動量
+#define VALUE_FRONTWALK	(0.50f)											// 前歩き移動量
+#define VALUE_BACKWALK	(0.20f)											// 後ろ歩き移動量
 #define	VALUE_ROTATE	(D3DX_PI * 1.00f)								// 回転量
 #define VALUE_ENLARGEMENT	(0.1f)										// 拡大・縮小量
 #define	VALUE_ROTATE_MODEL	(D3DX_PI * 0.05f)							// 回転速度

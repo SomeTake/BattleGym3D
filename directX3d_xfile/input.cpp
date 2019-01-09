@@ -499,31 +499,31 @@ void UpdatePad(void)
 
 		// ３２の各ビットに意味を持たせ、ボタン押下に応じてビットをオンにする
 		//* y-axis (forward)
-		if (dijs.lY < 0)					padState[i] |= BUTTON_UP;
+		if (dijs.lY < 0)					padState[i] |= STICK_UP;
 		//* y-axis (backward)
-		if (dijs.lY > 0)					padState[i] |= BUTTON_DOWN;
+		if (dijs.lY > 0)					padState[i] |= STICK_DOWN;
 		//* x-axis (left)
-		if (dijs.lX < 0)					padState[i] |= BUTTON_LEFT;
+		if (dijs.lX < 0)					padState[i] |= STICK_LEFT;
 		//* x-axis (right)
-		if (dijs.lX > 0)					padState[i] |= BUTTON_RIGHT;
+		if (dijs.lX > 0)					padState[i] |= STICK_RIGHT;
 
 		POV[0] = dijs.rgdwPOV[0];
 		// 十字キー上
-		if (dijs.rgdwPOV[0] == 0)			padState[i] |= BUTTON_UE;
+		if (dijs.rgdwPOV[0] == 0)			padState[i] |= BUTTON_UP;
 		// 十字キー右上
-		if (dijs.rgdwPOV[0] == 4500)		padState[i] |= BUTTON_MIGIUE;
+		if (dijs.rgdwPOV[0] == 4500)		padState[i] |= BUTTON_RIGHTUP;
 		// 十字キー右
-		if (dijs.rgdwPOV[0] == 9000)		padState[i] |= BUTTON_MIGI;
+		if (dijs.rgdwPOV[0] == 9000)		padState[i] |= BUTTON_RIGHT;
 		// 十字キー右下
-		if (dijs.rgdwPOV[0] == 13500)		padState[i] |= BUTTON_MIGISHITA;
+		if (dijs.rgdwPOV[0] == 13500)		padState[i] |= BUTTON_RIGHTDOWN;
 		// 十字キー下
-		if (dijs.rgdwPOV[0] == 18000)		padState[i] |= BUTTON_SHITA;
+		if (dijs.rgdwPOV[0] == 18000)		padState[i] |= BUTTON_DOWN;
 		// 十字キー左下
-		if (dijs.rgdwPOV[0] == 22500)		padState[i] |= BUTTON_HIDARISHITA;
+		if (dijs.rgdwPOV[0] == 22500)		padState[i] |= BUTTON_LEFTDOWN;
 		// 十字キー左
-		if (dijs.rgdwPOV[0] == 27000)		padState[i] |= BUTTON_HIDARI;
+		if (dijs.rgdwPOV[0] == 27000)		padState[i] |= BUTTON_LEFT;
 		// 十字キー左上
-		if (dijs.rgdwPOV[0] == 31500)		padState[i] |= BUTTON_HIDARIUE;
+		if (dijs.rgdwPOV[0] == 31500)		padState[i] |= BUTTON_LEFTUP;
 
 		//* Ａボタン
 		if (dijs.rgbButtons[0] & 0x80)	padState[i] |= BUTTON_A;

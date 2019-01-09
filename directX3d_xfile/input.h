@@ -18,20 +18,20 @@
 #define	USE_PAD												// 宣言するとパッドで操作可能になる
 
 /* game pad情報 */
-#define BUTTON_UP		0x00000001l	// 方向キー上(.IY<0)
-#define BUTTON_DOWN		0x00000002l	// 方向キー下(.IY>0)
-#define BUTTON_LEFT		0x00000004l	// 方向キー左(.IX<0)
-#define BUTTON_RIGHT	0x00000008l	// 方向キー右(.IX>0)
+#define STICK_UP		0x00000001l	// 方向キー上(.IY<0)
+#define STICK_DOWN		0x00000002l	// 方向キー下(.IY>0)
+#define STICK_LEFT		0x00000004l	// 方向キー左(.IX<0)
+#define STICK_RIGHT		0x00000008l	// 方向キー右(.IX>0)
 
 //十字キー
-#define BUTTON_UE		0x00004000l
-#define BUTTON_SHITA	(BUTTON_UE<<1)
-#define BUTTON_MIGI		(BUTTON_SHITA<<1)
-#define BUTTON_HIDARI	(BUTTON_MIGI<<1)
-#define BUTTON_MIGIUE	(BUTTON_HIDARI<<1)
-#define BUTTON_MIGISHITA	(BUTTON_MIGIUE<<1)
-#define BUTTON_HIDARISHITA	(BUTTON_MIGISHITA<<1)
-#define BUTTON_HIDARIUE	(BUTTON_HIDARISHITA<<1)
+#define BUTTON_UP		0x00004000l
+#define BUTTON_DOWN		(BUTTON_UP<<1)
+#define BUTTON_RIGHT	(BUTTON_DOWN<<1)
+#define BUTTON_LEFT		(BUTTON_RIGHT<<1)
+#define BUTTON_RIGHTUP	(BUTTON_LEFT<<1)
+#define BUTTON_RIGHTDOWN	(BUTTON_RIGHTUP<<1)
+#define BUTTON_LEFTDOWN	(BUTTON_RIGHTDOWN<<1)
+#define BUTTON_LEFTUP	(BUTTON_LEFTDOWN<<1)
 
 #define BUTTON_A		0x00000010l	// Ａボタン(.rgbButtons[0]&0x80) PS4コン□ボタン
 #define BUTTON_B		0x00000020l	// Ｂボタン(.rgbButtons[1]&0x80) PS4コン×ボタン

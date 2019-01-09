@@ -87,13 +87,13 @@ void UpdateModeselect(void)
 	if (phase == PhaseTitle)
 	{
 		//カーソル上下移動
-		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, BUTTON_UE))
+		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			titleselect = (titleselect == 0) ? TITLESELECT_MAX - 1 : titleselect - 1;
 			modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
-		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, BUTTON_SHITA))
+		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			titleselect = (titleselect == TITLESELECT_MAX - 1) ? 0 : titleselect + 1;
@@ -101,7 +101,7 @@ void UpdateModeselect(void)
 		}
 
 		//ボタンのリピート操作を擬似的に作成
-		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, BUTTON_UE))
+		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, STICK_UP))
 		{
 			if (buttoncount < BUTTON_TIMER)
 			{
@@ -114,7 +114,7 @@ void UpdateModeselect(void)
 				modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
 		}
-		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, BUTTON_SHITA))
+		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN))
 		{
 			if (buttoncount < BUTTON_TIMER)
 			{
@@ -127,7 +127,7 @@ void UpdateModeselect(void)
 				modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
 		}
-		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, BUTTON_UE) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, BUTTON_SHITA))
+		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, STICK_UP) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, STICK_DOWN))
 		{
 			buttoncount = 0;
 		}
@@ -170,13 +170,13 @@ void UpdateModeselect(void)
 	else if (phase == PhasePause)
 	{
 		//カーソル上下移動
-		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, BUTTON_UE))
+		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
-		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, BUTTON_SHITA))
+		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
@@ -184,7 +184,7 @@ void UpdateModeselect(void)
 		}
 
 		//ボタンのリピート操作を擬似的に作成
-		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, BUTTON_UE))
+		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, STICK_UP))
 		{
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
@@ -194,7 +194,7 @@ void UpdateModeselect(void)
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
 		}
-		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, BUTTON_SHITA))
+		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN))
 		{
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
@@ -204,7 +204,7 @@ void UpdateModeselect(void)
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
 		}
-		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, BUTTON_UE) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, BUTTON_SHITA))
+		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, STICK_UP) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, STICK_DOWN))
 		{
 			buttoncount = 0;
 		}
@@ -244,13 +244,13 @@ void UpdateModeselect(void)
 	else if (phase == PhaseTrainingPause)
 	{
 		//カーソル上下移動
-		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, BUTTON_UE))
+		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
-		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, BUTTON_SHITA))
+		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
@@ -258,7 +258,7 @@ void UpdateModeselect(void)
 		}
 
 		//ボタンのリピート操作を擬似的に作成
-		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, BUTTON_UE))
+		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, STICK_UP))
 		{
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
@@ -268,7 +268,7 @@ void UpdateModeselect(void)
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
 		}
-		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, BUTTON_SHITA))
+		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN))
 		{
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
@@ -278,7 +278,7 @@ void UpdateModeselect(void)
 				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 			}
 		}
-		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, BUTTON_UE) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, BUTTON_SHITA))
+		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, STICK_UP) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, STICK_DOWN))
 		{
 			buttoncount = 0;
 		}

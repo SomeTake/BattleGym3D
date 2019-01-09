@@ -216,13 +216,113 @@ void UpdatePlayer(void)
 	switch (playerWk.Action)
 	{
 	case Idle_P:
-		if (GetKeyboardTrigger(DIK_0))
+		// 入力処理
+		// D：右( → )
+		if (GetKeyboardTrigger(DIK_D) || IsButtonTriggered(0, BUTTON_RIGHT) || IsButtonTriggered(0, STICK_RIGHT))
+		{
+			playerWk.NextAction = Frontwalk_P;
+		}
+		// A：左( ← )
+		else if (GetKeyboardTrigger(DIK_A) || IsButtonTriggered(0, BUTTON_LEFT) || IsButtonTriggered(0, STICK_LEFT))
+		{
+			playerWk.NextAction = Backwalk_P;
+		}
+		// S：下( ↓ )
+		else if (GetKeyboardTrigger(DIK_S) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
+		{
+			downflag = true;
+			playerWk.NextAction = Rolling_P;
+		}
+		// W：上( ↑ )
+		else if (GetKeyboardTrigger(DIK_W) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
+		{
+			upflag = true;
+			playerWk.NextAction = Rolling_P;
+		}
+		
+		// 攻撃処理
+		// パンチ
+		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
 		{
 			playerWk.NextAction = Punchi_P;
 		}
+		// キック
+		if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
+		{
+			playerWk.NextAction = Kick_P;
+		}
+		break;
+	case Frontwalk_P:
+		// 攻撃処理
+		// パンチ
+		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
+		{
+			playerWk.NextAction = Punchi_P;
+		}
+		// キック
+		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
+		{
+			playerWk.NextAction = Kick_P;
+		}
+
+		// モデルの移動
+		else if (GetKeyboardPress(DIK_D) || IsButtonPressed(0, BUTTON_RIGHT) || IsButtonPressed(0, STICK_RIGHT))
+		{
+			playerWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_FRONTWALK;
+			playerWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_FRONTWALK;
+			playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.50f;
+		}
+
+		// リリースされた場合待機状態に戻す
+		else
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Backwalk_P:
+		// 攻撃処理
+		// パンチ
+		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
+		{
+			playerWk.NextAction = Punchi_P;
+		}
+		// キック
+		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
+		{
+			playerWk.NextAction = Kick_P;
+		}
+
+		// モデルの移動
+		else if (GetKeyboardPress(DIK_A) || IsButtonPressed(0, BUTTON_LEFT) || IsButtonPressed(0, STICK_LEFT))
+		{
+			playerWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_BACKWALK;
+			playerWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_BACKWALK;
+			playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
+		}
+
+		// リリースされた場合待機状態に戻す
+		else
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Rolling_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Rolling_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
 		break;
 	case Punchi_P:
+		// アニメーションが終わったので待機状態に戻す
 		if (playerWk.NextAction == Punchi_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Kick_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Kick_P)
 		{
 			playerWk.NextAction = Idle_P;
 		}
@@ -235,53 +335,83 @@ void UpdatePlayer(void)
 	switch (playerWk.NextAction)
 	{
 	case Idle_P:
-		if (playerWk.Animation->MotionEnd == true)
+		// ボタンリリースで待機状態に戻るアクション
+		if (playerWk.Action != Idle_P/* || playerWk.Action == Frontwalk_P || playerWk.Action == Backwalk_P*/)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 0.1f);
 			playerWk.Action = Idle_P;
 		}
+		else
+		{
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 0.1f);
+				playerWk.Action = Idle_P;
+			}
+		}
+		break;
+
+	case Frontwalk_P:
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, 0.1f);
+		playerWk.Action = Frontwalk_P;
+		break;
+	case Backwalk_P:
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 0.1f);
+		playerWk.Action = Backwalk_P;
+		break;
+	case Rolling_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Rolling_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rolling_P, 0.1f);
+			playerWk.Action = Rolling_P;
+		}
+		else
+		{
+			// アニメーションが終了したら待機モーションに戻す
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Rolling_P, 0.1f);
+				playerWk.Action = Rolling_P;
+			}
+		}
 		break;
 	case Punchi_P:
-		if (playerWk.Action == Idle_P)
+		// アニメーションを移行させる
+		if (playerWk.Action != Punchi_P)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 0.1f);
 			playerWk.Action = Punchi_P;
 		}
 		else
 		{
+			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
 				playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 0.1f);
 				playerWk.Action = Punchi_P;
 			}
 		}
+		break;
+	case Kick_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Kick_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 0.1f);
+			playerWk.Action = Kick_P;
+		}
+		else
+		{
+			// アニメーションが終了したら待機モーションに戻す
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 0.1f);
+				playerWk.Action = Kick_P;
+			}
+		}
+		break;
 	default:
 		break;
-	}
-	//モデルの移動
-	// D：右( → )
-	if (GetKeyboardPress(DIK_D))
-	{
-		playerWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_MOVE;
-		playerWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_MOVE;
-		playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.50f;
-	}
-	// A：左( ← )
-	else if (GetKeyboardPress(DIK_A))
-	{
-		playerWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_MOVE;
-		playerWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_MOVE;
-		playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
-	}
-	// S：下( ↓ )
-	else if (GetKeyboardTrigger(DIK_S))
-	{
-		downflag = true;
-	}
-	// W：上( ↑ )
-	else if (GetKeyboardTrigger(DIK_W))
-	{
-		upflag = true;
 	}
 
 	// 上移動中の座標処理
