@@ -69,7 +69,7 @@ bool SetWindowCenter(HWND hWnd);
 LPDIRECT3D9			g_pD3D = NULL;					// Direct3D オブジェクト
 LPDIRECT3DDEVICE9	g_pD3DDevice = NULL;			// Deviceオブジェクト(描画に必要)
 
-int ePhase = PhaseCompanyLogo;						// ゲームの開始位置&シーン遷移
+int ePhase = PhaseGame;						// ゲームの開始位置&シーン遷移
 int PlayerMode = 1;									// プレイヤー人数
 
 MATRIX MatrixState;									// マトリクス
@@ -527,23 +527,23 @@ void Update(void)
 	PLAYER *playerWk = GetPlayer();
 	ENEMY *enemyWk = GetEnemy();
 
-	//画面分割数の入力
-	if (GetKeyboardTrigger(DIK_1))
-	{
-		PlayerMode = 1;
-	}
-	else if (GetKeyboardTrigger(DIK_2))
-	{
-		PlayerMode = 2;
-	}
-	else if (GetKeyboardTrigger(DIK_3))
-	{
-		PlayerMode = 3;
-	}
-	else if (GetKeyboardTrigger(DIK_4))
-	{
-		PlayerMode = 4;
-	}
+	////画面分割数の入力
+	//if (GetKeyboardTrigger(DIK_1))
+	//{
+	//	PlayerMode = 1;
+	//}
+	//else if (GetKeyboardTrigger(DIK_2))
+	//{
+	//	PlayerMode = 2;
+	//}
+	//else if (GetKeyboardTrigger(DIK_3))
+	//{
+	//	PlayerMode = 3;
+	//}
+	//else if (GetKeyboardTrigger(DIK_4))
+	//{
+	//	PlayerMode = 4;
+	//}
 
 	// 入力更新
 	UpdateInput();

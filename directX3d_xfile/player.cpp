@@ -27,7 +27,8 @@ const char* PlayerAnimNum[] =
 	"idle",				// 待機
 	"frontwalk",		// 前歩き
 	"backwalk",			// 後ろ歩き
-	"rolling",			// 横移動　でんぐり返し
+	"rightstep",		// 横移動
+	"leftstep",			// 横移動
 	"jump",				// ジャンプ
 	"guard",			// ガード めっちゃ胸反る
 	"damage",			// ダメージ受けた
@@ -48,7 +49,8 @@ enum PlayerStateNum
 	Idle_P,
 	Frontwalk_P,
 	Backwalk_P,
-	Rolling_P,
+	Rightstep_P,
+	Leftstep_P,
 	Jump_P,
 	Guard_P,
 	Damage_P,
@@ -63,10 +65,6 @@ enum PlayerStateNum
 	Throw_P,
 	Win_P
 };
-
-bool upflag = false;
-bool downflag = false;
-int flagframecount = 0;
 
 //=============================================================================
 // 初期化処理
@@ -100,8 +98,13 @@ HRESULT InitPlayer(int type)
 		}
 
 		// AnimationCallbackをセットする
-		// 回転
-		if (FAILED(SetupCallbackKeyframes(playerWk.Animation, PlayerAnimNum[Rolling_P])))
+		// 横移動
+		if (FAILED(SetupCallbackKeyframes(playerWk.Animation, PlayerAnimNum[Rightstep_P])))
+		{
+			return E_FAIL;
+		}
+		// 横移動
+		if (FAILED(SetupCallbackKeyframes(playerWk.Animation, PlayerAnimNum[Leftstep_P])))
 		{
 			return E_FAIL;
 		}
@@ -167,12 +170,13 @@ HRESULT InitPlayer(int type)
 		playerWk.Animation->CurrentAnimID = Idle_P;
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Frontwalk_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Backwalk_P, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Rolling_P, 0.1f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, Rightstep_P, 0.1f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, Leftstep_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Jump_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Guard_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Damage_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Down_P, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, DownPose_P, 0.1f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, DownPose_P, 0.0f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Getup_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Punchi_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Kick_P, 0.1f);
@@ -185,7 +189,7 @@ HRESULT InitPlayer(int type)
 		// 影の生成
 		playerWk.IdxShadow = CreateShadow(playerWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 		playerWk.SizeShadow = 25.0f;
-		playerWk.ColShadow = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f);
+		playerWk.ColShadow = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f);	
 	}
 
 	return S_OK;
@@ -206,8 +210,29 @@ void UninitPlayer(void)
 //=============================================================================
 void UpdatePlayer(void)
 {
+	int *Phase = GetPhase();
+	ENEMY *enemyWk = GetEnemy();
+
 	CAMERA *camera = GetCamera(0);
 	D3DXVECTOR3 centerpos = GetCenterPos();
+
+#ifdef _DEBUG
+	// デバッグ用入力
+	if (GetKeyboardTrigger(DIK_1))
+	{
+		playerWk.NextAction = Down_P;
+	}
+	// プレイヤーHP0
+	else if (GetKeyboardTrigger(DIK_2))
+	{
+		playerWk.HPzan = 0;
+	}
+	// エネミーHP0
+	else if (GetKeyboardTrigger(DIK_3))
+	{
+		enemyWk->HPzan = 0;
+	}
+#endif
 
 	// アニメーションを更新
 	playerWk.Animation->UpdateAnimation(playerWk.Animation, TIME_PER_FRAME);
@@ -230,14 +255,12 @@ void UpdatePlayer(void)
 		// S：下( ↓ )
 		else if (GetKeyboardTrigger(DIK_S) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
 		{
-			downflag = true;
-			playerWk.NextAction = Rolling_P;
+			playerWk.NextAction = Rightstep_P;
 		}
 		// W：上( ↑ )
 		else if (GetKeyboardTrigger(DIK_W) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
 		{
-			upflag = true;
-			playerWk.NextAction = Rolling_P;
+			playerWk.NextAction = Leftstep_P;
 		}
 		
 		// 攻撃処理
@@ -247,9 +270,25 @@ void UpdatePlayer(void)
 			playerWk.NextAction = Punchi_P;
 		}
 		// キック
-		if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
+		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
 		{
 			playerWk.NextAction = Kick_P;
+		}
+		// 波動拳
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
+		{
+			playerWk.NextAction = Hadou_P;
+		}
+		// 昇竜拳
+		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
+		{
+			playerWk.NextAction = Shoryu_P;
+		}
+
+		// ガード入力
+		if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(0, BUTTON_Y))
+		{
+			playerWk.NextAction = Guard_P;
 		}
 		break;
 	case Frontwalk_P:
@@ -264,7 +303,21 @@ void UpdatePlayer(void)
 		{
 			playerWk.NextAction = Kick_P;
 		}
-
+		// 波動拳
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
+		{
+			playerWk.NextAction = Hadou_P;
+		}
+		// 昇竜拳
+		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
+		{
+			playerWk.NextAction = Shoryu_P;
+		}
+		// ガード入力
+		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(0, BUTTON_Y))
+		{
+			playerWk.NextAction = Guard_P;
+		}
 		// モデルの移動
 		else if (GetKeyboardPress(DIK_D) || IsButtonPressed(0, BUTTON_RIGHT) || IsButtonPressed(0, STICK_RIGHT))
 		{
@@ -272,7 +325,6 @@ void UpdatePlayer(void)
 			playerWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_FRONTWALK;
 			playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.50f;
 		}
-
 		// リリースされた場合待機状態に戻す
 		else
 		{
@@ -291,7 +343,21 @@ void UpdatePlayer(void)
 		{
 			playerWk.NextAction = Kick_P;
 		}
-
+		// 波動拳
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
+		{
+			playerWk.NextAction = Hadou_P;
+		}
+		// 昇竜拳
+		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
+		{
+			playerWk.NextAction = Shoryu_P;
+		}
+		// ガード入力
+		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(0, BUTTON_Y))
+		{
+			playerWk.NextAction = Guard_P;
+		}
 		// モデルの移動
 		else if (GetKeyboardPress(DIK_A) || IsButtonPressed(0, BUTTON_LEFT) || IsButtonPressed(0, STICK_LEFT))
 		{
@@ -299,16 +365,62 @@ void UpdatePlayer(void)
 			playerWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_BACKWALK;
 			playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
 		}
-
 		// リリースされた場合待機状態に戻す
 		else
 		{
 			playerWk.NextAction = Idle_P;
 		}
 		break;
-	case Rolling_P:
+	case Rightstep_P:
 		// アニメーションが終わったので待機状態に戻す
-		if (playerWk.NextAction == Rolling_P)
+		if (playerWk.NextAction == Rightstep_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Leftstep_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Leftstep_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Guard_P:
+		// ガード入力
+		if (GetKeyboardPress(DIK_O) || IsButtonPressed(0, BUTTON_Y))
+		{
+			playerWk.NextAction = Guard_P;
+		}
+		// リリースされた場合待機状態に戻す
+		else
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Damage_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Damage_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Down_P:
+		// アニメーションが終わったのでダウン状態のポーズに移行
+		if (playerWk.NextAction == Down_P)
+		{
+			playerWk.NextAction = DownPose_P;
+		}
+		break;
+	case DownPose_P:
+		// アニメーションが終わったのでHPがまだあれば起き上がりに移行
+		if (playerWk.NextAction == DownPose_P && playerWk.HPzan > 0)
+		{
+			playerWk.NextAction = Getup_P;
+		}
+		break;
+	case Getup_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Getup_P)
 		{
 			playerWk.NextAction = Idle_P;
 		}
@@ -327,6 +439,23 @@ void UpdatePlayer(void)
 			playerWk.NextAction = Idle_P;
 		}
 		break;
+	case Hadou_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Hadou_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Shoryu_P:
+		// アニメーションが終わったので待機状態に戻す
+		if (playerWk.NextAction == Shoryu_P)
+		{
+			playerWk.NextAction = Idle_P;
+		}
+		break;
+	case Win_P:
+		// 勝利状態なのでずっとこのアクションをしつづける
+		break;
 	default:
 		break;
 	}
@@ -336,7 +465,7 @@ void UpdatePlayer(void)
 	{
 	case Idle_P:
 		// 他アクションからボタンリリースで待機状態に戻る
-		if (playerWk.Action != Idle_P)
+		if (playerWk.Action == Idle_P || playerWk.Action == Frontwalk_P || playerWk.Action == Backwalk_P || playerWk.Action == Guard_P)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 0.1f);
 			playerWk.Action = Idle_P;
@@ -359,20 +488,109 @@ void UpdatePlayer(void)
 		playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 0.1f);
 		playerWk.Action = Backwalk_P;
 		break;
-	case Rolling_P:
+	case Rightstep_P:
 		// アニメーションを移行させる
-		if (playerWk.Action != Rolling_P)
+		if (playerWk.Action != Rightstep_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rolling_P, 0.1f);
-			playerWk.Action = Rolling_P;
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 0.1f);
+			playerWk.Action = Rightstep_P;
 		}
 		else
 		{
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Rolling_P, 0.1f);
-				playerWk.Action = Rolling_P;
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 0.1f);
+				playerWk.Action = Rightstep_P;
+			}
+		}
+		break;
+	case Leftstep_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Leftstep_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 0.1f);
+			playerWk.Action = Leftstep_P;
+		}
+		else
+		{
+			// アニメーションが終了したら待機モーションに戻す
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 0.1f);
+				playerWk.Action = Leftstep_P;
+			}
+		}
+		break;
+	case Guard_P:
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, 0.1f);
+		playerWk.Action = Guard_P;
+		break;
+	case Damage_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Damage_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage_P, 0.1f);
+			playerWk.Action = Damage_P;
+		}
+		else
+		{
+			// アニメーションが終了したら待機モーションに戻す
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage_P, 0.1f);
+				playerWk.Action = Damage_P;
+			}
+		}
+		break;
+	case Down_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Down_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 0.1f);
+			playerWk.Action = Down_P;
+		}
+		else
+		{
+			// アニメーションが終了したら次のアニメーションに移行
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 0.0f);
+				playerWk.Action = Down_P;
+			}
+		}
+		break;
+	case DownPose_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != DownPose_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 0.1f);
+			playerWk.Action = DownPose_P;
+		}
+		else
+		{
+			// アニメーションが終了したら次のアニメーションに移行
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 0.1f);
+				playerWk.Action = DownPose_P;
+			}
+		}
+		break;
+	case Getup_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Getup_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 0.1f);
+			playerWk.Action = Getup_P;
+		}
+		else
+		{
+			// アニメーションが終了したら次のアニメーションに移行
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 0.1f);
+				playerWk.Action = Getup_P;
 			}
 		}
 		break;
@@ -410,36 +628,78 @@ void UpdatePlayer(void)
 			}
 		}
 		break;
+	case Hadou_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Hadou_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 0.1f);
+			playerWk.Action = Hadou_P;
+		}
+		else
+		{
+			// アニメーションが終了したら待機モーションに戻す
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 0.1f);
+				playerWk.Action = Hadou_P;
+			}
+		}
+		break;
+	case Shoryu_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Shoryu_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 0.1f);
+			playerWk.Action = Shoryu_P;
+		}
+		else
+		{
+			// アニメーションが終了したら待機モーションに戻す
+			if (playerWk.Animation->MotionEnd == true)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 0.1f);
+				playerWk.Action = Shoryu_P;
+			}
+		}
+		break;
+	case Win_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != Win_P)
+		{
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Win_P, 0.1f);
+			playerWk.Action = Win_P;
+		}
+		break;
 	default:
 		break;
 	}
 
+	// 勝利時
+	if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Action == Idle_P)
+	{
+		playerWk.NextAction = Win_P;
+	}
+	// 敗北時HP0になったらダウン
+	if (playerWk.HPzan <= 0)
+	{
+		playerWk.HPzan = 0;
+		playerWk.NextAction = Down_P;
+		SetPhase(PhaseFinish);
+	}
+
 	// 上移動中の座標処理
-	if (upflag == true)
+	if (playerWk.Action == Rightstep_P)
 	{
 		playerWk.move.x -= sinf(camera->rot.y) * VALUE_ROTATE;
 		playerWk.move.z -= cosf(camera->rot.y) * VALUE_ROTATE;
 		playerWk.rotDest.y = camera->rot.y;
-		flagframecount++;
-		if (flagframecount == 10)
-		{
-			flagframecount = 0;
-			upflag = false;
-		}
 	}
-
 	// 下移動中の座標処理
-	if (downflag == true)
+	if (playerWk.Action == Leftstep_P)
 	{
 		playerWk.move.x -= sinf(D3DX_PI + camera->rot.y) * VALUE_ROTATE;
 		playerWk.move.z -= cosf(D3DX_PI + camera->rot.y) * VALUE_ROTATE;
 		playerWk.rotDest.y = D3DX_PI + camera->rot.y;
-		flagframecount++;
-		if (flagframecount == 10)
-		{
-			flagframecount = 0;
-			downflag = false;
-		}
 	}
 
 	// 常に中心を向く

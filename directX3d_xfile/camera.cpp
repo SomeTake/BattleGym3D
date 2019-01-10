@@ -13,12 +13,12 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-
+#define VIEW_DIST			(4)		// 最低限のカメラの距離
+#define VIEW_DIST_RATE		(0.3f)
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-
 CAMERA cameraWk[MAX_SEPARATE];
 
 D3DXVECTOR3 CenterPos;				// プレイヤーとエネミーの間の位置
@@ -68,10 +68,6 @@ void UpdateCamera(void)
 	float PEdistance = D3DXVec3Length(&unit);			// PE間の距離
 	D3DXVec3Normalize(&unit, &unit);					// 正規化する
 
-	// PとEの座標の中点から、PとEの座標をそれぞれ結んだ線分に対して垂直に移動した位置をカメラ位置とする
-	D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * PEdistance, AT_Y_CAM + POS_Y_CAM, CenterPos.z + unit.x * PEdistance);
-	cameraWk->pos = ViewFrom;
-
 	// カメラの注視点と位置の距離指定
 	if (PEdistance <= POS_Z_CAM)
 	{
@@ -82,12 +78,30 @@ void UpdateCamera(void)
 		cameraWk->distance = PEdistance;
 	}
 
+	// PとEの座標の中点から、PとEの座標をそれぞれ結んだ線分に対して垂直に移動した位置をカメラ位置とする
+	D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * cameraWk->distance, AT_Y_CAM + POS_Y_CAM, CenterPos.z + unit.x * cameraWk->distance);
+	cameraWk->pos = ViewFrom;
+
+	//// カメラの距離を求める
+	//// キャラクタの座標間の距離に比例させる
+	//float ViewDistance = PEdistance * VIEW_DIST * VIEW_DIST_RATE;
+
+	//// カメラが一定距離（VIEW_DIST）よりも近づかないようにする
+	//if (ViewDistance < VIEW_DIST)
+	//{
+	//	ViewDistance = VIEW_DIST;
+	//}
+	//
+	//// PとEの座標の中点から、PとEの座標をそれぞれ結んだ線分に対して垂直に移動した位置をカメラ位置とする
+	//D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * ViewDistance, AT_Y_CAM + POS_Y_CAM, CenterPos.z - unit.x * ViewDistance);
+	//cameraWk->pos = ViewFrom;
+
 	//x = cameraWk->distance * sinf(cameraWk->rot.y);
 	//z = cameraWk->distance * cosf(cameraWk->rot.y);
 	//x = unit.z * PEdistance;
 	//z = unit.x * PEdistance;
 
-	cameraWk->rot.y = atan2f(cameraWk->at.x - cameraWk->pos.x, cameraWk->at.z - cameraWk->pos.z) + D3DX_PI;	// カメラの回転（常に注視点を向き続ける）
+	cameraWk->rot.y = atan2f(cameraWk->at.x - cameraWk->pos.x, cameraWk->at.z - cameraWk->pos.z) * D3DX_PI;	// カメラの回転（常に注視点を向き続ける）
 	//cameraWk->pos = cameraWk->at + D3DXVECTOR3(x, y, z);													// カメラの位置（視点）
 	cameraWk->at = CenterPos + D3DXVECTOR3(AT_X_CAM, AT_Y_CAM, AT_Z_CAM);									// カメラの注視点＝モデルの中心点
 	cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);															// 3D空間の上方向はどちら？＝Yが＋方向が上

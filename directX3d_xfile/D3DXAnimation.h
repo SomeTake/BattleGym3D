@@ -27,7 +27,7 @@ struct D3DXANIMATION
 	UINT						PreventAnimID;	// 前再生していたアニメーションの番号
 	ANIMATIONSTATUS				*Status;		// アニメーションセットのデータ
 	AllocateHierarchy			*AllocateHier;	// x fileの各情報を保存する
-	LPD3DXFRAME					FrameRoot;		// ルートフレイム	
+	LPD3DXFRAME					FrameRoot;		// ルートフレーム	
 	int							AnimSetNum;		// アニメーションセットの数
 	int							KeyframeCount;  // Callback Keyframesを処理した数
 	bool						MotionEnd;		// 今再生しているアニメーションは最後かどうか

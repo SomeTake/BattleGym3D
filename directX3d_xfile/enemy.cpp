@@ -159,6 +159,13 @@ void UpdateEnemy(void)
 		enemyWk.rotDest.y = camera->rot.y;
 	}
 
+	// ”s–kŽž
+	if (enemyWk.HPzan <= 0)
+	{
+		enemyWk.HPzan = 0;
+		SetPhase(PhaseFinish);
+	}
+
 	// í‚É’†S‚ðŒü‚­
 	enemyWk.rot.y = atan2f(centerpos.x - enemyWk.pos.x, centerpos.z - enemyWk.pos.z) + D3DX_PI;
 
