@@ -9,6 +9,7 @@
 #include "input.h"
 #include "player.h"
 #include "enemy.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -105,6 +106,12 @@ void UpdateCamera(void)
 	//cameraWk->pos = cameraWk->at + D3DXVECTOR3(x, y, z);													// カメラの位置（視点）
 	cameraWk->at = CenterPos + D3DXVECTOR3(AT_X_CAM, AT_Y_CAM, AT_Z_CAM);									// カメラの注視点＝モデルの中心点
 	cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);															// 3D空間の上方向はどちら？＝Yが＋方向が上
+
+#ifdef _DEBUG
+	// デバッグ表示
+	PrintDebugProc("カメラ座標 X:%f Y:%f Z:%f\n", cameraWk->pos.x, cameraWk->pos.y, cameraWk->pos.z);
+	PrintDebugProc("カメラ角度 X:%f Y:%f Z:%f\n", cameraWk->rot.x, cameraWk->rot.y, cameraWk->rot.z);
+#endif
 }
 
 //=============================================================================

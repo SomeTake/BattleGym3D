@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "shadow.h"
 #include "D3DXAnimation.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -195,6 +196,12 @@ void UpdateEnemy(void)
 			enemyWk.jump = false;
 		}
 	}
+
+#ifdef _DEBUG
+	// デバッグ表示
+	PrintDebugProc("エネミー座標 X:%f Y:%f Z:%f\n", enemyWk.pos.x, enemyWk.pos.y, enemyWk.pos.z);
+	PrintDebugProc("エネミー角度 X:%f Y:%f Z:%f\n", enemyWk.rot.x, enemyWk.rot.y, enemyWk.rot.z);
+#endif
 
 	// 影の位置設定
 	SetPositionShadow(enemyWk.IdxShadow, D3DXVECTOR3(enemyWk.pos.x, 0.1f, enemyWk.pos.z));

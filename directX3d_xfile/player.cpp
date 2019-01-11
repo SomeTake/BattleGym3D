@@ -11,6 +11,7 @@
 #include "shadow.h"
 #include "D3DXAnimation.h"
 #include "enemy.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -213,9 +214,6 @@ void UpdatePlayer(void)
 	int *Phase = GetPhase();
 	ENEMY *enemyWk = GetEnemy();
 
-	CAMERA *camera = GetCamera(0);
-	D3DXVECTOR3 centerpos = GetCenterPos();
-
 #ifdef _DEBUG
 	// デバッグ用入力
 	if (GetKeyboardTrigger(DIK_1))
@@ -232,10 +230,95 @@ void UpdatePlayer(void)
 	{
 		enemyWk->HPzan = 0;
 	}
+
+	// デバッグ表示
+	PrintDebugProc("プレイヤー座標 X:%f Y:%f Z:%f\n", playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
+	PrintDebugProc("プレイヤー角度 X:%f Y:%f Z:%f\n", playerWk.rot.x, playerWk.rot.y, playerWk.rot.z);
 #endif
 
 	// アニメーションを更新
 	playerWk.Animation->UpdateAnimation(playerWk.Animation, TIME_PER_FRAME);
+
+	// 簡単入力
+	EasyInputPlayer();
+
+	// 本格入力
+
+
+	// 勝利時
+	if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Action == Idle_P)
+	{
+		playerWk.NextAction = Win_P;
+	}
+	// 敗北時HP0になったらダウン
+	if (playerWk.HPzan <= 0)
+	{
+		playerWk.HPzan = 0;
+		playerWk.NextAction = Down_P;
+		SetPhase(PhaseFinish);
+	}
+
+	// 座標移動
+	MovePlayer();
+
+	// 影の位置設定
+	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
+	SetVertexShadow(playerWk.IdxShadow, playerWk.SizeShadow, playerWk.SizeShadow);
+	SetColorShadow(playerWk.IdxShadow, playerWk.ColShadow);
+}
+
+//=============================================================================
+// 描画処理
+//=============================================================================
+void DrawPlayer(void)
+{
+	LPDIRECT3DDEVICE9 pDevice = GetDevice();
+	D3DMATERIAL9 matDef;
+	MATRIX matrix = *GetMatrix();
+	CAMERA *cameraWk = GetCamera(0);
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&matrix.world);
+
+	// スケールを反映
+	D3DXMatrixScaling(&matrix.scale, playerWk.scl.x, playerWk.scl.y, playerWk.scl.z);
+	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&matrix.scale, playerWk.rot.y, playerWk.rot.x, playerWk.rot.z);
+	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
+
+	// 移動を反映
+	D3DXMatrixTranslation(&matrix.translation, playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
+	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.translation);
+
+	// ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &matrix.world);
+
+	// 現在のマテリアルを取得
+	pDevice->GetMaterial(&matDef);
+
+	// レンダリング
+	playerWk.Animation->DrawAnimation(playerWk.Animation, &matrix.world);
+
+	// マテリアルをデフォルトに戻す
+	pDevice->SetMaterial(&matDef);
+}
+
+//=============================================================================
+//プレイヤーの情報を取得する
+//=============================================================================
+PLAYER *GetPlayer(void)
+{
+	return &playerWk;
+}
+
+//=============================================================================
+//簡単入力（アニメーションの管理も）
+//=============================================================================
+void EasyInputPlayer(void)
+{
+	CAMERA *camera = GetCamera(0);
 
 	// 現在のアニメーション管理
 	switch (playerWk.Action)
@@ -262,7 +345,7 @@ void UpdatePlayer(void)
 		{
 			playerWk.NextAction = Leftstep_P;
 		}
-		
+
 		// 攻撃処理
 		// パンチ
 		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
@@ -321,9 +404,8 @@ void UpdatePlayer(void)
 		// モデルの移動
 		else if (GetKeyboardPress(DIK_D) || IsButtonPressed(0, BUTTON_RIGHT) || IsButtonPressed(0, STICK_RIGHT))
 		{
-			playerWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_FRONTWALK;
-			playerWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_FRONTWALK;
-			playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.50f;
+			// 押している間Frontwalkが維持される
+			// 座標移動はMovePlayerに
 		}
 		// リリースされた場合待機状態に戻す
 		else
@@ -361,9 +443,8 @@ void UpdatePlayer(void)
 		// モデルの移動
 		else if (GetKeyboardPress(DIK_A) || IsButtonPressed(0, BUTTON_LEFT) || IsButtonPressed(0, STICK_LEFT))
 		{
-			playerWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_BACKWALK;
-			playerWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_BACKWALK;
-			playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
+			// 押している間Backwalkが維持される
+			// 座標移動はMovePlayerに
 		}
 		// リリースされた場合待機状態に戻す
 		else
@@ -673,33 +754,43 @@ void UpdatePlayer(void)
 	default:
 		break;
 	}
+}
 
-	// 勝利時
-	if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Action == Idle_P)
-	{
-		playerWk.NextAction = Win_P;
-	}
-	// 敗北時HP0になったらダウン
-	if (playerWk.HPzan <= 0)
-	{
-		playerWk.HPzan = 0;
-		playerWk.NextAction = Down_P;
-		SetPhase(PhaseFinish);
-	}
+//=============================================================================
+//座標移動
+//=============================================================================
+void MovePlayer(void)
+{
+	CAMERA *camera = GetCamera(0);
+	D3DXVECTOR3 centerpos = GetCenterPos();
 
+	// 右移動中の座標処理
+	if (playerWk.Action == Frontwalk_P)
+	{
+		playerWk.move.x -= sinf(camera->rot.y) * VALUE_FRONTWALK;
+		playerWk.move.z -= cosf(camera->rot.y) * VALUE_FRONTWALK;
+		playerWk.rotDest.y = camera->rot.y;
+	}
+	// 左移動中の座標処理
+	if (playerWk.Action == Backwalk_P)
+	{
+		playerWk.move.x -= sinf(camera->rot.y + D3DX_PI) * VALUE_BACKWALK;
+		playerWk.move.z -= cosf(camera->rot.y + D3DX_PI) * VALUE_BACKWALK;
+		playerWk.rotDest.y = camera->rot.y + D3DX_PI;
+	}
 	// 上移動中の座標処理
 	if (playerWk.Action == Rightstep_P)
 	{
-		playerWk.move.x -= sinf(camera->rot.y) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(camera->rot.y) * VALUE_ROTATE;
-		playerWk.rotDest.y = camera->rot.y;
+		playerWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
+		playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
 	}
 	// 下移動中の座標処理
 	if (playerWk.Action == Leftstep_P)
 	{
-		playerWk.move.x -= sinf(D3DX_PI + camera->rot.y) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(D3DX_PI + camera->rot.y) * VALUE_ROTATE;
-		playerWk.rotDest.y = D3DX_PI + camera->rot.y;
+		playerWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.5f) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.5f) * VALUE_ROTATE;
+		playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.5f;
 	}
 
 	// 常に中心を向く
@@ -731,55 +822,4 @@ void UpdatePlayer(void)
 			playerWk.jump = false;
 		}
 	}
-
-	// 影の位置設定
-	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
-	SetVertexShadow(playerWk.IdxShadow, playerWk.SizeShadow, playerWk.SizeShadow);
-	SetColorShadow(playerWk.IdxShadow, playerWk.ColShadow);
-}
-
-//=============================================================================
-// 描画処理
-//=============================================================================
-void DrawPlayer(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	D3DMATERIAL9 matDef;
-	MATRIX matrix = *GetMatrix();
-	CAMERA *cameraWk = GetCamera(0);
-
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&matrix.world);
-
-	// スケールを反映
-	D3DXMatrixScaling(&matrix.scale, playerWk.scl.x, playerWk.scl.y, playerWk.scl.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
-
-	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&matrix.scale, playerWk.rot.y, playerWk.rot.x, playerWk.rot.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
-
-	// 移動を反映
-	D3DXMatrixTranslation(&matrix.translation, playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.translation);
-
-	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &matrix.world);
-
-	// 現在のマテリアルを取得
-	pDevice->GetMaterial(&matDef);
-
-	// レンダリング
-	playerWk.Animation->DrawAnimation(playerWk.Animation, &matrix.world);
-
-	// マテリアルをデフォルトに戻す
-	pDevice->SetMaterial(&matDef);
-}
-
-//=============================================================================
-//プレイヤーの情報を取得する
-//=============================================================================
-PLAYER *GetPlayer(void)
-{
-	return &playerWk;
 }

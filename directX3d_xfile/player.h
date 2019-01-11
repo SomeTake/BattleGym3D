@@ -45,5 +45,7 @@ void UninitPlayer(void);
 void UpdatePlayer(void);
 void DrawPlayer(void);
 PLAYER *GetPlayer(void);
+void EasyInputPlayer(void);		// ŠÈ’P“ü—Í
+void MovePlayer(void);			// À•WˆÚ“®
 
 #endif

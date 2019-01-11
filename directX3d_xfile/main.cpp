@@ -393,6 +393,10 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// 情報表示用フォントを設定
 	D3DXCreateFont(g_pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
 					OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &g_pD3DXFont);
+
+	// デバッグ
+	InitDebugProc();
+
 #endif
 
 	// 入力処理の初期化
@@ -467,6 +471,10 @@ void Uninit(void)
 		g_pD3DXFont->Release();
 		g_pD3DXFont = NULL;
 	}
+
+	// デバッグ
+	UninitDebugProc();
+
 #endif
 	if(g_pD3DDevice != NULL)
 	{// デバイスの開放
@@ -524,6 +532,11 @@ void Uninit(void)
 //=============================================================================
 void Update(void)
 {
+#ifdef _DEBUG
+	UpdateDebugProc();
+
+#endif
+
 	PLAYER *playerWk = GetPlayer();
 	ENEMY *enemyWk = GetEnemy();
 
@@ -719,7 +732,7 @@ void Update(void)
 }
 
 //=============================================================================
-// 描画処理 引数にカメラ番号を入れる
+// 描画処理 引数:カメラ番号
 //=============================================================================
 void Draw(int no)
 {
@@ -996,6 +1009,9 @@ void Draw(int no)
 		}
 
 #ifdef _DEBUG
+		// デバッグ表示
+		DrawDebugProc();
+
 		// FPS表示
 		DrawFPS();
 #endif
@@ -1022,13 +1038,7 @@ LPDIRECT3DDEVICE9 GetDevice(void)
 //=============================================================================
 void DrawFPS(void)
 {
-	RECT rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-	char str[256];
-
-	wsprintf(str, "FPS:%d\n", g_nCountFPS);
-
-	// テキスト描画
-	g_pD3DXFont->DrawText(NULL, str, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
+	PrintDebugProc("FPS:%d\n", g_nCountFPS);
 }
 #endif
 
