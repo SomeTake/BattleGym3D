@@ -92,14 +92,12 @@ void UpdateCompany(void)
 		PlaySound(BGM_TITLE, 0, 1);
 	}
 
-	for (int ControllerCount = 0; ControllerCount < GAMEPADMAX; ControllerCount++)
+	//ボタンでタイトル画面へ
+	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(0, BUTTON_M)
+		|| IsButtonTriggered(1, BUTTON_C) || IsButtonTriggered(1, BUTTON_M))
 	{
-		//ボタンでタイトル画面へ
-		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerCount, BUTTON_C) || IsButtonTriggered(ControllerCount, BUTTON_M))
-		{
-			SetPhase(PhaseTitle);
-			PlaySound(BGM_TITLE, 0, 1);
-		}
+		SetPhase(PhaseTitle);
+		PlaySound(BGM_TITLE, 0, 1);
 	}
 
 	SetReflectCompany(i);

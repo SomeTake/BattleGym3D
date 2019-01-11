@@ -60,7 +60,15 @@ void UninitResult(void)
 //=============================================================================
 void UpdateResult(void)
 {
-	for (int ControllerCount = 0; ControllerCount < GAMEPADMAX; ControllerCount++)
+	static int sceneframe = 0;
+
+	// シーン遷移有効になるまでの時間
+	if (sceneframe < POSSIBLE_FRAME)
+	{
+		sceneframe++;
+	}
+
+	if (sceneframe == POSSIBLE_FRAME)
 	{
 		if (GetKeyboardTrigger(DIK_RETURN))
 		{// Enter押したら、ステージを切り替える
@@ -70,7 +78,7 @@ void UpdateResult(void)
 			PlaySound(BGM_TITLE, 1, 1);
 		}
 		// ゲームパッドで移動処理
-		else if (IsButtonTriggered(ControllerCount, BUTTON_M))
+		else if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_M) || IsButtonTriggered(1, BUTTON_C))
 		{
 			//ゲームループのための再初期化
 			ReInit();

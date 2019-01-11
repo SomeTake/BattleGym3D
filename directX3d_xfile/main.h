@@ -72,6 +72,8 @@
 #define MAX_SEPARATE	(4)												// 画面分割数の最大
 #define TRANSPARENCY	(0.3f)											// 透明度の設定
 
+#define POSSIBLE_FRAME						(120)						// KO画面、リザルト画面、などのシーン遷移が有効になるまでの時間
+
 // タイトル画面
 #define MODESELECT_POS_X					(450)						// 表示位置
 #define MODESELECT_POS_Y					(434)						// 表示位置

@@ -7,6 +7,7 @@
 #include "main.h"
 #include "tutorial.h"
 #include "input.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -69,19 +70,24 @@ void UninitTutorial(void)
 //=============================================================================
 void UpdateTutorial(void)
 {
-	for (int ControllerCount = 0; ControllerCount < GAMEPADMAX; ControllerCount++)
+	if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(0, BUTTON_Z) || IsButtonPressed(1, BUTTON_Z))
 	{
-		if (GetKeyboardPress(DIK_SPACE) || IsButtonPressed(ControllerCount, BUTTON_Z))
-		{
-			SetTextureTutorial(1);
-		}
-		else
-		{
-			SetTextureTutorial(0);
-		}
+		SetTextureTutorial(1);
+	}
+	else
+	{
+		SetTextureTutorial(0);
 	}
 	SetVertexTutorial();	// 移動後の座標で頂点を設定
 
+	// タイトル画面へ戻る
+	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(1, BUTTON_M))
+	{
+		SetPhase(PhaseTitle);
+		StopSound(BGM_TUTORIAL, 0);
+		PlaySound(BGM_TITLE, 1, 1);
+		ReInit();
+	}
 }
 
 //=============================================================================
