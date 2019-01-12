@@ -548,32 +548,32 @@ void EasyInputPlayer(void)
 		// 他アクションからボタンリリースで待機状態に戻る
 		if (playerWk.Action == Idle_P || playerWk.Action == Frontwalk_P || playerWk.Action == Backwalk_P || playerWk.Action == Guard_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
 			playerWk.Action = Idle_P;
 		}
 		else
 		{
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
 				playerWk.Action = Idle_P;
 			}
 		}
 		break;
 
 	case Frontwalk_P:
-		playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, 0.1f);
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, 1.0f);
 		playerWk.Action = Frontwalk_P;
 		break;
 	case Backwalk_P:
-		playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 0.1f);
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 1.0f);
 		playerWk.Action = Backwalk_P;
 		break;
 	case Rightstep_P:
 		// アニメーションを移行させる
 		if (playerWk.Action != Rightstep_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 1.0f);
 			playerWk.Action = Rightstep_P;
 		}
 		else
@@ -581,7 +581,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 1.0f);
 				playerWk.Action = Rightstep_P;
 			}
 		}
@@ -590,7 +590,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Leftstep_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 1.0f);
 			playerWk.Action = Leftstep_P;
 		}
 		else
@@ -598,20 +598,20 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 1.0f);
 				playerWk.Action = Leftstep_P;
 			}
 		}
 		break;
 	case Guard_P:
-		playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, 0.1f);
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, 1.0f);
 		playerWk.Action = Guard_P;
 		break;
 	case Damage_P:
 		// アニメーションを移行させる
 		if (playerWk.Action != Damage_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage_P, 1.0f);
 			playerWk.Action = Damage_P;
 		}
 		else
@@ -619,7 +619,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage_P, 1.0f);
 				playerWk.Action = Damage_P;
 			}
 		}
@@ -628,7 +628,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Down_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 1.0f);
 			playerWk.Action = Down_P;
 		}
 		else
@@ -636,7 +636,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら次のアニメーションに移行
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 0.0f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 1.0f);
 				playerWk.Action = Down_P;
 			}
 		}
@@ -645,7 +645,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != DownPose_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 1.0f);
 			playerWk.Action = DownPose_P;
 		}
 		else
@@ -653,7 +653,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら次のアニメーションに移行
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 1.0f);
 				playerWk.Action = DownPose_P;
 			}
 		}
@@ -662,7 +662,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Getup_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.0f);
 			playerWk.Action = Getup_P;
 		}
 		else
@@ -670,7 +670,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら次のアニメーションに移行
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.0f);
 				playerWk.Action = Getup_P;
 			}
 		}
@@ -679,7 +679,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Punchi_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 1.0f);
 			playerWk.Action = Punchi_P;
 		}
 		else
@@ -687,7 +687,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 1.0f);
 				playerWk.Action = Punchi_P;
 			}
 		}
@@ -696,7 +696,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Kick_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 1.0f);
 			playerWk.Action = Kick_P;
 		}
 		else
@@ -704,7 +704,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 1.0f);
 				playerWk.Action = Kick_P;
 			}
 		}
@@ -713,7 +713,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Hadou_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 1.0f);
 			playerWk.Action = Hadou_P;
 		}
 		else
@@ -721,7 +721,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 1.0f);
 				playerWk.Action = Hadou_P;
 			}
 		}
@@ -730,7 +730,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Shoryu_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 1.0f);
 			playerWk.Action = Shoryu_P;
 		}
 		else
@@ -738,7 +738,7 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら待機モーションに戻す
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 0.1f);
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 1.0f);
 				playerWk.Action = Shoryu_P;
 			}
 		}
@@ -747,7 +747,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Win_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Win_P, 0.1f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Win_P, 1.0f);
 			playerWk.Action = Win_P;
 		}
 		break;
