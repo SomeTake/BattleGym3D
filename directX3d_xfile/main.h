@@ -60,9 +60,9 @@
 #define	VIEW_FAR_Z		(1000.0f)										// ビュー平面のFarZ値
 
 #define	VALUE_MOVE		(1.00f)											// 移動量
-#define VALUE_FRONTWALK	(0.50f)											// 前歩き移動量
+#define VALUE_FRONTWALK	(0.30f)											// 前歩き移動量
 #define VALUE_BACKWALK	(0.20f)											// 後ろ歩き移動量
-#define	VALUE_ROTATE	(D3DX_PI * 1.00f)								// 回転量
+#define	VALUE_ROTATE	(D3DX_PI * 0.10f)								// 回転量
 #define VALUE_ENLARGEMENT	(0.1f)										// 拡大・縮小量
 #define	VALUE_ROTATE_MODEL	(D3DX_PI * 0.05f)							// 回転速度
 
@@ -82,10 +82,9 @@
 #define PAUSESELECT_POS_X					(450)						// 表示位置
 #define PAUSESELECT_POS_Y					(223)						// 表示位置
 
-// ステータス関係
+// バトル関係
 #define FULL_HP								(1000)						// ゲージの最大値
 #define FULL_SPGUAGE						(1000)						// ゲージの最大値
-#define JUMP_SPEED							(30.0f)						// ジャンプの初速
 #define DAMAGE_PUNCHI						(40)						// ダメージ量
 #define DAMAGE_KICK							(50)						// ダメージ量
 #define DAMAGE_HADOU						(100)						// ダメージ量

@@ -80,8 +80,6 @@ HRESULT InitPlayer(int type)
 	playerWk.rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	playerWk.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	playerWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	playerWk.jump = false;
-	playerWk.speed = JUMP_SPEED;
 	playerWk.HP = FULL_HP;
 	playerWk.HPzan = playerWk.HP;
 	playerWk.Action = Idle_P;
@@ -121,6 +119,11 @@ HRESULT InitPlayer(int type)
 		}
 		// ダウン
 		if (FAILED(SetupCallbackKeyframes(playerWk.Animation, PlayerAnimNum[Down_P])))
+		{
+			return E_FAIL;
+		}
+		// ダウン状態
+		if (FAILED(SetupCallbackKeyframes(playerWk.Animation, PlayerAnimNum[DownPose_P])))
 		{
 			return E_FAIL;
 		}
@@ -234,6 +237,8 @@ void UpdatePlayer(void)
 	// デバッグ表示
 	PrintDebugProc("プレイヤー座標 X:%f Y:%f Z:%f\n", playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
 	PrintDebugProc("プレイヤー角度 X:%f Y:%f Z:%f\n", playerWk.rot.x, playerWk.rot.y, playerWk.rot.z);
+	PrintDebugProc("プレイヤーアクション X:%d\n", playerWk.Action);
+	PrintDebugProc("プレイヤーネクストアクション X:%d\n", playerWk.NextAction);
 #endif
 
 	// アニメーションを更新
@@ -320,7 +325,7 @@ void EasyInputPlayer(void)
 {
 	CAMERA *camera = GetCamera(0);
 
-	// 現在のアニメーション管理
+	// 現在のアニメーションに応じて入力できる処理
 	switch (playerWk.Action)
 	{
 	case Idle_P:
@@ -486,25 +491,25 @@ void EasyInputPlayer(void)
 		}
 		break;
 	case Down_P:
-		// アニメーションが終わったのでダウン状態のポーズに移行
-		if (playerWk.NextAction == Down_P)
-		{
-			playerWk.NextAction = DownPose_P;
-		}
+		//// アニメーションが終わったのでダウン状態のポーズに移行
+		//if (playerWk.NextAction == Down_P)
+		//{
+		//	playerWk.NextAction = DownPose_P;
+		//}
 		break;
 	case DownPose_P:
-		// アニメーションが終わったのでHPがまだあれば起き上がりに移行
-		if (playerWk.NextAction == DownPose_P && playerWk.HPzan > 0)
-		{
-			playerWk.NextAction = Getup_P;
-		}
+		//// アニメーションが終わったのでHPがまだあれば起き上がりに移行
+		//if (playerWk.NextAction == Getup_P && playerWk.HPzan > 0)
+		//{
+		//	playerWk.Action = Getup_P;
+		//}
 		break;
 	case Getup_P:
-		// アニメーションが終わったので待機状態に戻す
-		if (playerWk.NextAction == Getup_P)
-		{
-			playerWk.NextAction = Idle_P;
-		}
+		//// アニメーションが終わったので待機状態に戻す
+		//if (playerWk.NextAction == Idle_P)
+		//{
+		//	playerWk.Action = Idle_P;
+		//}
 		break;
 	case Punchi_P:
 		// アニメーションが終わったので待機状態に戻す
@@ -541,7 +546,7 @@ void EasyInputPlayer(void)
 		break;
 	}
 
-	// 次のアニメーション管理
+	// アニメーションを切り替える
 	switch (playerWk.NextAction)
 	{
 	case Idle_P:
@@ -628,25 +633,17 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Down_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 1.0f);
-			playerWk.Action = Down_P;
-		}
-		else
-		{
-			// アニメーションが終了したら次のアニメーションに移行
-			if (playerWk.Animation->MotionEnd == true)
+			// HP0のときはスローモーションでダウンする
+			if (playerWk.HPzan == 0)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 0.5f);
+				playerWk.Action = Down_P;
+			}
+			else
 			{
 				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down_P, 1.0f);
 				playerWk.Action = Down_P;
 			}
-		}
-		break;
-	case DownPose_P:
-		// アニメーションを移行させる
-		if (playerWk.Action != DownPose_P)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 1.0f);
-			playerWk.Action = DownPose_P;
 		}
 		else
 		{
@@ -654,7 +651,24 @@ void EasyInputPlayer(void)
 			if (playerWk.Animation->MotionEnd == true)
 			{
 				playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 1.0f);
-				playerWk.Action = DownPose_P;
+				playerWk.NextAction = DownPose_P;
+			}
+		}
+		break;
+	case DownPose_P:
+		// アニメーションを移行させる
+		if (playerWk.Action != DownPose_P)
+		{
+			//playerWk.Animation->ChangeAnimation(playerWk.Animation, DownPose_P, 1.0f);
+			playerWk.Action = DownPose_P;
+		}
+		else
+		{
+			// アニメーションが終了したら次のアニメーションに移行
+			if (playerWk.Animation->MotionEnd == true && playerWk.HPzan > 0)
+			{
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.0f);
+				playerWk.NextAction = Getup_P;
 			}
 		}
 		break;
@@ -662,7 +676,7 @@ void EasyInputPlayer(void)
 		// アニメーションを移行させる
 		if (playerWk.Action != Getup_P)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.0f);
+			//playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.0f);
 			playerWk.Action = Getup_P;
 		}
 		else
@@ -670,8 +684,8 @@ void EasyInputPlayer(void)
 			// アニメーションが終了したら次のアニメーションに移行
 			if (playerWk.Animation->MotionEnd == true)
 			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.0f);
-				playerWk.Action = Getup_P;
+				playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+				playerWk.Action = Idle_P;
 			}
 		}
 		break;
@@ -764,33 +778,35 @@ void MovePlayer(void)
 	CAMERA *camera = GetCamera(0);
 	D3DXVECTOR3 centerpos = GetCenterPos();
 
-	// 右移動中の座標処理
-	if (playerWk.Action == Frontwalk_P)
+	// アクションに合わせた座標移動
+	switch (playerWk.Action)
 	{
-		playerWk.move.x -= sinf(camera->rot.y) * VALUE_FRONTWALK;
-		playerWk.move.z -= cosf(camera->rot.y) * VALUE_FRONTWALK;
-		playerWk.rotDest.y = camera->rot.y;
-	}
-	// 左移動中の座標処理
-	if (playerWk.Action == Backwalk_P)
-	{
-		playerWk.move.x -= sinf(camera->rot.y + D3DX_PI) * VALUE_BACKWALK;
-		playerWk.move.z -= cosf(camera->rot.y + D3DX_PI) * VALUE_BACKWALK;
-		playerWk.rotDest.y = camera->rot.y + D3DX_PI;
-	}
-	// 上移動中の座標処理
-	if (playerWk.Action == Rightstep_P)
-	{
-		playerWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
-		playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
-	}
-	// 下移動中の座標処理
-	if (playerWk.Action == Leftstep_P)
-	{
-		playerWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.5f) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.5f) * VALUE_ROTATE;
-		playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.5f;
+		// 前移動中の座標処理
+	case Frontwalk_P:
+		playerWk.move.x -= sinf(playerWk.rot.y) * VALUE_FRONTWALK;
+		playerWk.move.z -= cosf(playerWk.rot.y) * VALUE_FRONTWALK;
+		//playerWk.rotDest.y = camera->rot.y;
+		break;
+		// 後移動中の座標処理
+	case Backwalk_P:
+		playerWk.move.x -= sinf(playerWk.rot.y + D3DX_PI) * VALUE_BACKWALK;
+		playerWk.move.z -= cosf(playerWk.rot.y + D3DX_PI) * VALUE_BACKWALK;
+		//playerWk.rotDest.y = camera->rot.y + D3DX_PI;
+		break;
+		// 手前移動中の座標処理
+	case Rightstep_P:
+		playerWk.move.x -= sinf(playerWk.rot.y + D3DX_PI * 0.50f) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(playerWk.rot.y + D3DX_PI * 0.50f) * VALUE_ROTATE;
+		//playerWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
+		break;
+		// 奥移動中の座標処理
+	case Leftstep_P:
+		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * 0.5f) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * 0.5f) * VALUE_ROTATE;
+		//playerWk.rotDest.y = camera->rot.y + D3DX_PI * 0.5f;
+		break;
+	default:
+		break;
 	}
 
 	// 常に中心を向く
@@ -806,20 +822,4 @@ void MovePlayer(void)
 	playerWk.move.y += (0.0f - playerWk.move.y) * RATE_MOVE_MODEL;
 	playerWk.move.z += (0.0f - playerWk.move.z) * RATE_MOVE_MODEL;
 
-	//モデルのジャンプ
-	if (GetKeyboardTrigger(DIK_SPACE) && playerWk.pos.y == 0.0f)
-	{
-		playerWk.jump = true;
-	}
-	if (playerWk.jump == true)
-	{
-		playerWk.pos.y += playerWk.speed;
-		playerWk.speed -= 0.98f;
-		if (playerWk.pos.y <= 0.0f)
-		{
-			playerWk.speed = JUMP_SPEED;
-			playerWk.pos.y = 0.0f;
-			playerWk.jump = false;
-		}
-	}
 }

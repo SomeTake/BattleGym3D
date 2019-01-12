@@ -27,8 +27,6 @@ typedef struct {
 	int					IdxShadow;			// 影ID
 	float				SizeShadow;			// 影のサイズ
 	D3DXCOLOR			ColShadow;			// 影の色
-	bool				jump;				// ジャンプフラグ
-	float				speed;				// ジャンプのスピード
 	int					HP;					// 体力
 	int					HPzan;				// 残り体力
 
