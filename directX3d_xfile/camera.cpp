@@ -23,6 +23,7 @@
 CAMERA cameraWk[MAX_SEPARATE];
 
 D3DXVECTOR3 CenterPos;				// プレイヤーとエネミーの間の位置
+float PEdistance;					// プレイヤーとエネミーの距離
 
 //=============================================================================
 // カメラの初期化処理
@@ -66,7 +67,7 @@ void UpdateCamera(void)
 
 	// PとEの距離計測
 	D3DXVECTOR3 unit = playerWk->pos - enemyWk->pos;	// PE間のベクトル
-	float PEdistance = D3DXVec3Length(&unit);			// PE間の距離
+	PEdistance = D3DXVec3Length(&unit);					// PE間の距離
 	D3DXVec3Normalize(&unit, &unit);					// 正規化する
 
 	// カメラの注視点と位置の距離指定
@@ -83,27 +84,7 @@ void UpdateCamera(void)
 	D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * cameraWk->distance, AT_Y_CAM + POS_Y_CAM, CenterPos.z + unit.x * cameraWk->distance);
 	cameraWk->pos = ViewFrom;
 
-	//// カメラの距離を求める
-	//// キャラクタの座標間の距離に比例させる
-	//float ViewDistance = PEdistance * VIEW_DIST * VIEW_DIST_RATE;
-
-	//// カメラが一定距離（VIEW_DIST）よりも近づかないようにする
-	//if (ViewDistance < VIEW_DIST)
-	//{
-	//	ViewDistance = VIEW_DIST;
-	//}
-	//
-	//// PとEの座標の中点から、PとEの座標をそれぞれ結んだ線分に対して垂直に移動した位置をカメラ位置とする
-	//D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * ViewDistance, AT_Y_CAM + POS_Y_CAM, CenterPos.z - unit.x * ViewDistance);
-	//cameraWk->pos = ViewFrom;
-
-	//x = cameraWk->distance * sinf(cameraWk->rot.y);
-	//z = cameraWk->distance * cosf(cameraWk->rot.y);
-	//x = unit.z * PEdistance;
-	//z = unit.x * PEdistance;
-
 	cameraWk->rot.y = atan2f(cameraWk->at.x - cameraWk->pos.x, cameraWk->at.z - cameraWk->pos.z) * D3DX_PI;	// カメラの回転（常に注視点を向き続ける）
-	//cameraWk->pos = cameraWk->at + D3DXVECTOR3(x, y, z);													// カメラの位置（視点）
 	cameraWk->at = CenterPos + D3DXVECTOR3(AT_X_CAM, AT_Y_CAM, AT_Z_CAM);									// カメラの注視点＝モデルの中心点
 	cameraWk->up = D3DXVECTOR3(0.0f, 1.0f, 0.0f);															// 3D空間の上方向はどちら？＝Yが＋方向が上
 
@@ -111,6 +92,7 @@ void UpdateCamera(void)
 	// デバッグ表示
 	PrintDebugProc("カメラ座標 X:%f Y:%f Z:%f\n", cameraWk->pos.x, cameraWk->pos.y, cameraWk->pos.z);
 	PrintDebugProc("カメラ角度 X:%f Y:%f Z:%f\n", cameraWk->rot.x, cameraWk->rot.y, cameraWk->rot.z);
+	PrintDebugProc("プレイヤー間の距離 %f\n", PEdistance);
 #endif
 }
 
@@ -164,4 +146,12 @@ CAMERA *GetCamera(int cno)
 D3DXVECTOR3 GetCenterPos(void)
 {
 	return CenterPos;
+}
+
+//=============================================================================
+//PとEのの距離を取得する
+//=============================================================================
+float GetPEdistance(void)
+{
+	return PEdistance;
 }

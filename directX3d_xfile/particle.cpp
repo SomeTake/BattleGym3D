@@ -68,8 +68,10 @@ HRESULT InitParticle(int type)
 	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)
 	{
 		particle->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		particle->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		particle->scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 		particle->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		particle->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		particle->fWidth = PARTICLE_WIDTH;
 		particle->fHeight = PARTICLE_HEIGHT;
 		particle->bUse = false;
@@ -114,97 +116,132 @@ void UpdateParticle(void)
 	PARTICLE *particle = GetParticle(0);
 	PLAYER *playerWk = GetPlayer();
 
-	//============================================================================
-	// 魔法陣っぽいの
-	float radius = CIRCLE_RADIUS;
-	if (GetKeyboardPress(DIK_SPACE))
-	{
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-		SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
-	}
 
 	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)
 	{
-		//1つめ
-		if (nCntParticle % 10 == 0)
+		if (particle->bUse == true)
 		{
-			centerpos = playerWk->pos + D3DXVECTOR3(CIRCLE_RADIUS,0.0f,0.0f);
-		}
-		//2つめ
-		else if (nCntParticle % 10 == 1)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, CIRCLE_RADIUS / 2 * sqrtf(2));
-		}
-		//3つめ
-		else if (nCntParticle % 10 == 2)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(0.0f, 0.0f, CIRCLE_RADIUS);
-		}
-		//4つめ
-		else if (nCntParticle % 10 == 3)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(-CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, CIRCLE_RADIUS / 2 * sqrtf(2));
-		}
-		//5つめ
-		else if (nCntParticle % 10 == 4)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(-CIRCLE_RADIUS, 0.0f, 0.0f);
-		}
-		//6つめ
-		else if (nCntParticle % 10 == 5)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(-CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, -CIRCLE_RADIUS / 2 * sqrtf(2));
-		}
-		//7つめ
-		else if (nCntParticle % 10 == 6)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(0.0f, 0.0f, -CIRCLE_RADIUS);
-		}
-		//8つめ
-		else if (nCntParticle % 10 == 7)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, -CIRCLE_RADIUS / 2 * sqrtf(2));
-		}
-		//9つめ&10こめ
-		else if(nCntParticle % 10 == 8 || nCntParticle % 10 == 9)
-		{
-			centerpos = playerWk->pos + D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		}
+			// パーティクルの動き
+			particle->pos.y -= 5.0f;
 
-		if (nCntParticle % 10 == 8)
-		{
-			particle->theta += (1.0f + (rand() % 101 / 100.0f));
-			particle->pos.x = centerpos.x + (radius * 2 + 10.0f) * cosf(particle->theta);
-			particle->pos.z = centerpos.z + (radius * 2 + 10.0f) * sinf(particle->theta);
-		}
-		else if (nCntParticle % 10 == 9)
-		{
-			particle->theta += (1.0f + (rand() % 101 / 100.0f));
-			particle->pos.x = centerpos.x + (radius * 2 + 20.0f) * cosf(particle->theta);
-			particle->pos.z = centerpos.z + (radius * 2 + 20.0f) * sinf(particle->theta);
-		}
-		else
-		{
-			particle->theta += (1.0f + (rand() % 101 / 100.0f));
-			particle->pos.x = centerpos.x + radius * cosf(particle->theta);
-			particle->pos.z = centerpos.z + radius * sinf(particle->theta);
+			if (particle->pos.y <= 0.0f - PARTICLE_HEIGHT)
+			{
+				particle->bUse =false;
+				ReleaseShadow(particle->nIdxShadow);
+			}
 
-		}
+			particle->pos.x += particle->move.x;
+			particle->pos.z += particle->move.z;
 
-		if (particle->theta == 2.0f)
-		{
-			particle->bUse = false;
-			particle->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			particle->col.a -= particle->DecAlpha;
+			if (particle->col.a <= 0.0f)
+			{
+				particle->col.a = 0.0f;
+			}
+			SetColorParticle(nCntParticle,
+				D3DXCOLOR(Particle->col.r, particle->col.b,
+					particle->col.b, particle->col.a));
+
+			particle->time;
+			if (particle->time <= 0)
+			{
+				particle->bUse = false;
+			}
+
 		}
 	}
+
+	//============================================================================
+	// 魔法陣っぽいの
+	//float radius = CIRCLE_RADIUS;
+	//if (GetKeyboardPress(DIK_SPACE))
+	//{
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//	SetParticle(D3DXVECTOR3(0.0f, 1.0f, 0.0f), PARTICLE_WIDTH, PARTICLE_HEIGHT, D3DXCOLOR(0.337f, 0.329f, 0.635f, 0.7f));
+	//}
+
+	//for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)
+	//{
+	//	//1つめ
+	//	if (nCntParticle % 10 == 0)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(CIRCLE_RADIUS,0.0f,0.0f);
+	//	}
+	//	//2つめ
+	//	else if (nCntParticle % 10 == 1)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, CIRCLE_RADIUS / 2 * sqrtf(2));
+	//	}
+	//	//3つめ
+	//	else if (nCntParticle % 10 == 2)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(0.0f, 0.0f, CIRCLE_RADIUS);
+	//	}
+	//	//4つめ
+	//	else if (nCntParticle % 10 == 3)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(-CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, CIRCLE_RADIUS / 2 * sqrtf(2));
+	//	}
+	//	//5つめ
+	//	else if (nCntParticle % 10 == 4)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(-CIRCLE_RADIUS, 0.0f, 0.0f);
+	//	}
+	//	//6つめ
+	//	else if (nCntParticle % 10 == 5)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(-CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, -CIRCLE_RADIUS / 2 * sqrtf(2));
+	//	}
+	//	//7つめ
+	//	else if (nCntParticle % 10 == 6)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(0.0f, 0.0f, -CIRCLE_RADIUS);
+	//	}
+	//	//8つめ
+	//	else if (nCntParticle % 10 == 7)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(CIRCLE_RADIUS / 2 * sqrtf(2), 0.0f, -CIRCLE_RADIUS / 2 * sqrtf(2));
+	//	}
+	//	//9つめ&10こめ
+	//	else if(nCntParticle % 10 == 8 || nCntParticle % 10 == 9)
+	//	{
+	//		centerpos = playerWk->pos + D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//	}
+
+	//	if (nCntParticle % 10 == 8)
+	//	{
+	//		particle->theta += (1.0f + (rand() % 101 / 100.0f));
+	//		particle->pos.x = centerpos.x + (radius * 2 + 10.0f) * cosf(particle->theta);
+	//		particle->pos.z = centerpos.z + (radius * 2 + 10.0f) * sinf(particle->theta);
+	//	}
+	//	else if (nCntParticle % 10 == 9)
+	//	{
+	//		particle->theta += (1.0f + (rand() % 101 / 100.0f));
+	//		particle->pos.x = centerpos.x + (radius * 2 + 20.0f) * cosf(particle->theta);
+	//		particle->pos.z = centerpos.z + (radius * 2 + 20.0f) * sinf(particle->theta);
+	//	}
+	//	else
+	//	{
+	//		particle->theta += (1.0f + (rand() % 101 / 100.0f));
+	//		particle->pos.x = centerpos.x + radius * cosf(particle->theta);
+	//		particle->pos.z = centerpos.z + radius * sinf(particle->theta);
+
+	//	}
+
+	//	if (particle->theta == 2.0f)
+	//	{
+	//		particle->bUse = false;
+	//		particle->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//	}
+	//}
 	//============================================================================
 
 
@@ -462,7 +499,7 @@ void SetVertexParticle(int nIdxParticle, float fWidth, float fHeight)
 }
 
 //=============================================================================
-// 頂点カラーの設定
+// 頂点カラーの設定 引数(nIdxParticle = 番号, col = 色)
 //=============================================================================
 void SetColorParticle(int nIdxParticle, D3DXCOLOR col)
 {
@@ -490,29 +527,33 @@ void SetColorParticle(int nIdxParticle, D3DXCOLOR col)
 //=============================================================================
 // 頂点情報の作成
 //=============================================================================
-int SetParticle(D3DXVECTOR3 pos, float fWidth, float fHeight, D3DXCOLOR col)
+int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, float fHeight, int Time)
 {
 	PARTICLE *particle = GetParticle(0);
 	int nIdxParticle = -1;
 
-	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)
+	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
 	{
 		if (!particle->bUse)
 		{
 			particle->pos = pos;
+			particle->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			particle->scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+			particle->move = move;
+			particle->col = col;
 			particle->fWidth = fWidth;
 			particle->fHeight = fHeight;
+			particle->time = Time;
+			particle->DecAlpha = col.a / Time;
 			particle->bUse = true;
 
 			// 頂点座標の設定
 			SetVertexParticle(nCntParticle, fWidth, fHeight);
 
 			// 頂点カラーの設定
-			SetColorParticle(nCntParticle, col);
-
-			// 影の設定
-			particle->nIdxShadow = CreateShadow(particle->pos, particle->fWidth, particle->fWidth);
+			SetColorParticle(nCntParticle,
+				D3DXCOLOR(particle->col.r, particle->col.b,
+					particle->col.b, particle->col.a));
 
 			nIdxParticle = nCntParticle;
 

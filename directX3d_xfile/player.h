@@ -22,7 +22,6 @@ typedef struct {
 	D3DXVECTOR3			pos;				// モデルの位置
 	D3DXVECTOR3			move;				// モデルの移動量
 	D3DXVECTOR3			rot;				// 現在の向き
-	D3DXVECTOR3			rotDest;			// 目的の向き
 	D3DXVECTOR3			scl;				// モデルの大きさ(スケール)
 	int					IdxShadow;			// 影ID
 	float				SizeShadow;			// 影のサイズ

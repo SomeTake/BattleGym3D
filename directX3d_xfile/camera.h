@@ -49,6 +49,7 @@ void InitCamera(void);
 void UpdateCamera(void);
 CAMERA *GetCamera(int cno);
 void SetCamera(int no);
-D3DXVECTOR3 GetCenterPos(void);
+D3DXVECTOR3 GetCenterPos(void);		// P‚ÆE‚ÌŠÔ‚ÌˆÊ’u‚ðŽæ“¾‚·‚é
+float GetPEdistance(void);			// P‚ÆE‚Ì‹——£‚ðŽæ“¾‚·‚é
 
 #endif

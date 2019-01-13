@@ -27,12 +27,15 @@ typedef struct
 {
 	D3DXMATRIX mtxWorld;	// ワールドマトリックス
 	D3DXVECTOR3 pos;		// 位置
+	D3DXVECTOR3 rot;		// 回転
 	D3DXVECTOR3 scl;		// スケール
 	D3DXCOLOR col;			// 色
+	D3DXVECTOR3 move;		// 移動量
 	float fWidth;			// 幅
 	float fHeight;			// 高さ
 	int nIdxShadow;			// 影ID
 	bool bUse;				// 使用しているかどうか
+	float DecAlpha;			// 減衰値
 	int time;				// 表示する時間
 	float theta;			// 角度θ
 } PARTICLE;
@@ -48,7 +51,7 @@ HRESULT MakeVertexParticle(LPDIRECT3DDEVICE9 pDevice);
 void SetVertexParticle(int nIdxParticle, float fWidth, float fHeight);
 void SetColorParticle(int nIdxParticle, D3DXCOLOR col);
 
-int SetParticle(D3DXVECTOR3 pos, float fWidth, float fHeight, D3DXCOLOR col);	// パーティクル発生用(場所, 幅, 高さ, 色)
-PARTICLE *GetParticle(int no);													// パーティクル構造体のゲッター
+int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, float fHeight, int Time);	// パーティクル発生用(場所, 移動量, 色, 幅, 高さ, 時間)
+PARTICLE *GetParticle(int no);																				// パーティクル構造体のゲッター
 
 #endif
