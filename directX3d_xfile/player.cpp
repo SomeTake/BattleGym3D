@@ -579,13 +579,6 @@ void MovePlayer(void)
 			enemyWk->move.x -= sinf(enemyWk->rot.y + D3DX_PI) * VALUE_FRONTWALK;
 			enemyWk->move.z -= cosf(enemyWk->rot.y + D3DX_PI) * VALUE_FRONTWALK;
 		}
-		// エフェクトの設定
-		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 20);
-		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 20);
-		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 20);
 		break;
 		// 後移動中の座標処理
 	case Backwalk_P:
@@ -633,5 +626,17 @@ void MovePlayer(void)
 	playerWk.move.x = 0.0f;
 	playerWk.move.y = 0.0f;
 	playerWk.move.z = 0.0f;
+
+	// 移動中のエフェクトの発生
+	if (playerWk.Animation->CurrentAnimID == Frontwalk_P || playerWk.Animation->CurrentAnimID == Backwalk_P ||
+		playerWk.Animation->CurrentAnimID == Rightstep_P || playerWk.Animation->CurrentAnimID == Leftstep_P)
+	{
+		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 20);
+		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 20);
+		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 20);
+	}
 
 }

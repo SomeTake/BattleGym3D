@@ -42,6 +42,7 @@
 #include "winner.h"
 #include "sound.h"
 #include "meshwall.h"
+#include "thanks.h"
 
 
 //*****************************************************************************
@@ -456,6 +457,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitPause(0);
 	InitDrawgame(0);
 	InitCompany(0);
+	InitThanks(0);
 
 	return S_OK;
 }
@@ -524,6 +526,7 @@ void Uninit(void)
 	UninitPause();
 	UninitDrawgame();
 	UninitCompany();
+	UninitThanks();
 
 }
 
@@ -727,7 +730,9 @@ void Update(void)
 			}
 		}
 		break;
-
+	case PhaseThankyou:
+		UpdateThanks();
+		break;
 	}
 }
 
@@ -914,12 +919,12 @@ void Draw(int no)
 			break;
 
 		case PhaseGame:
+			//エフェクト
+			DrawParticle();
+
 			//BG
 			DrawMeshField();
 			DrawMeshWall();
-
-			//エフェクト
-			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -1006,6 +1011,9 @@ void Draw(int no)
 				DrawEvaluation();
 			}
 			break;
+		case PhaseThankyou:
+			DrawThanks();
+			break;
 		}
 
 #ifdef _DEBUG
@@ -1014,6 +1022,8 @@ void Draw(int no)
 
 		// FPS表示
 		DrawFPS();
+
+		PrintDebugProc("現在のゲームシーン %d\n", ePhase);
 #endif
 
 		// Direct3Dによる描画の終了
@@ -1086,7 +1096,7 @@ void ReInit(void)
 	InitPause(1);
 	InitDrawgame(1);
 	InitCompany(1);
-
+	InitThanks(1);
 }
 
 //=====================================================================================================

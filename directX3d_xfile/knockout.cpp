@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "input.h"
 #include "sound.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -24,6 +25,7 @@
 // グローバル変数
 //*****************************************************************************
 static LPDIRECT3DTEXTURE9		g_pD3DTextureKnockout = NULL;		// テクスチャへのポリゴン
+static LPDIRECT3DTEXTURE9		g_pD3DTexturePushbutton = NULL;
 
 KNOCKOUT knockout[1];
 
@@ -41,6 +43,9 @@ HRESULT InitKnockout(int type)
 			TEXTURE_GAME_KNOCKOUT00,				// ファイルの名前
 			&g_pD3DTextureKnockout);				// 読み込むメモリのポインタ
 
+		D3DXCreateTextureFromFile(pDevice,
+			TEXTURE_PUSHBUTTON00,
+			&g_pD3DTexturePushbutton);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +54,7 @@ HRESULT InitKnockout(int type)
 	knockout->pos = D3DXVECTOR3(KNOCKOUT_POS_X, KNOCKOUT_POS_Y, 0.0f);
 	knockout->CountAnim = 0;
 	knockout->PatternAnim = 0;
+	knockout->pushok = false;
 
 	// 頂点情報の作成
 	MakeVertexKnockout();
@@ -67,6 +73,12 @@ void UninitKnockout(void)
 		g_pD3DTextureKnockout->Release();
 		g_pD3DTextureKnockout = NULL;
 	}
+
+	if (g_pD3DTexturePushbutton != NULL)
+	{
+		g_pD3DTexturePushbutton->Release();
+		g_pD3DTexturePushbutton = NULL;
+	}
 }
 
 //=============================================================================
@@ -80,6 +92,11 @@ void UpdateKnockout(void)
 	StopSound(BGM_BATTLE, 0);
 
 	static int sceneframe = 0;
+	static int pushframe = 0;
+
+#ifdef _DEBUG
+	PrintDebugProc("pushframe%d\n", pushframe);
+#endif
 
 	// シーン遷移有効になるまでの時間
 	if (sceneframe < POSSIBLE_FRAME)
@@ -89,6 +106,8 @@ void UpdateKnockout(void)
 	
 	if (sceneframe == POSSIBLE_FRAME)
 	{
+		knockout->pushok = true;
+		knockout->pos = D3DXVECTOR3(PUSHBUTTON_POS_X, PUSHBUTTON_POS_Y, 0.0f);
 		if (GetKeyboardTrigger(DIK_RETURN))
 		{// Enter押したら、ステージを切り替える
 			SetPhase(PhaseResult);
@@ -104,20 +123,36 @@ void UpdateKnockout(void)
 
 	if (knockout->use == true)
 	{
-		//どちらかがKOされたら
-		if(player->HPzan == 0 || enemy->HPzan == 0)
-		{ 
+		if (knockout->pushok == true)
+		{
 			knockout->PatternAnim = 0;
+			// 点滅させる
+			pushframe == 60 ? pushframe = 0 : pushframe++;
+			if (pushframe >= 30)
+			{
+				SetReflectKnockout(0.00f);
+			}
+			else
+			{
+				SetReflectKnockout(1.00f);
+			}
 		}
-		//タイムアップなら
 		else
 		{
-			knockout->PatternAnim = 1;
+			//どちらかがKOされたら
+			if (player->HPzan == 0 || enemy->HPzan == 0)
+			{
+				knockout->PatternAnim = 0;
+			}
+			//タイムアップなら
+			else
+			{
+				knockout->PatternAnim = 1;
+			}
+			SetReflectKnockout(255);
 		}
-
 		//テクスチャ座標をセット
 		SetTextureKnockout(knockout->PatternAnim);
-
 	}
 	SetVertexKnockout();
 }
@@ -134,10 +169,16 @@ void DrawKnockout(void)
 
 	if (knockout->use == true)
 	{
-		// テクスチャの設定(ポリゴンの描画前に読み込んだテクスチャのセットを行う)
-		// テクスチャのセットをしないと前にセットされたテクスチャが貼られる→何もはらないことを指定するpDevide->SetTexture(0, NULL);
-		pDevice->SetTexture(0, g_pD3DTextureKnockout);
-
+		if (knockout->pushok == false)
+		{
+			// テクスチャの設定(ポリゴンの描画前に読み込んだテクスチャのセットを行う)
+			// テクスチャのセットをしないと前にセットされたテクスチャが貼られる→何もはらないことを指定するpDevide->SetTexture(0, NULL);
+			pDevice->SetTexture(0, g_pD3DTextureKnockout);
+		}
+		else
+		{
+			pDevice->SetTexture(0, g_pD3DTexturePushbutton);
+		}
 		// ポリゴンの描画
 		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, knockout->vertexWk, sizeof(VERTEX_2D));
 	}
@@ -167,9 +208,9 @@ HRESULT MakeVertexKnockout(void)
 
 	// テクスチャ座標の設定
 	knockout->vertexWk[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	knockout->vertexWk[1].tex = D3DXVECTOR2(0.125f, 0.0f);
+	knockout->vertexWk[1].tex = D3DXVECTOR2(1.0f, 0.0f);
 	knockout->vertexWk[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	knockout->vertexWk[3].tex = D3DXVECTOR2(0.125f, 1.0f);
+	knockout->vertexWk[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	return S_OK;
 }
@@ -179,10 +220,23 @@ HRESULT MakeVertexKnockout(void)
 //=============================================================================
 void SetTextureKnockout(int cntPattern)
 {
-	int x = cntPattern % TEXTURE_PATTERN_DIVIDE_KNOCKOUT_X;
-	int y = cntPattern / TEXTURE_PATTERN_DIVIDE_KNOCKOUT_X;
-	float sizeX = 1.0f / TEXTURE_PATTERN_DIVIDE_KNOCKOUT_X;
-	float sizeY = 1.0f / TEXTURE_PATTERN_DIVIDE_KNOCKOUT_Y;
+	int x, y;
+	float sizeX, sizeY;
+
+	if (knockout->pushok == false)
+	{
+		x = cntPattern % TEXTURE_PATTERN_DIVIDE_KNOCKOUT_X;
+		y = cntPattern / TEXTURE_PATTERN_DIVIDE_KNOCKOUT_X;
+		sizeX = 1.0f / TEXTURE_PATTERN_DIVIDE_KNOCKOUT_X;
+		sizeY = 1.0f / TEXTURE_PATTERN_DIVIDE_KNOCKOUT_Y;
+	}
+	else
+	{
+		x = cntPattern % TEXTURE_PATTERN_DIVIDE_PUSHBUTTON_X;
+		y = cntPattern / TEXTURE_PATTERN_DIVIDE_PUSHBUTTON_X;
+		sizeX = 1.0f / TEXTURE_PATTERN_DIVIDE_PUSHBUTTON_X;
+		sizeY = 1.0f / TEXTURE_PATTERN_DIVIDE_PUSHBUTTON_Y;
+	}
 
 	// テクスチャ座標の設定
 	knockout->vertexWk[0].tex = D3DXVECTOR2((float)(x)* sizeX, (float)(y)* sizeY);
@@ -196,10 +250,33 @@ void SetTextureKnockout(int cntPattern)
 //=============================================================================
 void SetVertexKnockout(void)
 {
-	// 頂点座標の設定
-	knockout->vertexWk[0].vtx = D3DXVECTOR3(knockout->pos.x, knockout->pos.y, knockout->pos.z);
-	knockout->vertexWk[1].vtx = D3DXVECTOR3(knockout->pos.x + TEXTURE_KNOCKOUT00_SIZE_X, knockout->pos.y, knockout->pos.z);
-	knockout->vertexWk[2].vtx = D3DXVECTOR3(knockout->pos.x, knockout->pos.y + TEXTURE_KNOCKOUT00_SIZE_Y, knockout->pos.z);
-	knockout->vertexWk[3].vtx = D3DXVECTOR3(knockout->pos.x + TEXTURE_KNOCKOUT00_SIZE_X, knockout->pos.y + TEXTURE_KNOCKOUT00_SIZE_Y, knockout->pos.z);
+	if (knockout->pushok == false)
+	{
+		// 頂点座標の設定
+		knockout->vertexWk[0].vtx = D3DXVECTOR3(knockout->pos.x, knockout->pos.y, knockout->pos.z);
+		knockout->vertexWk[1].vtx = D3DXVECTOR3(knockout->pos.x + TEXTURE_KNOCKOUT00_SIZE_X, knockout->pos.y, knockout->pos.z);
+		knockout->vertexWk[2].vtx = D3DXVECTOR3(knockout->pos.x, knockout->pos.y + TEXTURE_KNOCKOUT00_SIZE_Y, knockout->pos.z);
+		knockout->vertexWk[3].vtx = D3DXVECTOR3(knockout->pos.x + TEXTURE_KNOCKOUT00_SIZE_X, knockout->pos.y + TEXTURE_KNOCKOUT00_SIZE_Y, knockout->pos.z);
+	}
+	else
+	{
+		knockout->vertexWk[0].vtx = D3DXVECTOR3(knockout->pos.x, knockout->pos.y, knockout->pos.z);
+		knockout->vertexWk[1].vtx = D3DXVECTOR3(knockout->pos.x + TEXTURE_PUSHBUTTON00_SIZE_X, knockout->pos.y, knockout->pos.z);
+		knockout->vertexWk[2].vtx = D3DXVECTOR3(knockout->pos.x, knockout->pos.y + TEXTURE_PUSHBUTTON00_SIZE_Y, knockout->pos.z);
+		knockout->vertexWk[3].vtx = D3DXVECTOR3(knockout->pos.x + TEXTURE_PUSHBUTTON00_SIZE_X, knockout->pos.y + TEXTURE_PUSHBUTTON00_SIZE_Y, knockout->pos.z);
+	}
 }
 
+//=============================================================================
+// 反射光の設定 引数:float per = 透明度の％
+//=============================================================================
+void SetReflectKnockout(float per)
+{
+	int clear = (int)(255 * per);
+
+	// 反射光の設定
+	knockout->vertexWk[0].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+	knockout->vertexWk[1].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+	knockout->vertexWk[2].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+	knockout->vertexWk[3].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+}

@@ -60,31 +60,20 @@ void UninitResult(void)
 //=============================================================================
 void UpdateResult(void)
 {
-	static int sceneframe = 0;
-
-	// シーン遷移有効になるまでの時間
-	if (sceneframe < POSSIBLE_FRAME)
-	{
-		sceneframe++;
+	if (GetKeyboardTrigger(DIK_RETURN))
+	{// Enter押したら、ステージを切り替える
+	 //ゲームループのための再初期化
+		ReInit();
+		SetPhase(PhaseTitle);
+		PlaySound(BGM_TITLE, 1, 1);
 	}
-
-	if (sceneframe == POSSIBLE_FRAME)
+	// ゲームパッドで移動処理
+	else if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_M) || IsButtonTriggered(1, BUTTON_C))
 	{
-		if (GetKeyboardTrigger(DIK_RETURN))
-		{// Enter押したら、ステージを切り替える
-		 //ゲームループのための再初期化
-			ReInit();
-			SetPhase(PhaseTitle);
-			PlaySound(BGM_TITLE, 1, 1);
-		}
-		// ゲームパッドで移動処理
-		else if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_M) || IsButtonTriggered(1, BUTTON_C))
-		{
-			//ゲームループのための再初期化
-			ReInit();
-			SetPhase(PhaseTitle);
-			PlaySound(BGM_TITLE, 1, 1);
-		}
+		//ゲームループのための再初期化
+		ReInit();
+		SetPhase(PhaseTitle);
+		PlaySound(BGM_TITLE, 1, 1);
 	}
 }
 

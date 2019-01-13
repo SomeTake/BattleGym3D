@@ -58,7 +58,7 @@ void UninitCompany(void)
 //=============================================================================
 void UpdateCompany(void)
 {
-	static float i = 0.0f;
+	static float per = 0.0f;
 	static int frame = 0;
 
 	frame++;
@@ -67,22 +67,22 @@ void UpdateCompany(void)
 	//徐々に表示
 	if (frame < CLEAR_DOWN)
 	{
-		i += 0.01f;
+		per += 0.01f;
 	}
 	//100%表示されたら100フレーム間表示する
 	else if (frame >= CLEAR_DOWN && frame < CLEAR_NONE)
 	{
-		i = 1.00f;
+		per = 1.00f;
 	}
 	//徐々に消していく
 	else if (frame >= CLEAR_NONE && frame < CLEAR_UP)
 	{
-		i -= 0.01f;
+		per -= 0.01f;
 	}
 
 	if (frame >= CLEAR_UP)
 	{
-		i = 0.00f;
+		per = 0.00f;
 	}
 
 	//完全に消えたらタイトル画面へ
@@ -100,7 +100,7 @@ void UpdateCompany(void)
 		PlaySound(BGM_TITLE, 0, 1);
 	}
 
-	SetReflectCompany(i);
+	SetReflectCompany(per);
 }
 
 //=============================================================================
@@ -153,7 +153,7 @@ HRESULT MakeVertexCompany(void)
 }
 
 //=============================================================================
-// 反射光の設定 引数:int per = 透明度の％
+// 反射光の設定 引数:float per = 透明度の％
 //=============================================================================
 void SetReflectCompany(float per)
 {

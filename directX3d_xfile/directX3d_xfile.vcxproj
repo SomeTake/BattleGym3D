@@ -174,6 +174,7 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="spguage.h" />
     <ClInclude Include="spmax.h" />
+    <ClInclude Include="thanks.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="tutorial.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="spguage.cpp" />
     <ClCompile Include="spmax.cpp" />
+    <ClCompile Include="thanks.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="tutorial.cpp" />

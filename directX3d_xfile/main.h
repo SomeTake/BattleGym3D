@@ -72,7 +72,7 @@
 #define MAX_SEPARATE	(4)												// 画面分割数の最大
 #define TRANSPARENCY	(0.3f)											// 透明度の設定
 
-#define POSSIBLE_FRAME						(120)						// KO画面、リザルト画面、などのシーン遷移が有効になるまでの時間
+#define POSSIBLE_FRAME						(120)						// KO画面などのシーン遷移が有効になるまでの時間
 
 // タイトル画面
 #define MODESELECT_POS_X					(450)						// 表示位置
@@ -141,6 +141,7 @@ enum
 	PhaseGame,					// ゲーム画面
 	PhaseFinish,				// KO画面
 	PhaseResult,				// リザルト画面
+	PhaseThankyou,				// ゲーム終了前の挨拶
 	PhaseExit,					// ゲーム終了
 };
 

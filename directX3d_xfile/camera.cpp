@@ -58,10 +58,6 @@ void UpdateCamera(void)
 	ENEMY *enemyWk = GetEnemy();
 	CAMERA *cameraWk = GetCamera(0);
 
-	static float x = POS_X_CAM;
-	static float y = POS_Y_CAM;
-	static float z = POS_Z_CAM;
-
 	// P‚ÆE‚Ì’†SˆÊ’u
 	CenterPos = (playerWk->pos + enemyWk->pos) * 0.5f;
 

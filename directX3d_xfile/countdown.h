@@ -13,7 +13,7 @@
 #define TEXTURE_COUNTDOWN00_SIZE_X	(1000)							// テクスチャサイズ
 #define TEXTURE_COUNTDOWN00_SIZE_Y	(250)							// 同上
 
-#define TEXTURE_PATTERN_DIVIDE_COUNTDOWN_X	(1)					// アニメパターンのテクスチャ内分割数（X)
+#define TEXTURE_PATTERN_DIVIDE_COUNTDOWN_X	(1)						// アニメパターンのテクスチャ内分割数（X)
 #define TEXTURE_PATTERN_DIVIDE_COUNTDOWN_Y	(4)						// アニメパターンのテクスチャ内分割数（Y)
 #define ANIM_PATTERN_NUM_COUNTDOWN		(TEXTURE_PATTERN_DIVIDE_COUNTDOWN_X*TEXTURE_PATTERN_DIVIDE_COUNTDOWN_Y)	// アニメーションパターン数
 #define TIME_ANIMATION_COUNTDOWN		(1)							// アニメーションの切り替わるカウント

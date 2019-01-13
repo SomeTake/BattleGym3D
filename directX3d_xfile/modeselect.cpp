@@ -83,9 +83,9 @@ void UpdateModeselect(void)
 {
 	int phase = *GetPhase();
 
-	//タイトル画面
-	if (phase == PhaseTitle)
+	switch (phase)
 	{
+	case PhaseTitle:
 		//カーソル上下移動
 		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP)
 			|| IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
@@ -95,7 +95,7 @@ void UpdateModeselect(void)
 			modeselectWk->pos.y = (float)MODESELECT_POS_Y + (titleselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
 		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN)
-				|| IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
+			|| IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			titleselect = (titleselect == TITLESELECT_MAX - 1) ? 0 : titleselect + 1;
@@ -118,7 +118,7 @@ void UpdateModeselect(void)
 			}
 		}
 		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN)
-				|| IsButtonPressed(1, BUTTON_DOWN) || IsButtonPressed(1, STICK_DOWN))
+			|| IsButtonPressed(1, BUTTON_DOWN) || IsButtonPressed(1, STICK_DOWN))
 		{
 			if (buttoncount < BUTTON_TIMER)
 			{
@@ -166,14 +166,11 @@ void UpdateModeselect(void)
 			else if (titleselect == 3)
 			{
 				PlaySound(SE_SELECT1, 0, 0);
-				SetPhase(PhaseExit);
+				SetPhase(PhaseThankyou);
 			}
 		}
-	}
-
-	//VSモードのポーズ画面
-	else if (phase == PhasePause)
-	{
+		break;
+	case PhaseTrainingPause:
 		//カーソル上下移動
 		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP)
 			|| IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
@@ -183,7 +180,7 @@ void UpdateModeselect(void)
 			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
 		}
 		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN)
-				|| IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
+			|| IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
 		{
 			PlaySound(SE_SELECT0, 0, 0);
 			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
@@ -203,86 +200,7 @@ void UpdateModeselect(void)
 			}
 		}
 		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN)
-				|| IsButtonPressed(1, BUTTON_DOWN) || IsButtonPressed(1, STICK_DOWN))
-		{
-			buttoncount++;
-			if (buttoncount >= BUTTON_TIMER)
-			{
-				PlaySound(SE_SELECT0, 0, 0);
-				pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
-				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
-			}
-		}
-		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, STICK_UP) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, STICK_DOWN)
-			&& !IsButtonPressed(1, BUTTON_UP) && !IsButtonPressed(1, STICK_UP) && !IsButtonPressed(1, BUTTON_DOWN) && !IsButtonPressed(1, STICK_DOWN))
-		{
-			buttoncount = 0;
-		}
-
-		//モードセレクト
-		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(0, BUTTON_C))
-		{
-			if (pauseselect == 0)
-			{
-				PlaySound(SE_SELECT1, 0, 0);
-				SetPhase(PhaseGame);
-				PlaySound(BGM_BATTLE, 1, 1);
-			}
-			else if (pauseselect == 1)
-			{
-				PlaySound(SE_SELECT1, 0, 0);
-				ReInit();
-				SetPhase(PhaseCountdown);
-			}
-			else if (pauseselect == 2)
-			{
-				PlaySound(SE_SELECT1, 0, 0);
-				ReInit();
-				SetPhase(PhaseTitle);
-				PlaySound(BGM_TITLE, 1, 1);
-			}
-		}
-		if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(1, BUTTON_M))
-		{
-			PlaySound(SE_SELECT1, 0, 0);
-			SetPhase(PhaseGame);
-			PlaySound(BGM_BATTLE, 1, 1);
-		}
-	}
-
-	//トレーニングモードのポーズ画面
-	else if (phase == PhaseTrainingPause)
-	{
-		//カーソル上下移動
-		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP)
-			|| IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
-		{
-			PlaySound(SE_SELECT0, 0, 0);
-			pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
-			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
-		}
-		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN)
-				|| IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
-		{
-			PlaySound(SE_SELECT0, 0, 0);
-			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
-			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
-		}
-
-		//ボタンのリピート操作を擬似的に作成
-		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, STICK_UP)
-			|| IsButtonPressed(1, BUTTON_UP) || IsButtonPressed(1, STICK_UP))
-		{
-			buttoncount++;
-			if (buttoncount >= BUTTON_TIMER)
-			{
-				PlaySound(SE_SELECT0, 0, 0);
-				pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
-				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
-			}
-		}
-		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN)
-				|| IsButtonPressed(1, BUTTON_DOWN) || IsButtonPressed(1, STICK_DOWN))
+			|| IsButtonPressed(1, BUTTON_DOWN) || IsButtonPressed(1, STICK_DOWN))
 		{
 			buttoncount++;
 			if (buttoncount >= BUTTON_TIMER)
@@ -328,6 +246,85 @@ void UpdateModeselect(void)
 			SetPhase(PhaseTraining);
 			PlaySound(BGM_TRAINING, 1, 1);
 		}
+		break;
+	case PhasePause:
+		//カーソル上下移動
+		if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP)
+			|| IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
+		{
+			PlaySound(SE_SELECT0, 0, 0);
+			pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
+			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
+		}
+		else if (GetKeyboardRepeat(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN)
+			|| IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
+		{
+			PlaySound(SE_SELECT0, 0, 0);
+			pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
+			modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
+		}
+
+		//ボタンのリピート操作を擬似的に作成
+		if (IsButtonPressed(0, BUTTON_UP) || IsButtonPressed(0, STICK_UP)
+			|| IsButtonPressed(1, BUTTON_UP) || IsButtonPressed(1, STICK_UP))
+		{
+			buttoncount++;
+			if (buttoncount >= BUTTON_TIMER)
+			{
+				PlaySound(SE_SELECT0, 0, 0);
+				pauseselect = (pauseselect == 0) ? PAUSESELECT_MAX - 1 : pauseselect - 1;
+				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
+			}
+		}
+		else if (IsButtonPressed(0, BUTTON_DOWN) || IsButtonPressed(0, STICK_DOWN)
+			|| IsButtonPressed(1, BUTTON_DOWN) || IsButtonPressed(1, STICK_DOWN))
+		{
+			buttoncount++;
+			if (buttoncount >= BUTTON_TIMER)
+			{
+				PlaySound(SE_SELECT0, 0, 0);
+				pauseselect = (pauseselect == PAUSESELECT_MAX - 1) ? 0 : pauseselect + 1;
+				modeselectWk->pos.y = (float)PAUSESELECT_POS_Y + (pauseselect * TEXTURE_MODESELECT_SIZE_Y);
+			}
+		}
+		if (!IsButtonPressed(0, BUTTON_UP) && !IsButtonPressed(0, STICK_UP) && !IsButtonPressed(0, BUTTON_DOWN) && !IsButtonPressed(0, STICK_DOWN)
+			&& !IsButtonPressed(1, BUTTON_UP) && !IsButtonPressed(1, STICK_UP) && !IsButtonPressed(1, BUTTON_DOWN) && !IsButtonPressed(1, STICK_DOWN))
+		{
+			buttoncount = 0;
+		}
+
+		//モードセレクト
+		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(0, BUTTON_C))
+		{
+			if (pauseselect == 0)
+			{
+				PlaySound(SE_SELECT1, 0, 0);
+				SetPhase(PhaseGame);
+				PlaySound(BGM_BATTLE, 1, 1);
+			}
+			else if (pauseselect == 1)
+			{
+				PlaySound(SE_SELECT1, 0, 0);
+				ReInit();
+				SetPhase(PhaseCountdown);
+			}
+			else if (pauseselect == 2)
+			{
+				PlaySound(SE_SELECT1, 0, 0);
+				ReInit();
+				SetPhase(PhaseTitle);
+				PlaySound(BGM_TITLE, 1, 1);
+			}
+		}
+		if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(1, BUTTON_M))
+		{
+			PlaySound(SE_SELECT1, 0, 0);
+			SetPhase(PhaseGame);
+			PlaySound(BGM_BATTLE, 1, 1);
+		}
+		break;
+	default:
+		break;
 	}
 
 	//透明度の設定
