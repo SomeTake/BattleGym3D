@@ -6,6 +6,7 @@
 //=============================================================================
 #include "meshwall.h"
 #include "input.h"
+#include "HitCheck.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -266,3 +267,44 @@ void DrawMeshWall(void)
 	}
 }
 
+//=============================================================================
+// 壁との当たり判定
+// pos0:始点（移動前）
+// pos1:終点（移動後）
+//=============================================================================
+int hitCheckMeshwall(D3DXVECTOR3 pos0, D3DXVECTOR3 pos1)
+{
+	int				ans = 0;	// 一先ず当たっていないをセットしておく
+
+	D3DXVECTOR3		pos[4];
+	D3DXVECTOR3		nor;		// ポリゴンの法線
+
+	//// 頂点データの範囲をロックし、頂点バッファへのポインタを取得
+	//VERTEX_3D		*pVtx;
+	//g_pD3DVtxBuffBill->Lock(0, 0, (void**)&pVtx, 0);
+
+	//for (int i = 0; i<1; i++, pVtx += 4)
+	//{	// まずは、ポリゴンの頂点を求める
+
+	//	// 頂点座標の設定
+	//	pos[0] = pVtx[0].vtx;
+	//	pos[1] = pVtx[1].vtx;
+	//	pos[2] = pVtx[2].vtx;
+	//	pos[3] = pVtx[3].vtx;
+
+	//	// 左下側ポリゴンと線分の当たり判定
+	//	ans = hitCheck(pos[0], pos[2], pos[3], pos0, pos1);
+	//	if (ans != 0) break;
+
+	//	// 右上側ポリゴンと線分の当たり判定
+	//	ans = hitCheck(pos[0], pos[3], pos[1], pos0, pos1);
+	//	if (ans != 0) break;
+
+	//}
+
+	//// 頂点データをアンロックする
+	//g_pD3DVtxBuffBill->Unlock();
+
+	return(ans);
+
+}

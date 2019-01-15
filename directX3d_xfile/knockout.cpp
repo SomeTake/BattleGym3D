@@ -112,12 +112,16 @@ void UpdateKnockout(void)
 		{// Enter押したら、ステージを切り替える
 			SetPhase(PhaseResult);
 			PlaySound(SE_WINNER0, 1, 0);
+			sceneframe = 0;
+			pushframe = 0;
 		}
 		// ゲームパッドで移動処理
 		else if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_M) || IsButtonTriggered(1, BUTTON_C))
 		{
 			SetPhase(PhaseResult);
 			PlaySound(SE_WINNER0, 1, 0);
+			sceneframe = 0;
+			pushframe = 0;
 		}
 	}
 
@@ -149,7 +153,7 @@ void UpdateKnockout(void)
 			{
 				knockout->PatternAnim = 1;
 			}
-			SetReflectKnockout(255);
+			SetReflectKnockout(1.00f);
 		}
 		//テクスチャ座標をセット
 		SetTextureKnockout(knockout->PatternAnim);

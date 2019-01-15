@@ -22,13 +22,13 @@
     <Filter Include="ソース ファイル\3D">
       <UniqueIdentifier>{a8e25227-0033-49c3-a0ac-e84bbe70dce6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\2D">
-      <UniqueIdentifier>{46c4a008-7562-470a-be5b-fd364eb41dc6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\3D">
       <UniqueIdentifier>{6479e34d-5857-4310-b1dd-ee95fdc2536a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\2D">
+    <Filter Include="ソース ファイル\2DUI">
+      <UniqueIdentifier>{46c4a008-7562-470a-be5b-fd364eb41dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\2DUI">
       <UniqueIdentifier>{9d5735c0-239b-4f4f-9e53-15843e066c92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -69,9 +69,6 @@
     <ClInclude Include="meshwall.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
-    <ClInclude Include="particle.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
@@ -82,82 +79,85 @@
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
     <ClInclude Include="blackscreen.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="company.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="countdown.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="drawgame.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="eguage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="eredguage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="escore.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="espguage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="evaluation.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="frame.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="framespguage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="guage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="knockout.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="modeselect.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="pause.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="redguage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="result.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="resultstar.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="score.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="spguage.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="spmax.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="title.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="tutorial.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="winner.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="thanks.h">
-      <Filter>ヘッダー ファイル\2D</Filter>
+      <Filter>ヘッダー ファイル\2DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -183,46 +183,46 @@
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="blackscreen.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="company.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="countdown.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="drawgame.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="eguage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
     <ClCompile Include="eredguage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="escore.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="espguage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="evaluation.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="frame.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="framespguage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="guage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="knockout.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル\3D</Filter>
@@ -242,47 +242,47 @@
     <ClCompile Include="shadow.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
-    <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
     <ClCompile Include="modeselect.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="pause.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="redguage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="result.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="resultstar.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="score.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="spguage.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="spmax.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="title.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="tutorial.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="winner.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="thanks.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\2DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

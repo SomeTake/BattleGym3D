@@ -12,7 +12,9 @@
 #include "D3DXAnimation.h"
 #include "enemy.h"
 #include "debugproc.h"
-#include "particle.h"
+#include "effect.h"
+#include "HitCheck.h"
+#include "meshwall.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -155,6 +157,7 @@ HRESULT InitPlayer(int type)
 				return E_FAIL;
 			}
 		}
+		playerWk.Animation->CurrentAnimID = Idle_P;
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Frontwalk_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Backwalk_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Rightstep_P, 0.1f);
@@ -326,12 +329,12 @@ void EasyInputPlayer(void)
 		// 前
 		if (GetKeyboardTrigger(DIK_D) || IsButtonTriggered(0, BUTTON_RIGHT) || IsButtonTriggered(0, STICK_RIGHT))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, 2.0f);
 		}
 		// 後ろ
 		else if (GetKeyboardTrigger(DIK_A) || IsButtonTriggered(0, BUTTON_LEFT) || IsButtonTriggered(0, STICK_LEFT))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 2.0f);
 		}
 		// 手前
 		else if (GetKeyboardTrigger(DIK_S) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
@@ -561,10 +564,10 @@ void MovePlayer(void)
 	CAMERA *camera = GetCamera(0);
 	D3DXVECTOR3 centerpos = GetCenterPos();
 	ENEMY *enemyWk = GetEnemy();
-
+	D3DXVECTOR3		oldPos = playerWk.pos;		// 元の位置
 	float PEdistance = GetPEdistance();
 
-	//D3DXVECTOR3 newpos;
+	D3DXVECTOR3 newpos;
 
 	// アクションに合わせた座標移動
 	switch (playerWk.Animation->CurrentAnimID)
@@ -596,16 +599,16 @@ void MovePlayer(void)
 		break;
 		// 手前移動中の座標処理
 	case Rightstep_P:
-		//newpos.x = PEdistance * cosf(playerWk.rot.y + D3DXToRadian(1)) + enemyWk->pos.x;
-		//newpos.z = PEdistance * sinf(playerWk.rot.y + D3DXToRadian(1)) + enemyWk->pos.x;
+		//playerWk.move.x -= PEdistance * cosf(playerWk.rot.y + D3DXToRadian(1));
+		//playerWk.move.z -= PEdistance * sinf(playerWk.rot.y + D3DXToRadian(1));
 		//playerWk.move = newpos - playerWk.pos;
 		playerWk.move.x -= sinf(playerWk.rot.y + D3DX_PI * 0.50f) * VALUE_ROTATE;
 		playerWk.move.z -= cosf(playerWk.rot.y + D3DX_PI * 0.50f) * VALUE_ROTATE;
 		break;
 		// 奥移動中の座標処理
 	case Leftstep_P:
-		//newpos.x = PEdistance * cosf(playerWk.rot.y + D3DXToRadian(-1)) + enemyWk->pos.x;
-		//newpos.z = PEdistance * sinf(playerWk.rot.y + D3DXToRadian(-1)) + enemyWk->pos.x;
+		//playerWk.move.x -= PEdistance * cosf(playerWk.rot.y + D3DXToRadian(-1));
+		//playerWk.move.z -= PEdistance * sinf(playerWk.rot.y + D3DXToRadian(-1));
 		//playerWk.move = newpos - playerWk.pos;
 		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * 0.5f) * VALUE_ROTATE;
 		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * 0.5f) * VALUE_ROTATE;
@@ -622,20 +625,40 @@ void MovePlayer(void)
 	playerWk.pos.y += playerWk.move.y;
 	playerWk.pos.z += playerWk.move.z;
 
+	// 移動前と現在の座標の長さを測り移動しているようなら当たり判定を行う
+	D3DXVECTOR3		vec = playerWk.move - oldPos;
+	float			len = D3DXVec3Length(&vec);
+	if (len > 0.1f)
+	{	// ビルボードとの当たり判定
+		//if (hitCheckMeshwall(oldPos, playerWk.move) != 0)
+		//{
+		//	// 当たっているので元の位置に戻す
+		//	playerWk.pos = oldPos;
+		//}
+	}
+	// (半径*角度)＋基準座標
+
+
 	// 移動量をリセットする
 	playerWk.move.x = 0.0f;
 	playerWk.move.y = 0.0f;
-	playerWk.move.z = 0.0f;
+	playerWk.move.z = 0.0f;	
 
 	// 移動中のエフェクトの発生
 	if (playerWk.Animation->CurrentAnimID == Frontwalk_P || playerWk.Animation->CurrentAnimID == Backwalk_P ||
 		playerWk.Animation->CurrentAnimID == Rightstep_P || playerWk.Animation->CurrentAnimID == Leftstep_P)
 	{
-		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXVECTOR3 pos;
+
+		pos.x = playerWk.pos.x + sinf(playerWk.rot.y) * 10.0f;
+		pos.y = playerWk.pos.y + 2.0f;
+		pos.z = playerWk.pos.z + cosf(playerWk.rot.y) * 10.0f;
+
+		SetEffect(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 20);
-		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		SetEffect(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 20);
-		SetParticle(playerWk.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		SetEffect(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 20);
 	}
 

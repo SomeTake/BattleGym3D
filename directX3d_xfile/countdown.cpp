@@ -190,8 +190,8 @@ void SetTextureCountdown(int cntPattern)
 void SetVertexCountdown(void)
 {
 	// ’¸“_À•W‚ÌÝ’è
-	countdown->vertexWk[0].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y, countdown->pos.z);
+	countdown->vertexWk[0].vtx = D3DXVECTOR3(countdown->pos.x, countdown->pos.y, countdown->pos.z);
 	countdown->vertexWk[1].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y, countdown->pos.z);
-	countdown->vertexWk[2].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
+	countdown->vertexWk[2].vtx = D3DXVECTOR3(countdown->pos.x, countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
 	countdown->vertexWk[3].vtx = D3DXVECTOR3(countdown->pos.x + (TEXTURE_COUNTDOWN00_SIZE_X), countdown->pos.y + TEXTURE_COUNTDOWN00_SIZE_Y, countdown->pos.z);
 }

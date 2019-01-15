@@ -13,7 +13,7 @@
 #include "shadow.h"
 #include "enemy.h"
 #include "debugproc.h"
-#include "particle.h"
+//#include "particle.h"
 #include "score.h"
 #include "Icon.h"
 #include "blackscreen.h"
@@ -43,6 +43,7 @@
 #include "sound.h"
 #include "meshwall.h"
 #include "thanks.h"
+#include "effect.h"
 
 
 //*****************************************************************************
@@ -70,7 +71,7 @@ bool SetWindowCenter(HWND hWnd);
 LPDIRECT3D9			g_pD3D = NULL;					// Direct3D オブジェクト
 LPDIRECT3DDEVICE9	g_pD3DDevice = NULL;			// Deviceオブジェクト(描画に必要)
 
-int ePhase = PhaseGame;						// ゲームの開始位置&シーン遷移
+int ePhase = PhaseCompanyLogo;						// ゲームの開始位置&シーン遷移
 int PlayerMode = 1;									// プレイヤー人数
 
 MATRIX MatrixState;									// マトリクス
@@ -405,33 +406,34 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitCamera();
 	InitLight();
 	InitSound(hWnd);
-	// フィールドの大きさ指定
-	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 0);
+	// フィールドの初期化
+	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		10, 10, 80.0f, 80.0f, 0);
 	
 	// 壁の初期化
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 640.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(D3DXVECTOR3(-640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(D3DXVECTOR3(640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -640.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -400.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
 
 	// 壁(裏側用)
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 640.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(D3DXVECTOR3(-640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(D3DXVECTOR3(640.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -640.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
 	
 	InitShadow(0);
 	InitPlayer(0);
 	InitEnemy(0);
-	InitParticle(0);
+	InitEffect(0);
 	InitScore(0);
 	InitEScore(0);
 	InitFrame(0);
@@ -500,7 +502,7 @@ void Uninit(void)
 	UninitMeshField();
 	UninitMeshWall();
 	UninitShadow();
-	UninitParticle();
+	UninitEffect();
 	UninitScore();
 	UninitEScore();
 	UninitFrame();
@@ -597,7 +599,7 @@ void Update(void)
 		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateParticle();
+		UpdateEffect();
 
 		break;
 
@@ -619,7 +621,7 @@ void Update(void)
 		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateParticle();
+		UpdateEffect();
 
 		break;
 
@@ -655,7 +657,7 @@ void Update(void)
 		UpdateMeshWall();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateParticle();
+		UpdateEffect();
 
 		break;
 
@@ -666,7 +668,7 @@ void Update(void)
 		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateParticle();
+		UpdateEffect();
 		UpdateScore();
 		UpdateEScore();
 		UpdateGuage();
@@ -702,7 +704,7 @@ void Update(void)
 		UpdateMeshWall();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateParticle();
+		UpdateEffect();
 
 		break;
 
@@ -771,7 +773,7 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawParticle();
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -798,7 +800,7 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawParticle();
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -826,7 +828,7 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawParticle();
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -861,7 +863,7 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawParticle();
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -893,7 +895,7 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawParticle();
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -919,12 +921,12 @@ void Draw(int no)
 			break;
 
 		case PhaseGame:
-			//エフェクト
-			DrawParticle();
-
 			//BG
 			DrawMeshField();
 			DrawMeshWall();
+
+			//エフェクト
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -954,7 +956,7 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawParticle();
+			DrawEffect();
 
 			// キャラクター等
 			DrawEnemy();
@@ -1070,7 +1072,7 @@ void ReInit(void)
 	InitPlayer(1);
 	InitEnemy(1);
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 1);
-	InitParticle(1);
+	InitEffect(1);
 	InitScore(1);
 	InitEScore(1);
 	InitFrame(1);

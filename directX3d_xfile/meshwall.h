@@ -22,5 +22,6 @@ HRESULT InitMeshWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col,
 void UninitMeshWall(void);
 void UpdateMeshWall(void);
 void DrawMeshWall(void);
+int hitCheckMeshwall(D3DXVECTOR3 pos0, D3DXVECTOR3 pos1);
 
 #endif
