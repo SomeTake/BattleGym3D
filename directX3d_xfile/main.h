@@ -82,6 +82,14 @@
 #define PAUSESELECT_POS_X					(450)						// 表示位置
 #define PAUSESELECT_POS_Y					(223)						// 表示位置
 
+// フィールド関係
+#define FIELD_SIZE							(50.0f)
+#define WALL_BLOCK_NUM_X					(16)
+#define WALL_BLOCK_NUM_Y					(2)
+#define WALL_SIZE_HEIGHT					(100.0f)
+#define WALL_SIZE_WIDTH						(50.0f)
+#define WALL_POS							(400.0f)
+
 // バトル関係
 #define MAX_DISTANCE						(250.0f)					// プレイヤー間の最大距離（これ以上は遠ざかれない）
 #define MIN_DISTANCE						(30.0f)						// プレイヤー間の最小距離（これ以上は近づけない）
@@ -154,5 +162,6 @@ int *GetPhase(void);				// 現在のゲームフェーズを取得する
 void SetPhase(int phase);			// ゲームフェーズを変更する
 void ReInit(void);					// ゲームループのための最初期化処理
 float GetAspect(void);				// アスペクト比を取得する
+HRESULT LoadTexture(LPCSTR SrcFile, LPDIRECT3DTEXTURE9* TexturePtr, const char* ErrorSrc);	// テクスチャを読み込む
 
 #endif

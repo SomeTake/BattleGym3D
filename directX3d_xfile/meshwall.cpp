@@ -17,22 +17,8 @@
 //*****************************************************************************
 LPDIRECT3DTEXTURE9 g_pD3DTexture = NULL;		// テクスチャ読み込み場所
 
-typedef struct
-{
-	LPDIRECT3DVERTEXBUFFER9 pD3DVtxBuff;		// 頂点バッファインターフェースへのポインタ
-	LPDIRECT3DINDEXBUFFER9 pD3DIdxBuff;			// インデックスバッファインターフェースへのポインタ
-
-	D3DXMATRIX mtxWorld;						// ワールドマトリックス
-	D3DXVECTOR3 pos;							// ポリゴン表示位置の中心座標
-	D3DXVECTOR3 rot;							// ポリゴンの回転角
-	int nNumBlockX, nNumBlockY;					// ブロック数
-	int nNumVertex;								// 総頂点数	
-	int nNumVertexIndex;						// 総インデックス数
-	int nNumPolygon;							// 総ポリゴン数
-	float fBlockSizeX, fBlockSizeY;				// ブロックサイズ
-} MESH_WALL;
-
 MESH_WALL g_aMeshWall[MAX_MESHWALL];			// メッシュ壁ワーク
+MESH_WALL *pMesh = NULL;						// メッシュ壁のポインタ
 int g_nNumMeshField = 0;						// メッシュ壁の数
 
 //=============================================================================
@@ -42,7 +28,7 @@ HRESULT InitMeshWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col,
 						int nNumBlockX, int nNumBlockY, float fBlockSizeX, float fBlockSizeZ)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	MESH_WALL *pMesh;
+	//MESH_WALL *pMesh;
 
 	if(g_nNumMeshField >= MAX_MESHWALL)
 	{
@@ -186,7 +172,7 @@ HRESULT InitMeshWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXCOLOR col,
 //=============================================================================
 void UninitMeshWall(void)
 {
-	MESH_WALL *pMesh;
+	//MESH_WALL *pMesh;
 	int nCntMeshField;
 
 	for(nCntMeshField = 0; nCntMeshField < g_nNumMeshField; nCntMeshField++)
@@ -229,7 +215,7 @@ void DrawMeshWall(void)
 
 	D3DXMATRIX mtxRot, mtxTranslate;
 
-	MESH_WALL *pMesh;
+	//MESH_WALL *pMesh;
 	int nCntMeshField;
 
 	for(nCntMeshField = 0; nCntMeshField < g_nNumMeshField; nCntMeshField++)
@@ -279,31 +265,31 @@ int hitCheckMeshwall(D3DXVECTOR3 pos0, D3DXVECTOR3 pos1)
 	D3DXVECTOR3		pos[4];
 	D3DXVECTOR3		nor;		// ポリゴンの法線
 
-	//// 頂点データの範囲をロックし、頂点バッファへのポインタを取得
-	//VERTEX_3D		*pVtx;
-	//g_pD3DVtxBuffBill->Lock(0, 0, (void**)&pVtx, 0);
+	// 頂点データの範囲をロックし、頂点バッファへのポインタを取得
+	VERTEX_3D		*pVtx;
+	pMesh->pD3DVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//for (int i = 0; i<1; i++, pVtx += 4)
-	//{	// まずは、ポリゴンの頂点を求める
+	for (int i = 0; i<1; i++, pVtx += 4)
+	{	// まずは、ポリゴンの頂点を求める
 
-	//	// 頂点座標の設定
-	//	pos[0] = pVtx[0].vtx;
-	//	pos[1] = pVtx[1].vtx;
-	//	pos[2] = pVtx[2].vtx;
-	//	pos[3] = pVtx[3].vtx;
+		// 頂点座標の設定
+		pos[0] = pVtx[0].vtx;
+		pos[1] = pVtx[1].vtx;
+		pos[2] = pVtx[2].vtx;
+		pos[3] = pVtx[3].vtx;
 
-	//	// 左下側ポリゴンと線分の当たり判定
-	//	ans = hitCheck(pos[0], pos[2], pos[3], pos0, pos1);
-	//	if (ans != 0) break;
+		// 左下側ポリゴンと線分の当たり判定
+		ans = hitCheck(pos[0], pos[2], pos[3], pos0, pos1);
+		if (ans != 0) break;
 
-	//	// 右上側ポリゴンと線分の当たり判定
-	//	ans = hitCheck(pos[0], pos[3], pos[1], pos0, pos1);
-	//	if (ans != 0) break;
+		// 右上側ポリゴンと線分の当たり判定
+		ans = hitCheck(pos[0], pos[3], pos[1], pos0, pos1);
+		if (ans != 0) break;
 
-	//}
+	}
 
-	//// 頂点データをアンロックする
-	//g_pD3DVtxBuffBill->Unlock();
+	// 頂点データをアンロックする
+	pMesh->pD3DVtxBuff->Unlock();
 
 	return(ans);
 

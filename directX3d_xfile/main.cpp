@@ -13,7 +13,7 @@
 #include "shadow.h"
 #include "enemy.h"
 #include "debugproc.h"
-//#include "particle.h"
+#include "particle.h"
 #include "score.h"
 #include "Icon.h"
 #include "blackscreen.h"
@@ -44,7 +44,7 @@
 #include "meshwall.h"
 #include "thanks.h"
 #include "effect.h"
-
+#include "skybox.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -71,7 +71,7 @@ bool SetWindowCenter(HWND hWnd);
 LPDIRECT3D9			g_pD3D = NULL;					// Direct3D オブジェクト
 LPDIRECT3DDEVICE9	g_pD3DDevice = NULL;			// Deviceオブジェクト(描画に必要)
 
-int ePhase = PhaseCompanyLogo;						// ゲームの開始位置&シーン遷移
+int ePhase = PhaseGame;						// ゲームの開始位置&シーン遷移
 int PlayerMode = 1;									// プレイヤー人数
 
 MATRIX MatrixState;									// マトリクス
@@ -408,27 +408,27 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitSound(hWnd);
 	// フィールドの初期化
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		10, 10, 80.0f, 80.0f, 0);
+		10, 10, FIELD_SIZE, FIELD_SIZE, 0);
 	
 	// 壁の初期化
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
-	InitMeshWall(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
-	InitMeshWall(D3DXVECTOR3(400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -400.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, WALL_POS), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
+	InitMeshWall(D3DXVECTOR3(-WALL_POS, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
+	InitMeshWall(D3DXVECTOR3(WALL_POS, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -WALL_POS), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
 
 	// 壁(裏側用)
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, 400.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
-	InitMeshWall(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
-	InitMeshWall(D3DXVECTOR3(400.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
-	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -400.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 50.0f, 100.0f);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, WALL_POS), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
+	InitMeshWall(D3DXVECTOR3(-WALL_POS, 0.0f, 0.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
+	InitMeshWall(D3DXVECTOR3(WALL_POS, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -D3DX_PI * 0.50f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
+	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -WALL_POS), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
 	
 	InitShadow(0);
 	InitPlayer(0);
@@ -460,6 +460,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitDrawgame(0);
 	InitCompany(0);
 	InitThanks(0);
+	InitParticle(0);
+	InitSkyBox(0);
 
 	return S_OK;
 }
@@ -529,7 +531,8 @@ void Uninit(void)
 	UninitDrawgame();
 	UninitCompany();
 	UninitThanks();
-
+	UninitParticle();
+	UninitSkyBox();
 }
 
 //=============================================================================
@@ -600,6 +603,8 @@ void Update(void)
 		UpdateCamera();
 		UpdateShadow();
 		UpdateEffect();
+		UpdateParticle();
+		UpdateSkyBox();
 
 		break;
 
@@ -622,6 +627,8 @@ void Update(void)
 		UpdateCamera();
 		UpdateShadow();
 		UpdateEffect();
+		UpdateParticle();
+		UpdateSkyBox();
 
 		break;
 
@@ -658,6 +665,8 @@ void Update(void)
 		UpdateCamera();
 		UpdateShadow();
 		UpdateEffect();
+		UpdateParticle();
+		UpdateSkyBox();
 
 		break;
 
@@ -681,6 +690,8 @@ void Update(void)
 		UpdateSpmax();
 		UpdateRedGuage();
 		UpdateERedGuage();
+		UpdateParticle();
+		UpdateSkyBox();
 
 		break;
 
@@ -705,6 +716,8 @@ void Update(void)
 		UpdateCamera();
 		UpdateShadow();
 		UpdateEffect();
+		UpdateParticle();
+		UpdateSkyBox();
 
 		break;
 
@@ -769,11 +782,13 @@ void Draw(int no)
 
 		case PhaseTraining:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -796,11 +811,13 @@ void Draw(int no)
 
 		case PhaseTutorial:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -824,11 +841,13 @@ void Draw(int no)
 
 		case PhasePause:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -859,11 +878,13 @@ void Draw(int no)
 
 		case PhaseTrainingPause:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -891,11 +912,13 @@ void Draw(int no)
 
 		case PhaseCountdown:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -922,11 +945,13 @@ void Draw(int no)
 
 		case PhaseGame:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -952,11 +977,13 @@ void Draw(int no)
 
 		case PhaseFinish:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
 			//エフェクト
 			DrawEffect();
+			DrawParticle();
 
 			// キャラクター等
 			DrawEnemy();
@@ -983,6 +1010,7 @@ void Draw(int no)
 
 		case PhaseResult:
 			//BG
+			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
 
@@ -1099,6 +1127,7 @@ void ReInit(void)
 	InitDrawgame(1);
 	InitCompany(1);
 	InitThanks(1);
+	InitSkyBox(1);
 }
 
 //=====================================================================================================
@@ -1179,4 +1208,23 @@ bool SetWindowCenter(HWND hWnd)
 							(SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER)	//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
 						);
 
+}
+
+//=============================================================================
+// テクスチャを読み込む関数
+//=============================================================================
+HRESULT LoadTexture(LPCSTR SrcFile, LPDIRECT3DTEXTURE9* TexturePtr, const char* ErrorSrc)
+{
+	char Message[64];
+
+	D3DXCreateTextureFromFile(g_pD3DDevice, SrcFile, TexturePtr);
+
+	if (*TexturePtr == NULL)
+	{
+		sprintf_s(Message, "Load %s Texture Failed！", ErrorSrc);
+		MessageBox(0, Message, "Error", 0);
+		return E_FAIL;
+	}
+
+	return S_OK;
 }

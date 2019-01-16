@@ -12,9 +12,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define ENEMY_XFILE		"data/MODEL/Boy.x"
-
-#define ENEMY_JUMP_SPEED	(10.0f)	//ジャンプの初速
+#define ENEMY_XFILE		"data/MODEL/Boy.x"				// 読み込むモデル
+#define FIRST_ENEMY_POS	D3DXVECTOR3(-50.0f, 0.0f, 0.0f)	// 初期位置
 
 //*****************************************************************************
 // グローバル変数
@@ -23,19 +22,13 @@ typedef struct {
 	D3DXVECTOR3			pos;			// モデルの位置
 	D3DXVECTOR3			move;			// モデルの移動量
 	D3DXVECTOR3			rot;			// 現在の向き
-	D3DXVECTOR3			rotDest;		// 目的の向き
 	D3DXVECTOR3			scl;			// モデルの大きさ(スケール)
 	int					IdxShadow;		// 影ID
 	float				SizeShadow;		// 影のサイズ
 	D3DXCOLOR			ColShadow;		// 影の色
-	bool				jump;			// ジャンプフラグ
-	float				speed;			// ジャンプのスピード
 	int					HP;				// 体力
 	int					HPzan;			// 残り体力
-
 	D3DXANIMATION		*Animation;			// アニメーション
-	int					Action;				// 現在のアニメーション
-	int					NextAction;			// 次のアニメーション
 }ENEMY;
 
 //*****************************************************************************

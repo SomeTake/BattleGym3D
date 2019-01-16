@@ -164,6 +164,7 @@
     <ClInclude Include="meshfield.h" />
     <ClInclude Include="meshwall.h" />
     <ClInclude Include="modeselect.h" />
+    <ClInclude Include="particle.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="redguage.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="resultstar.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="shadow.h" />
+    <ClInclude Include="skybox.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="spguage.h" />
     <ClInclude Include="spmax.h" />
@@ -207,6 +209,7 @@
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="modeselect.cpp" />
+    <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="redguage.cpp" />
@@ -214,6 +217,7 @@
     <ClCompile Include="resultstar.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="shadow.cpp" />
+    <ClCompile Include="skybox.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="spguage.cpp" />
     <ClCompile Include="spmax.cpp" />

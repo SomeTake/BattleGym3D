@@ -159,6 +159,12 @@
     <ClInclude Include="effect.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAllocateHierarchy.cpp">
@@ -282,6 +288,12 @@
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
   </ItemGroup>

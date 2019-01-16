@@ -15,6 +15,7 @@
 #include "effect.h"
 #include "HitCheck.h"
 #include "meshwall.h"
+#include "particle.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -74,7 +75,7 @@ HRESULT InitPlayer(int type)
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
 	// 位置・回転・スケールの初期設定
-	playerWk.pos = D3DXVECTOR3(50.0f, 0.0f, 0.0f);
+	playerWk.pos = FIRST_PLAYER_POS;
 	playerWk.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	playerWk.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	playerWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -610,34 +611,41 @@ void MovePlayer(void)
 		//playerWk.move.x -= PEdistance * cosf(playerWk.rot.y + D3DXToRadian(-1));
 		//playerWk.move.z -= PEdistance * sinf(playerWk.rot.y + D3DXToRadian(-1));
 		//playerWk.move = newpos - playerWk.pos;
-		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * 0.5f) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * 0.5f) * VALUE_ROTATE;
+		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
 		break;
 	default:
 		break;
 	}
 
-	// 常に中心を向く
-	playerWk.rot.y = atan2f(centerpos.x - playerWk.pos.x, centerpos.z - playerWk.pos.z) + D3DX_PI;
+	// 攻撃モーション時以外に中心を向く
+	if (playerWk.Animation->CurrentAnimID == Punchi_P || playerWk.Animation->CurrentAnimID == Kick_P 
+		|| playerWk.Animation->CurrentAnimID == Hadou_P || playerWk.Animation->CurrentAnimID == Shoryu_P)
+	{
+	}
+	else
+	{
+		playerWk.rot.y = atan2f(centerpos.x - playerWk.pos.x, centerpos.z - playerWk.pos.z) + D3DX_PI;
+	}
 
-	/// 位置移動
+	// 位置移動
 	playerWk.pos.x += playerWk.move.x;
 	playerWk.pos.y += playerWk.move.y;
 	playerWk.pos.z += playerWk.move.z;
 
 	// 移動前と現在の座標の長さを測り移動しているようなら当たり判定を行う
-	D3DXVECTOR3		vec = playerWk.move - oldPos;
-	float			len = D3DXVec3Length(&vec);
-	if (len > 0.1f)
-	{	// ビルボードとの当たり判定
-		//if (hitCheckMeshwall(oldPos, playerWk.move) != 0)
-		//{
-		//	// 当たっているので元の位置に戻す
-		//	playerWk.pos = oldPos;
-		//}
-	}
-	// (半径*角度)＋基準座標
+	//D3DXVECTOR3		vec = playerWk.move - oldPos;
+	//float			len = D3DXVec3Length(&vec);
+	//if (len > 0.1f)
+	//{	// ビルボードとの当たり判定
+	//	if (hitCheckMeshwall(oldPos, playerWk.move) != 0)
+	//	{
+	//		// 当たっているので元の位置に戻す
+	//		playerWk.pos = oldPos;
+	//	}
+	//}
 
+	// (半径*角度)＋基準座標でプレイヤーの座標を計算する
 
 	// 移動量をリセットする
 	playerWk.move.x = 0.0f;
@@ -654,11 +662,11 @@ void MovePlayer(void)
 		pos.y = playerWk.pos.y + 2.0f;
 		pos.z = playerWk.pos.z + cosf(playerWk.rot.y) * 10.0f;
 
-		SetEffect(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 20);
-		SetEffect(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 20);
-		SetEffect(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 20);
 	}
 

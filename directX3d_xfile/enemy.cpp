@@ -31,15 +31,11 @@ HRESULT InitEnemy(int type)
 	//ModelIndex = 0;
 
 	// 位置・回転・スケールの初期設定
-	enemyWk.pos = D3DXVECTOR3(-50.0f, 0.0f, 0.0f);
+	enemyWk.pos = FIRST_ENEMY_POS;
 	enemyWk.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	enemyWk.rotDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	enemyWk.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	enemyWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	enemyWk.jump = false;
-	enemyWk.speed = ENEMY_JUMP_SPEED;
-	enemyWk.HP = 1000;
+	enemyWk.HP = FULL_HP;
 	enemyWk.HPzan = enemyWk.HP;
 
 	if (type == 0)
@@ -95,24 +91,18 @@ void UpdateEnemy(void)
 		{
 			enemyWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.75f) * VALUE_MOVE;
 			enemyWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.75f) * VALUE_MOVE;
-
-			enemyWk.rotDest.y = camera->rot.y + D3DX_PI * 0.75f;
 		}
 		// D + W：右上( →・↑ )
 		else if (GetKeyboardPress(DIK_I))
 		{
 			enemyWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.25f) * VALUE_MOVE;
 			enemyWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.25f) * VALUE_MOVE;
-
-			enemyWk.rotDest.y = camera->rot.y + D3DX_PI * 0.25f;
 		}
 		// D：右( → )
 		else
 		{
 			enemyWk.move.x -= sinf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_MOVE;
 			enemyWk.move.z -= cosf(camera->rot.y + D3DX_PI * 0.50f) * VALUE_MOVE;
-
-			enemyWk.rotDest.y = camera->rot.y + D3DX_PI * 0.50f;
 		}
 	}
 	// A：左( ← )
@@ -123,24 +113,18 @@ void UpdateEnemy(void)
 		{
 			enemyWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.75f) * VALUE_MOVE;
 			enemyWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.75f) * VALUE_MOVE;
-
-			enemyWk.rotDest.y = camera->rot.y - D3DX_PI * 0.75f;
 		}
 		// A + W：左上( ←・↑ )
 		else if (GetKeyboardPress(DIK_I))
 		{
 			enemyWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.25f) * VALUE_MOVE;
 			enemyWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.25f) * VALUE_MOVE;
-
-			enemyWk.rotDest.y = camera->rot.y - D3DX_PI * 0.25f;
 		}
 		// A：左( ← )
 		else
 		{
 			enemyWk.move.x -= sinf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_MOVE;
 			enemyWk.move.z -= cosf(camera->rot.y - D3DX_PI * 0.50f) * VALUE_MOVE;
-
-			enemyWk.rotDest.y = camera->rot.y - D3DX_PI * 0.50f;
 		}
 	}
 	// S：下( ↓ )
@@ -148,16 +132,12 @@ void UpdateEnemy(void)
 	{
 		enemyWk.move.x -= sinf(D3DX_PI + camera->rot.y) * VALUE_MOVE;
 		enemyWk.move.z -= cosf(D3DX_PI + camera->rot.y) * VALUE_MOVE;
-
-		enemyWk.rotDest.y = D3DX_PI + camera->rot.y;
 	}
 	// W：上( ↑ )
 	else if (GetKeyboardPress(DIK_I))
 	{
 		enemyWk.move.x -= sinf(camera->rot.y) * VALUE_MOVE;
 		enemyWk.move.z -= cosf(camera->rot.y) * VALUE_MOVE;
-
-		enemyWk.rotDest.y = camera->rot.y;
 	}
 
 	// 敗北時
@@ -167,7 +147,9 @@ void UpdateEnemy(void)
 		SetPhase(PhaseFinish);
 	}
 
-	// 常に中心を向く
+	// 攻撃時以外常に中心を向く
+	//if(enemyWk.Animation->CurrentAnimID == Punchi_E || enemyWk.Animation->CurrentAnimID == Kick_E || 
+	//	enemyWk.Animation->CurrentAnimID == Hadou_E || enemyWk.Animation->CurrentAnimID == Shoryu_E)
 	enemyWk.rot.y = atan2f(centerpos.x - enemyWk.pos.x, centerpos.z - enemyWk.pos.z) + D3DX_PI;
 
 	// 位置移動
@@ -179,23 +161,6 @@ void UpdateEnemy(void)
 	enemyWk.move.x += (0.0f - enemyWk.move.x) * RATE_MOVE_MODEL;
 	enemyWk.move.y += (0.0f - enemyWk.move.y) * RATE_MOVE_MODEL;
 	enemyWk.move.z += (0.0f - enemyWk.move.z) * RATE_MOVE_MODEL;
-
-	//モデルのジャンプ
-	if (GetKeyboardTrigger(DIK_RETURN) && enemyWk.pos.y == 0.0f)
-	{
-		enemyWk.jump = true;
-	}
-	if (enemyWk.jump == true)
-	{
-		enemyWk.pos.y += enemyWk.speed;
-		enemyWk.speed -= 0.98f;
-		if (enemyWk.pos.y <= 0.0f)
-		{
-			enemyWk.speed = ENEMY_JUMP_SPEED;
-			enemyWk.pos.y = 0.0f;
-			enemyWk.jump = false;
-		}
-	}
 
 #ifdef _DEBUG
 	// デバッグ表示
