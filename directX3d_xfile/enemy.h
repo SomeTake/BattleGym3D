@@ -8,6 +8,7 @@
 #define _ENEMY_H_
 
 #include "D3DXAnimation.h"
+#include "CapsuleMesh.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -28,7 +29,8 @@ typedef struct {
 	D3DXCOLOR			ColShadow;		// 影の色
 	int					HP;				// 体力
 	int					HPzan;			// 残り体力
-	D3DXANIMATION		*Animation;			// アニメーション
+	D3DXANIMATION		*Animation;		// アニメーション
+	CAPSULE				HitCapsule;		// 当たり判定用カプセル
 }ENEMY;
 
 //*****************************************************************************
@@ -39,5 +41,7 @@ void UninitEnemy(void);
 void UpdateEnemy(void);
 void DrawEnemy(void);
 ENEMY *GetEnemy(void);
+void EasyInputEnemy(void);		// 簡単入力
+void MoveEnemy(void);			// 座標移動
 
 #endif

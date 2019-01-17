@@ -77,6 +77,10 @@
     <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -140,6 +144,7 @@
     <ClInclude Include="blackscreen.h" />
     <ClInclude Include="CAllocateHierarchy.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="CapsuleMesh.h" />
     <ClInclude Include="company.h" />
     <ClInclude Include="countdown.h" />
     <ClInclude Include="D3DXAnimation.h" />
@@ -186,6 +191,7 @@
     <ClCompile Include="blackscreen.cpp" />
     <ClCompile Include="CAllocateHierarchy.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="CapsuleMesh.cpp" />
     <ClCompile Include="company.cpp" />
     <ClCompile Include="countdown.cpp" />
     <ClCompile Include="D3DXAnimation.cpp" />

@@ -65,6 +65,7 @@
 #define	VALUE_ROTATE	(D3DX_PI * 0.80f)								// 回転量
 #define VALUE_ENLARGEMENT	(0.1f)										// 拡大・縮小量
 #define	VALUE_ROTATE_MODEL	(D3DX_PI * 0.05f)							// 回転速度
+#define VALUE_HALF		(0.5f)											// 何らかの値を半分にするために掛ける
 
 #define	RATE_MOVE_MODEL		(0.20f)										// 移動慣性係数
 #define	RATE_ROTATE_MODEL	(0.20f)										// 回転慣性係数
@@ -83,10 +84,10 @@
 #define PAUSESELECT_POS_Y					(223)						// 表示位置
 
 // フィールド関係
-#define FIELD_SIZE							(50.0f)
+#define FIELD_SIZE							(80.0f)
 #define WALL_BLOCK_NUM_X					(16)
 #define WALL_BLOCK_NUM_Y					(2)
-#define WALL_SIZE_HEIGHT					(100.0f)
+#define WALL_SIZE_HEIGHT					(150.0f)
 #define WALL_SIZE_WIDTH						(50.0f)
 #define WALL_POS							(400.0f)
 
@@ -101,6 +102,12 @@
 #define DAMAGE_SHORYU						(120)						// ダメージ量
 #define DAMAGE_SPATTACK						(400)						// ダメージ量
 #define DAMAGE_THROW						(150)						// ダメージ量
+
+// アニメーションスピード
+#define ANIM_SPD_05							(0.5f)
+#define ANIM_SPD_1							(1.0f)
+#define ANIM_SPD_15							(1.5f)
+#define ANIM_SPD_2							(2.0f)
 
 // デストラクタ
 #define SAFE_DELETE(object)			{if(object){delete (object);		(object) = NULL;}}

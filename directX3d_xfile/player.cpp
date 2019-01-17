@@ -12,10 +12,10 @@
 #include "D3DXAnimation.h"
 #include "enemy.h"
 #include "debugproc.h"
-#include "effect.h"
 #include "HitCheck.h"
 #include "meshwall.h"
 #include "particle.h"
+#include "CapsuleMesh.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -175,6 +175,13 @@ HRESULT InitPlayer(int type)
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Throw_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Win_P, 0.1f);
 
+		// 当たり判定カプセルを生成
+		if (FAILED(
+			CreateCapsule(&playerWk.HitCapsule, D3DXVECTOR3(0.0f,0.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 1.0f), 60.0f, 15.0f, true)))
+		{
+			return E_FAIL;
+		}
+
 		// 影の生成
 		playerWk.IdxShadow = CreateShadow(playerWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 		playerWk.SizeShadow = 25.0f;
@@ -194,6 +201,9 @@ void UninitPlayer(void)
 {
 	// アニメーションをリリース
 	playerWk.Animation->UninitAnimation(playerWk.Animation);
+	
+	// カプセルをリリース
+	UninitCapsule(&playerWk.HitCapsule);
 
 }
 
@@ -277,6 +287,7 @@ void DrawPlayer(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 	D3DMATERIAL9 matDef;
+	D3DXMATRIX CapsuleMatrix;
 	MATRIX matrix = *GetMatrix();
 	CAMERA *cameraWk = GetCamera(0);
 
@@ -306,6 +317,10 @@ void DrawPlayer(void)
 
 	// マテリアルをデフォルトに戻す
 	pDevice->SetMaterial(&matDef);
+
+	// プレイヤーのカプセルを描画する
+	CapsuleMatrix = GetBoneMatrix(playerWk.Animation, "Hips");
+	DrawCapsule(&playerWk.HitCapsule, &CapsuleMatrix);
 }
 
 //=============================================================================
@@ -330,49 +345,49 @@ void EasyInputPlayer(void)
 		// 前
 		if (GetKeyboardTrigger(DIK_D) || IsButtonTriggered(0, BUTTON_RIGHT) || IsButtonTriggered(0, STICK_RIGHT))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk_P, ANIM_SPD_2);
 		}
 		// 後ろ
 		else if (GetKeyboardTrigger(DIK_A) || IsButtonTriggered(0, BUTTON_LEFT) || IsButtonTriggered(0, STICK_LEFT))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk_P, ANIM_SPD_2);
 		}
 		// 手前
 		else if (GetKeyboardTrigger(DIK_S) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep_P, ANIM_SPD_2);
 		}
 		// 奥
 		else if (GetKeyboardTrigger(DIK_W) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep_P, ANIM_SPD_2);
 		}
 
 		// 攻撃
 		// パンチ
 		else if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, ANIM_SPD_15);
 		}
 		// キック
 		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, ANIM_SPD_15);
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, ANIM_SPD_2);
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, ANIM_SPD_15);
 		}
 		// ガード
 		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(0, BUTTON_Y))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, ANIM_SPD_1);
 		}
 		else
 		{
@@ -387,34 +402,34 @@ void EasyInputPlayer(void)
 		// ボタンリリースで待機に戻る
 		else
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 
 		// 攻撃
 		// パンチ
 		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, ANIM_SPD_15);
 		}
 		// キック
 		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, ANIM_SPD_15);
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, ANIM_SPD_2);
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, ANIM_SPD_15);
 		}
 		// ガード
 		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(0, BUTTON_Y))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, ANIM_SPD_1);
 		}
 		break;
 	case Backwalk_P:
@@ -426,48 +441,48 @@ void EasyInputPlayer(void)
 		// ボタンリリースで待機に戻る
 		else
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 
 		// 攻撃
 		// パンチ
 		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, ANIM_SPD_15);
 		}
 		// キック
 		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, ANIM_SPD_15);
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, ANIM_SPD_2);
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, ANIM_SPD_15);
 		}
 		// ガード
 		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(0, BUTTON_Y))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard_P, ANIM_SPD_1);
 		}
 		break;
 	case Rightstep_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Leftstep_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Guard_P:
@@ -478,77 +493,77 @@ void EasyInputPlayer(void)
 			// ボタンリリースで待機に戻る
 		else
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 
 		// 攻撃
 		// パンチ
 		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(0, BUTTON_A))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi_P, ANIM_SPD_15);
 		}
 		// キック
 		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_B))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick_P, ANIM_SPD_15);
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(0, BUTTON_X))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, 2.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou_P, ANIM_SPD_2);
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(0, BUTTON_C))
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu_P, ANIM_SPD_15);
 		}
 	case Damage_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Down_P:
 		// アニメーション終了で起き上がりに移行
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup_P, ANIM_SPD_15);
 		}
 		break;
 	case Getup_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Punchi_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Kick_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Hadou_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	case Shoryu_P:
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, 1.0f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle_P, ANIM_SPD_1);
 		}
 		break;
 	default:
@@ -568,7 +583,7 @@ void MovePlayer(void)
 	D3DXVECTOR3		oldPos = playerWk.pos;		// 元の位置
 	float PEdistance = GetPEdistance();
 
-	D3DXVECTOR3 newpos;
+	//D3DXVECTOR3 newpos;
 
 	// アクションに合わせた座標移動
 	switch (playerWk.Animation->CurrentAnimID)
@@ -603,16 +618,16 @@ void MovePlayer(void)
 		//playerWk.move.x -= PEdistance * cosf(playerWk.rot.y + D3DXToRadian(1));
 		//playerWk.move.z -= PEdistance * sinf(playerWk.rot.y + D3DXToRadian(1));
 		//playerWk.move = newpos - playerWk.pos;
-		playerWk.move.x -= sinf(playerWk.rot.y + D3DX_PI * 0.50f) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(playerWk.rot.y + D3DX_PI * 0.50f) * VALUE_ROTATE;
+		playerWk.move.x -= sinf(playerWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(playerWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		break;
 		// 奥移動中の座標処理
 	case Leftstep_P:
 		//playerWk.move.x -= PEdistance * cosf(playerWk.rot.y + D3DXToRadian(-1));
 		//playerWk.move.z -= PEdistance * sinf(playerWk.rot.y + D3DXToRadian(-1));
 		//playerWk.move = newpos - playerWk.pos;
-		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
-		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * 0.50f) * VALUE_ROTATE;
+		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
+		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		break;
 	default:
 		break;
@@ -663,11 +678,11 @@ void MovePlayer(void)
 		pos.z = playerWk.pos.z + cosf(playerWk.rot.y) * 10.0f;
 
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 20);
+			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 60);
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 20);
+			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 60);
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 20);
+			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 60);
 	}
 
 }

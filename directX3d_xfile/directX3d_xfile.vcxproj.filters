@@ -165,6 +165,9 @@
     <ClInclude Include="skybox.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
+    <ClInclude Include="CapsuleMesh.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAllocateHierarchy.cpp">
@@ -294,6 +297,9 @@
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
     <ClCompile Include="skybox.cpp">
+      <Filter>ソース ファイル\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleMesh.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
   </ItemGroup>

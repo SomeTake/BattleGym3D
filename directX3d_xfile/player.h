@@ -8,6 +8,7 @@
 #define _PLAYER_H_
 
 #include "D3DXAnimation.h"
+#include "CapsuleMesh.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -29,10 +30,8 @@ typedef struct {
 	D3DXCOLOR			ColShadow;			// 影の色
 	int					HP;					// 体力
 	int					HPzan;				// 残り体力
-
 	D3DXANIMATION		*Animation;			// アニメーション
-	int					Action;				// 現在のアニメーション
-	int					NextAction;			// 次のアニメーション
+	CAPSULE				HitCapsule;			// 当たり判定用カプセル
 }PLAYER;
 
 //*****************************************************************************

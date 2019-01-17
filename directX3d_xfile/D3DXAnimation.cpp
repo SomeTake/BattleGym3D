@@ -245,7 +245,7 @@ HRESULT Load_xFile(D3DXANIMATION* D3DXAnimation, LPCTSTR filename, const char* E
 
 
 //=============================================================================
-// 特定なボーンのマトリックスを取得
+// 特定のボーンマトリックスを取得
 //=============================================================================
 D3DXMATRIX GetBoneMatrix(D3DXANIMATION* Animation, const char* BoneName)
 {
