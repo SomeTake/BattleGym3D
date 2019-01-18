@@ -14,7 +14,7 @@
 #define TEXTURE_SKYBOX_DIVIDE_X			(4)		// テクスチャ内分割数（横)
 #define TEXTURE_SKYBOX_DIVIDE_Y			(3)		// テクスチャ内分割数（縦)
 #define SURFACE_NUM						(6)
-#define SKYBOX_LENGTH					(5000.0f)
+#define SKYBOX_LENGTH					(3000.0f)
 #define SKYBLUE(Alpha)		D3DCOLOR_RGBA(135, 206, 235, Alpha)
 
 typedef struct

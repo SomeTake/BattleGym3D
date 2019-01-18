@@ -57,7 +57,7 @@
 #define	VIEW_ANGLE		(D3DXToRadian(45.0f))							// ビュー平面の視野角
 #define	VIEW_ASPECT		((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT)	// ビュー平面のアスペクト比	
 #define	VIEW_NEAR_Z		(10.0f)											// ビュー平面のNearZ値
-#define	VIEW_FAR_Z		(1000.0f)										// ビュー平面のFarZ値
+#define	VIEW_FAR_Z		(5000.0f)										// ビュー平面のFarZ値
 
 #define	VALUE_MOVE		(1.00f)											// 移動量
 #define VALUE_FRONTWALK	(1.50f)											// 前歩き移動量
@@ -87,7 +87,7 @@
 #define FIELD_SIZE							(80.0f)
 #define WALL_BLOCK_NUM_X					(16)
 #define WALL_BLOCK_NUM_Y					(2)
-#define WALL_SIZE_HEIGHT					(150.0f)
+#define WALL_SIZE_HEIGHT					(100.0f)
 #define WALL_SIZE_WIDTH						(50.0f)
 #define WALL_POS							(400.0f)
 

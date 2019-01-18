@@ -12,7 +12,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_EFFECT			"data/TEXTURE/shadow000.jpg"	// 読み込むテクスチャファイル名
+#define	TEXTURE_EFFECT			"data/TEXTURE/effect000.jpg"	// 読み込むテクスチャファイル名
 #define	EFFECT_SIZE_X			(50.0f)							// ビルボードの幅
 #define	EFFECT_SIZE_Y			(50.0f)							// ビルボードの高さ
 #define	VALUE_MOVE_BULLET		(2.0f)							// 移動速度

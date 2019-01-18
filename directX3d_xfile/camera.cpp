@@ -14,7 +14,7 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-#define VIEW_DIST			(4)		// 最低限のカメラの距離
+#define VIEW_DIST			(4)		// 最低限のキャラクターとカメラの距離
 #define VIEW_DIST_RATE		(0.3f)
 
 //*****************************************************************************
@@ -24,6 +24,7 @@ CAMERA cameraWk[MAX_SEPARATE];
 
 D3DXVECTOR3 CenterPos;				// プレイヤーとエネミーの間の位置
 float PEdistance;					// プレイヤーとエネミーの距離
+D3DXVECTOR3 NewCenterPos;			// 更新後の新しいプレイヤーとエネミーの間の位置
 
 //=============================================================================
 // カメラの初期化処理
@@ -77,8 +78,10 @@ void UpdateCamera(void)
 	}
 
 	// PとEの座標の中点から、PとEの座標をそれぞれ結んだ線分に対して垂直に移動した位置をカメラ位置とする
-	D3DXVECTOR3 ViewFrom = D3DXVECTOR3(CenterPos.x - unit.z * cameraWk->distance, AT_Y_CAM + POS_Y_CAM, CenterPos.z + unit.x * cameraWk->distance);
-	cameraWk->pos = ViewFrom;
+	NewCenterPos = D3DXVECTOR3(CenterPos.x - unit.z * cameraWk->distance, AT_Y_CAM + POS_Y_CAM, CenterPos.z + unit.x * cameraWk->distance);
+	D3DXVECTOR3 DistVec = NewCenterPos - cameraWk->pos;	// 更新前のカメラ位置と、新しいカメラ位置の差をベクトルにする
+	// キャラ間の中心位置は常に取得し続けるようにしたい
+	cameraWk->pos += DistVec * CAMERA_SPD;				// 徐々に新しいカメラ位置に近づける
 
 	cameraWk->rot.y = atan2f(cameraWk->at.x - cameraWk->pos.x, cameraWk->at.z - cameraWk->pos.z) * D3DX_PI;	// カメラの回転（常に注視点を向き続ける）
 	cameraWk->at = CenterPos + D3DXVECTOR3(AT_X_CAM, AT_Y_CAM, AT_Z_CAM);									// カメラの注視点＝モデルの中心点
@@ -137,7 +140,7 @@ CAMERA *GetCamera(int cno)
 }
 
 //=============================================================================
-//PとEのの中心位置を取得する
+//PとEの間の位置を取得する
 //=============================================================================
 D3DXVECTOR3 GetCenterPos(void)
 {

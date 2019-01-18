@@ -1228,3 +1228,4 @@ HRESULT LoadTexture(LPCSTR SrcFile, LPDIRECT3DTEXTURE9* TexturePtr, const char* 
 
 	return S_OK;
 }
+

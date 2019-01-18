@@ -25,7 +25,7 @@ HRESULT MakeVertexSkyBox(void);
 LPDIRECT3DVERTEXBUFFER9 SkyBoxVertexBuffer = NULL;			// 頂点バッファへのポインタ
 LPDIRECT3DTEXTURE9		SkyBoxTexture = NULL;
 D3DXMATRIX				WorldMatrix_SkyBox;					// ワールドマトリックス
-SKYBOX					Sky;
+SKYBOX					skyWk;
 
 //=============================================================================
 // 初期化処理
@@ -35,9 +35,9 @@ HRESULT InitSkyBox(int type)
 	LPDIRECT3DDEVICE9 Device = GetDevice();
 
 	// 位置・回転・スケールの初期設定
-	Sky.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);;
-	Sky.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	Sky.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	skyWk.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);;
+	skyWk.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	skyWk.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
 	// 初めて初期化
 	if (type == 0)
@@ -79,9 +79,8 @@ void UpdateSkyBox(void)
 	PLAYER *Player = GetPlayer();
 	CAMERA *Camera = GetCamera(0);
 
-	//Sky.Pos = Player->Pos;
-	Sky.pos = Camera->at;
-	Sky.rot.y += 0.0001f;
+	//skyWk.pos = Camera->at;
+	skyWk.rot.y += 0.0001f;
 
 	return;
 }
@@ -98,15 +97,15 @@ void DrawSkyBox(void)
 	D3DXMatrixIdentity(&WorldMatrix_SkyBox);
 
 	// スケールを反映
-	D3DXMatrixScaling(&ScaleMatrix, Sky.scl.x, Sky.scl.y, Sky.scl.z);
+	D3DXMatrixScaling(&ScaleMatrix, skyWk.scl.x, skyWk.scl.y, skyWk.scl.z);
 	D3DXMatrixMultiply(&WorldMatrix_SkyBox, &WorldMatrix_SkyBox, &ScaleMatrix);
 
 	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&RotMatrix, Sky.rot.y, Sky.rot.x, Sky.rot.z);
+	D3DXMatrixRotationYawPitchRoll(&RotMatrix, skyWk.rot.y, skyWk.rot.x, skyWk.rot.z);
 	D3DXMatrixMultiply(&WorldMatrix_SkyBox, &WorldMatrix_SkyBox, &RotMatrix);
 
 	// 移動を反映
-	D3DXMatrixTranslation(&TransMatrix, Sky.pos.x, Sky.pos.y, Sky.pos.z);
+	D3DXMatrixTranslation(&TransMatrix, skyWk.pos.x, skyWk.pos.y, skyWk.pos.z);
 	D3DXMatrixMultiply(&WorldMatrix_SkyBox, &WorldMatrix_SkyBox, &TransMatrix);
 
 	// ワールドマトリックスの設定

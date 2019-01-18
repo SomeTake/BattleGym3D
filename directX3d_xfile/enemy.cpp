@@ -37,6 +37,7 @@ const char* EnemyAnimNum[] =
 	"guard",			// ガード めっちゃ胸反る
 	"damage",			// ダメージ受けた
 	"down",				// ダウン
+	"downpose",			// ダウン状態
 	"getup",			// 起き上がり
 	"punchi",			// パンチ
 	"kick",				// キック
@@ -57,6 +58,7 @@ enum EnemyStateNum
 	Guard_E,
 	Damage_E,
 	Down_E,
+	Downpose_E,
 	Getup_E,
 	Punchi_E,
 	Kick_E,
@@ -116,6 +118,11 @@ HRESULT InitEnemy(int type)
 		{
 			return E_FAIL;
 		}
+		// ダウン状態
+		if (FAILED(SetupCallbackKeyframes(enemyWk.Animation, EnemyAnimNum[Downpose_E])))
+		{
+			return E_FAIL;
+		}
 		// 起き上がり
 		if (FAILED(SetupCallbackKeyframes(enemyWk.Animation, EnemyAnimNum[Getup_E])))
 		{
@@ -161,6 +168,9 @@ HRESULT InitEnemy(int type)
 			}
 		}
 		enemyWk.Animation->CurrentAnimID = Idle_E;
+		
+		// アニメーション間の補完を設定
+		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Idle_E, 0.5f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Frontwalk_E, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Backwalk_E, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Rightstep_E, 0.1f);
@@ -168,6 +178,7 @@ HRESULT InitEnemy(int type)
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Guard_E, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Damage_E, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Down_E, 0.1f);
+		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Downpose_E, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Getup_E, 1.0f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Punchi_E, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Kick_E, 0.1f);
@@ -241,7 +252,7 @@ void UpdateEnemy(void)
 	}
 
 	// 座標移動
-	MovePlayer();
+	MoveEnemy();
 
 	// 影の位置設定
 	SetPositionShadow(enemyWk.IdxShadow, D3DXVECTOR3(enemyWk.pos.x, 0.1f, enemyWk.pos.z));
@@ -312,49 +323,49 @@ void EasyInputEnemy(void)
 	case Idle_E:
 		// 移動
 		// 前
-		if (GetKeyboardTrigger(DIK_RIGHT) || IsButtonTriggered(1, BUTTON_RIGHT) || IsButtonTriggered(1, STICK_RIGHT))
+		if (GetKeyboardTrigger(DIK_A) || IsButtonTriggered(1, BUTTON_RIGHT) || IsButtonTriggered(1, STICK_RIGHT))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Frontwalk_E, ANIM_SPD_2);
 		}
 		// 後ろ
-		else if (GetKeyboardTrigger(DIK_LEFT) || IsButtonTriggered(1, BUTTON_LEFT) || IsButtonTriggered(1, STICK_LEFT))
+		else if (GetKeyboardTrigger(DIK_D) || IsButtonTriggered(1, BUTTON_LEFT) || IsButtonTriggered(1, STICK_LEFT))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Backwalk_E, ANIM_SPD_2);
 		}
 		// 手前
-		else if (GetKeyboardTrigger(DIK_DOWN) || IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
+		else if (GetKeyboardTrigger(DIK_S) || IsButtonTriggered(1, BUTTON_DOWN) || IsButtonTriggered(1, STICK_DOWN))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Rightstep_E, ANIM_SPD_2);
 		}
 		// 奥
-		else if (GetKeyboardTrigger(DIK_UP) || IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
+		else if (GetKeyboardTrigger(DIK_W) || IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Leftstep_E, ANIM_SPD_2);
 		}
 
 		// 攻撃
 		// パンチ
-		else if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(1, BUTTON_A))
+		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_A))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Punchi_E, ANIM_SPD_15);
 		}
 		// キック
-		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(1, BUTTON_B))
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_B))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Kick_E, ANIM_SPD_15);
 		}
 		// 波動拳
-		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_X))
+		else if (GetKeyboardTrigger(DIK_L) || IsButtonTriggered(1, BUTTON_X))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Hadou_E, ANIM_SPD_2);
 		}
 		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_C))
+		else if (GetKeyboardTrigger(DIK_P) || IsButtonTriggered(1, BUTTON_C))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Shoryu_E, ANIM_SPD_15);
 		}
 		// ガード
-		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_Y))
+		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_Y))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Guard_E, ANIM_SPD_1);
 		}
@@ -364,7 +375,7 @@ void EasyInputEnemy(void)
 		break;
 	case Frontwalk_E:
 		// 前
-		if (GetKeyboardPress(DIK_D) || IsButtonPressed(1, BUTTON_RIGHT) || IsButtonPressed(1, STICK_RIGHT))
+		if (GetKeyboardPress(DIK_A) || IsButtonPressed(1, BUTTON_RIGHT) || IsButtonPressed(1, STICK_RIGHT))
 		{
 
 		}
@@ -376,34 +387,34 @@ void EasyInputEnemy(void)
 
 		// 攻撃
 		// パンチ
-		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(1, BUTTON_A))
+		if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_A))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Punchi_E, ANIM_SPD_15);
 		}
 		// キック
-		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(1, BUTTON_B))
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_B))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Kick_E, ANIM_SPD_15);
 		}
 		// 波動拳
-		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_X))
+		else if (GetKeyboardTrigger(DIK_L) || IsButtonTriggered(1, BUTTON_X))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Hadou_E, ANIM_SPD_2);
 		}
 		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_C))
+		else if (GetKeyboardTrigger(DIK_P) || IsButtonTriggered(1, BUTTON_C))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Shoryu_E, ANIM_SPD_15);
 		}
 		// ガード
-		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_Y))
+		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_Y))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Guard_E, ANIM_SPD_1);
 		}
 		break;
 	case Backwalk_E:
 		// 後ろ
-		if (GetKeyboardPress(DIK_A) || IsButtonPressed(1, BUTTON_LEFT) || IsButtonPressed(1, STICK_LEFT))
+		if (GetKeyboardPress(DIK_D) || IsButtonPressed(1, BUTTON_LEFT) || IsButtonPressed(1, STICK_LEFT))
 		{
 
 		}
@@ -415,27 +426,27 @@ void EasyInputEnemy(void)
 
 		// 攻撃
 		// パンチ
-		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(1, BUTTON_A))
+		if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_A))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Punchi_E, ANIM_SPD_15);
 		}
 		// キック
-		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(1, BUTTON_B))
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_B))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Kick_E, ANIM_SPD_15);
 		}
 		// 波動拳
-		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_X))
+		else if (GetKeyboardTrigger(DIK_L) || IsButtonTriggered(1, BUTTON_X))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Hadou_E, ANIM_SPD_2);
 		}
 		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_C))
+		else if (GetKeyboardTrigger(DIK_P) || IsButtonTriggered(1, BUTTON_C))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Shoryu_E, ANIM_SPD_15);
 		}
 		// ガード
-		else if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_Y))
+		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_Y))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Guard_E, ANIM_SPD_1);
 		}
@@ -455,7 +466,7 @@ void EasyInputEnemy(void)
 		}
 		break;
 	case Guard_E:
-		if (GetKeyboardPress(DIK_O) || IsButtonPressed(1, BUTTON_Y))
+		if (GetKeyboardPress(DIK_I) || IsButtonPressed(1, BUTTON_Y))
 		{
 
 		}
@@ -467,22 +478,22 @@ void EasyInputEnemy(void)
 
 		// 攻撃
 		// パンチ
-		if (GetKeyboardTrigger(DIK_U) || IsButtonTriggered(1, BUTTON_A))
+		if (GetKeyboardTrigger(DIK_O) || IsButtonTriggered(1, BUTTON_A))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Punchi_E, ANIM_SPD_15);
 		}
 		// キック
-		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(1, BUTTON_B))
+		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_B))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Kick_E, ANIM_SPD_15);
 		}
 		// 波動拳
-		else if (GetKeyboardTrigger(DIK_K) || IsButtonTriggered(1, BUTTON_X))
+		else if (GetKeyboardTrigger(DIK_L) || IsButtonTriggered(1, BUTTON_X))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Hadou_E, ANIM_SPD_2);
 		}
 		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_I) || IsButtonTriggered(1, BUTTON_C))
+		else if (GetKeyboardTrigger(DIK_P) || IsButtonTriggered(1, BUTTON_C))
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Shoryu_E, ANIM_SPD_15);
 		}
@@ -494,6 +505,16 @@ void EasyInputEnemy(void)
 		}
 		break;
 	case Down_E:
+		// アニメーション終了で起き上がりに移行
+		if (enemyWk.Animation->MotionEnd == true)
+		{
+			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose_E, ANIM_SPD_1);
+			D3DXMATRIXA16 newmatrix;	// モーション座標を取得するための行列
+			newmatrix = GetBoneMatrix(enemyWk.Animation, "Hips");
+			enemyWk.pos = D3DXVECTOR3(newmatrix._41, 0.0f, newmatrix._43);
+		}
+		break;
+	case Downpose_E:
 		// アニメーション終了で起き上がりに移行
 		if (enemyWk.Animation->MotionEnd == true)
 		{
@@ -582,19 +603,13 @@ void MoveEnemy(void)
 		break;
 		// 手前移動中の座標処理
 	case Rightstep_E:
-		//enemyWk.move.x -= PEdistance * cosf(enemyWk.rot.y + D3DXToRadian(1));
-		//enemyWk.move.z -= PEdistance * sinf(enemyWk.rot.y + D3DXToRadian(1));
-		//enemyWk.move = newpos - enemyWk.pos;
-		enemyWk.move.x -= sinf(enemyWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
-		enemyWk.move.z -= cosf(enemyWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
+		enemyWk.move.x -= sinf(enemyWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
+		enemyWk.move.z -= cosf(enemyWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		break;
 		// 奥移動中の座標処理
 	case Leftstep_E:
-		//enemyWk.move.x -= PEdistance * cosf(enemyWk.rot.y + D3DXToRadian(-1));
-		//enemyWk.move.z -= PEdistance * sinf(enemyWk.rot.y + D3DXToRadian(-1));
-		//enemyWk.move = newpos - enemyWk.pos;
-		enemyWk.move.x -= sinf(enemyWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
-		enemyWk.move.z -= cosf(enemyWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
+		enemyWk.move.x -= sinf(enemyWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
+		enemyWk.move.z -= cosf(enemyWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		break;
 	default:
 		break;
@@ -620,5 +635,6 @@ void MoveEnemy(void)
 	enemyWk.move.x = 0;
 	enemyWk.move.y = 0;
 	enemyWk.move.z = 0;
+
 
 }

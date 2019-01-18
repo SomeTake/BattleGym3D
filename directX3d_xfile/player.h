@@ -44,5 +44,6 @@ void DrawPlayer(void);
 PLAYER *GetPlayer(void);
 void EasyInputPlayer(void);		// ŠÈ’P“ü—Í
 void MovePlayer(void);			// À•WˆÚ“®
+void HitCheckPlayer(void);		// “–‚½‚è”»’è
 
 #endif

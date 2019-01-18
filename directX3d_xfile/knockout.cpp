@@ -94,10 +94,6 @@ void UpdateKnockout(void)
 	static int sceneframe = 0;
 	static int pushframe = 0;
 
-#ifdef _DEBUG
-	PrintDebugProc("pushframe%d\n", pushframe);
-#endif
-
 	// ƒV[ƒ“‘JˆÚ—LŒø‚É‚È‚é‚Ü‚Å‚ÌŠÔ
 	if (sceneframe < POSSIBLE_FRAME)
 	{
