@@ -236,8 +236,24 @@ void UpdateEnemy(void)
 	// 座標移動
 	MoveEnemy();
 
+	// 当たり判定用ボール座標の更新
+	D3DXMATRIX Mtx;
+	for (int i = 0; i < HIT_CHECK_NUM; i++)
+	{
+		Mtx = GetBoneMatrix(enemyWk.Animation, CharaHitPos[i]);
+		UpdateBall(&enemyWk.HitBall[i], Mtx);
+	}
+
 	// 当たり判定
-	HitCheckEnemy();
+	if (enemyWk.HitFrag == false)
+	{
+		// キャラクター同士の当たり判定
+		if (HitCheckCToC(&enemyWk, playerWk) == true)
+		{
+			// 当たった後の動き
+			HitAction(&enemyWk, playerWk);
+		}
+	}
 
 	// 影の位置設定
 	SetPositionShadow(enemyWk.IdxShadow, D3DXVECTOR3(enemyWk.pos.x, 0.1f, enemyWk.pos.z));
@@ -529,6 +545,7 @@ void EasyInputEnemy(void)
 		if (enemyWk.Animation->MotionEnd == true)
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
+			enemyWk.HitFrag = false;
 		}
 		break;
 	case Kick:
@@ -536,6 +553,7 @@ void EasyInputEnemy(void)
 		if (enemyWk.Animation->MotionEnd == true)
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
+			enemyWk.HitFrag = false;
 		}
 		break;
 	case Hadou:
@@ -543,6 +561,7 @@ void EasyInputEnemy(void)
 		if (enemyWk.Animation->MotionEnd == true)
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
+			enemyWk.HitFrag = false;
 		}
 		break;
 	case Shoryu:
@@ -550,6 +569,7 @@ void EasyInputEnemy(void)
 		if (enemyWk.Animation->MotionEnd == true)
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
+			enemyWk.HitFrag = false;
 		}
 		break;
 	default:
