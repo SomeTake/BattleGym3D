@@ -45,6 +45,7 @@
 #include "thanks.h"
 #include "effect.h"
 #include "skybox.h"
+#include "ball.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`

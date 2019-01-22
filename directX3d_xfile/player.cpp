@@ -16,6 +16,7 @@
 #include "meshwall.h"
 #include "particle.h"
 #include "CapsuleMesh.h"
+#include "ball.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -70,6 +71,7 @@ enum PlayerStateNum
 };
 
 bool RenderWireframe = false;
+D3DXMATRIX WorldMtxPlayer;
 
 //=============================================================================
 // 初期化処理
@@ -196,12 +198,33 @@ HRESULT InitPlayer(int type)
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Throw_P, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Win_P, 0.1f);
 
-		// 当たり判定カプセルを生成
-		if (FAILED(
-			CreateCapsule(&playerWk.HitCapsule, D3DXVECTOR3(0.0f,0.0f,0.0f), D3DXVECTOR3(0.0f, 0.0f, 1.0f), 60.0f, 15.0f, true)))
-		{
-			return E_FAIL;
-		}
+		// 当たり判定用ボールを生成
+		D3DXMATRIX Mtx = GetBoneMatrix(playerWk.Animation, "Hips");
+		InitBall(0, &playerWk.HitBall[0], Mtx, BODY_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "Neck");
+		InitBall(0, &playerWk.HitBall[1], Mtx, BODY_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "Head");
+		InitBall(0, &playerWk.HitBall[2], Mtx, BODY_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "LeftShoulder");
+		InitBall(0, &playerWk.HitBall[3], Mtx, ARM_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "RightShoulder");
+		InitBall(0, &playerWk.HitBall[4], Mtx, ARM_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "LeftHand");
+		InitBall(0, &playerWk.HitBall[5], Mtx, ARM_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "RightHand");
+		InitBall(0, &playerWk.HitBall[6], Mtx, ARM_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "LeftFoot");
+		InitBall(0, &playerWk.HitBall[7], Mtx, FOOT_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "RightFoot");
+		InitBall(0, &playerWk.HitBall[8], Mtx, FOOT_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "LeftForeArm");
+		InitBall(0, &playerWk.HitBall[9], Mtx, ARM_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "RightForeArm");
+		InitBall(0, &playerWk.HitBall[10], Mtx, ARM_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "LeftLeg");
+		InitBall(0, &playerWk.HitBall[11], Mtx, FOOT_RADIUS);
+		Mtx = GetBoneMatrix(playerWk.Animation, "RightLeg");
+		InitBall(0, &playerWk.HitBall[12], Mtx, FOOT_RADIUS);
 
 		// 影の生成
 		playerWk.IdxShadow = CreateShadow(playerWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
@@ -223,9 +246,11 @@ void UninitPlayer(void)
 	// アニメーションをリリース
 	playerWk.Animation->UninitAnimation(playerWk.Animation);
 	
-	// カプセルをリリース
-	UninitCapsule(&playerWk.HitCapsule);
-
+	// 当たり判定ボールをリリース
+	for (int i = 0; i < HIT_CHECK_NUM; i++)
+	{
+		UninitBall(&playerWk.HitBall[i]);
+	}
 }
 
 //=============================================================================
@@ -328,27 +353,25 @@ void DrawPlayer(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 	D3DMATERIAL9 matDef;
-	D3DXMATRIX CapsuleMatrix;
-	MATRIX matrix = *GetMatrix();
-	CAMERA *cameraWk = GetCamera(0);
+	D3DXMATRIX ScaleMatrix, RotMatrix, TransMatrix, CapsuleMatrix, BallMatrix;
 
 	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&matrix.world);
+	D3DXMatrixIdentity(&WorldMtxPlayer);
 
 	// スケールを反映
-	D3DXMatrixScaling(&matrix.scale, playerWk.scl.x, playerWk.scl.y, playerWk.scl.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
+	D3DXMatrixScaling(&ScaleMatrix, playerWk.scl.x, playerWk.scl.y, playerWk.scl.z);
+	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &ScaleMatrix);
 
 	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&matrix.scale, playerWk.rot.y, playerWk.rot.x, playerWk.rot.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.scale);
+	D3DXMatrixRotationYawPitchRoll(&ScaleMatrix, playerWk.rot.y, playerWk.rot.x, playerWk.rot.z);
+	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &ScaleMatrix);
 
 	// 移動を反映
-	D3DXMatrixTranslation(&matrix.translation, playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
-	D3DXMatrixMultiply(&matrix.world, &matrix.world, &matrix.translation);
+	D3DXMatrixTranslation(&TransMatrix, playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
+	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &TransMatrix);
 
 	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &matrix.world);
+	pDevice->SetTransform(D3DTS_WORLD, &WorldMtxPlayer);
 
 	// 現在のマテリアルを取得
 	pDevice->GetMaterial(&matDef);
@@ -359,14 +382,19 @@ void DrawPlayer(void)
 	}
 
 	// レンダリング
-	playerWk.Animation->DrawAnimation(playerWk.Animation, &matrix.world);
+	playerWk.Animation->DrawAnimation(playerWk.Animation, &WorldMtxPlayer);
 
 	// マテリアルをデフォルトに戻す
 	pDevice->SetMaterial(&matDef);
 
-	// プレイヤーのカプセルを描画する
-	CapsuleMatrix = GetBoneMatrix(playerWk.Animation, "Hips");
-	DrawCapsule(&playerWk.HitCapsule, &CapsuleMatrix);
+	if (RenderWireframe == true)
+	{
+		for (int i = 0; i < HIT_CHECK_NUM; i++)
+		{
+			// プレイヤーの当たり判定用ボールを描画する
+			DrawBall(&playerWk.HitBall[i]);
+		}
+	}
 }
 
 //=============================================================================
@@ -382,8 +410,6 @@ PLAYER *GetPlayer(void)
 //=============================================================================
 void EasyInputPlayer(void)
 {
-	CAMERA *camera = GetCamera(0);
-
 	switch (playerWk.Animation->CurrentAnimID)
 	{
 	case Idle_P:
@@ -632,13 +658,9 @@ void EasyInputPlayer(void)
 //=============================================================================
 void MovePlayer(void)
 {
-	CAMERA *camera = GetCamera(0);
 	D3DXVECTOR3 centerpos = GetCenterPos();
 	ENEMY *enemyWk = GetEnemy();
-	D3DXVECTOR3		oldPos = playerWk.pos;		// 元の位置
 	float PEdistance = GetPEdistance();
-
-	//D3DXVECTOR3 newpos;
 
 	// アクションに合わせた座標移動
 	switch (playerWk.Animation->CurrentAnimID)
@@ -682,26 +704,6 @@ void MovePlayer(void)
 		break;
 	}
 
-	//D3DXMATRIXA16 newmatrix;	// モーション座標を取得するための行列
-	//// 前歩き、後ろ歩きのボタンがリリースされた場合、モーション途中の座標をプレイヤー座標とする
-	//if (GetKeyboardRelease(DIK_RIGHT) || (GetKeyboardRelease(DIK_LEFT)))
-	//{
-	//	// プレイヤー座標をモーション座標に合わせる
-	//	newmatrix = GetBoneMatrix(playerWk.Animation, "Hips");
-	//	playerWk.pos = D3DXVECTOR3(newmatrix._41, 0.0f, newmatrix._43);
-	//}
-	//// モーション終了時にプレイヤー座標をモーション座標に合わせる
-	//if (playerWk.Animation->MotionEnd == true)
-	//{
-	//	// 前歩き、後ろ歩きが継続する場合、フラグを戻す
-	//	if (playerWk.Animation->CurrentAnimID == Frontwalk_P || playerWk.Animation->CurrentAnimID == Backwalk_P)
-	//	{
-	//		playerWk.Animation->MotionEnd = false;
-	//	}
-	//	newmatrix = GetBoneMatrix(playerWk.Animation, "Hips");
-	//	playerWk.pos = D3DXVECTOR3(newmatrix._41, 0.0f, newmatrix._43);
-	//}
-
 	// 攻撃モーション時以外に中心を向く
 	if (playerWk.Animation->CurrentAnimID == Punchi_P || playerWk.Animation->CurrentAnimID == Kick_P 
 		|| playerWk.Animation->CurrentAnimID == Hadou_P || playerWk.Animation->CurrentAnimID == Shoryu_P)
@@ -716,18 +718,6 @@ void MovePlayer(void)
 	playerWk.pos.x += playerWk.move.x;
 	playerWk.pos.y += playerWk.move.y;
 	playerWk.pos.z += playerWk.move.z;
-
-	// 移動前と現在の座標の長さを測り移動しているようなら当たり判定を行う
-	//D3DXVECTOR3		vec = playerWk.move - oldPos;
-	//float			len = D3DXVec3Length(&vec);
-	//if (len > 0.1f)
-	//{	// ビルボードとの当たり判定
-	//	if (hitCheckMeshwall(oldPos, playerWk.move) != 0)
-	//	{
-	//		// 当たっているので元の位置に戻す
-	//		playerWk.pos = oldPos;
-	//	}
-	//}
 
 	// (半径*角度)＋基準座標でプレイヤーの座標を計算する
 
@@ -761,33 +751,33 @@ void MovePlayer(void)
 //=============================================================================
 void HitCheckPlayer(void)
 {
-	D3DXMATRIXA16 AtkMtx;									// 当たり判定を発生させるボーン座標を取得する行列
-	D3DXVECTOR3 AtkPos1 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 AtkPos2 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	// 当たり判定を発生させる座標
-
-	switch (playerWk.Animation->CurrentAnimID)
-	{
-	case Punchi_P:
-		AtkMtx = GetBoneMatrix(playerWk.Animation, "LeftHand");
-		AtkPos1 = D3DXVECTOR3(AtkMtx._41, AtkMtx._42, AtkMtx._43);
-		break;
-	case Kick_P:
-		AtkMtx = GetBoneMatrix(playerWk.Animation, "RightFoot");
-		AtkPos1 = D3DXVECTOR3(AtkMtx._41, AtkMtx._42, AtkMtx._43);
-		break;
-	case Hadou_P:
-		AtkMtx = GetBoneMatrix(playerWk.Animation, "RightHand");
-		AtkPos1 = D3DXVECTOR3(AtkMtx._41, AtkMtx._42, AtkMtx._43);
-		break;
-	case Shoryu_P:
-		AtkMtx = GetBoneMatrix(playerWk.Animation, "RightFoot");
-		AtkPos1 = D3DXVECTOR3(AtkMtx._41, AtkMtx._42, AtkMtx._43);
-		AtkMtx = GetBoneMatrix(playerWk.Animation, "LeftFoot");
-		AtkPos2 = D3DXVECTOR3(AtkMtx._41, AtkMtx._42, AtkMtx._43);
-		break;
-	default:
-		break;
-	}
+	// 当たり判定の更新
+	D3DXMATRIX Mtx = GetBoneMatrix(playerWk.Animation, "Hips");
+	UpdateBall(&playerWk.HitBall[0], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "Neck");
+	UpdateBall(&playerWk.HitBall[1], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "Head");
+	UpdateBall(&playerWk.HitBall[2], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "LeftShoulder");
+	UpdateBall(&playerWk.HitBall[3], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "RightShoulder");
+	UpdateBall(&playerWk.HitBall[4], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "LeftHand");
+	UpdateBall(&playerWk.HitBall[5], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "RightHand");
+	UpdateBall(&playerWk.HitBall[6], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "LeftFoot");
+	UpdateBall(&playerWk.HitBall[7], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "RightFoot");
+	UpdateBall(&playerWk.HitBall[8], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "LeftForeArm");
+	UpdateBall(&playerWk.HitBall[9], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "RightForeArm");
+	UpdateBall(&playerWk.HitBall[10], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "LeftLeg");
+	UpdateBall(&playerWk.HitBall[11], Mtx);
+	Mtx = GetBoneMatrix(playerWk.Animation, "RightLeg");
+	UpdateBall(&playerWk.HitBall[12], Mtx);
 
 	// 引数にAtkPosと半径と、エネミー側の当たり判定の座標と半径を入れられる当たり判定の関数を作る
 }

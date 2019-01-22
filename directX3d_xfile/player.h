@@ -9,6 +9,7 @@
 
 #include "D3DXAnimation.h"
 #include "CapsuleMesh.h"
+#include "ball.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -31,7 +32,7 @@ typedef struct {
 	int					HP;					// 体力
 	int					HPzan;				// 残り体力
 	D3DXANIMATION		*Animation;			// アニメーション
-	CAPSULE				HitCapsule;			// 当たり判定用カプセル
+	BALL				HitBall[HIT_CHECK_NUM];	// 当たり判定用ボール
 }PLAYER;
 
 //*****************************************************************************

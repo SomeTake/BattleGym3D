@@ -103,6 +103,11 @@
 #define DAMAGE_SPATTACK						(400)						// ダメージ量
 #define DAMAGE_THROW						(150)						// ダメージ量
 
+// 当たり判定
+#define BODY_RADIUS							(10.0f)						// 体の当たり判定の半径
+#define ARM_RADIUS							(5.0f)						// 手の当たり判定の半径
+#define FOOT_RADIUS							(7.0f)						// 足の当たり判定の半径
+
 // アニメーションスピード
 #define ANIM_SPD_05							(0.5f)
 #define ANIM_SPD_1							(1.0f)
