@@ -59,17 +59,6 @@
 #define	VIEW_NEAR_Z		(10.0f)											// ビュー平面のNearZ値
 #define	VIEW_FAR_Z		(5000.0f)										// ビュー平面のFarZ値
 
-#define	VALUE_MOVE		(1.00f)											// 移動量
-#define VALUE_FRONTWALK	(1.50f)											// 前歩き移動量
-#define VALUE_BACKWALK	(1.00f)											// 後ろ歩き移動量
-#define	VALUE_ROTATE	(D3DX_PI * 0.80f)								// 回転量
-#define VALUE_ENLARGEMENT	(0.1f)										// 拡大・縮小量
-#define	VALUE_ROTATE_MODEL	(D3DX_PI * 0.05f)							// 回転速度
-#define VALUE_HALF		(0.5f)											// 何らかの値を半分にするために掛ける
-
-#define	RATE_MOVE_MODEL		(0.20f)										// 移動慣性係数
-#define	RATE_ROTATE_MODEL	(0.20f)										// 回転慣性係数
-
 #define MAX_SEPARATE	(4)												// 画面分割数の最大
 #define TRANSPARENCY	(0.3f)											// 透明度の設定
 
@@ -90,29 +79,6 @@
 #define WALL_SIZE_HEIGHT					(100.0f)
 #define WALL_SIZE_WIDTH						(50.0f)
 #define WALL_POS							(400.0f)
-
-// バトル関係
-#define MAX_DISTANCE						(250.0f)					// プレイヤー間の最大距離（これ以上は遠ざかれない）
-#define MIN_DISTANCE						(30.0f)						// プレイヤー間の最小距離（これ以上は近づけない）
-#define FULL_HP								(1000)						// ゲージの最大値
-#define FULL_SPGUAGE						(1000)						// ゲージの最大値
-#define DAMAGE_PUNCHI						(40)						// ダメージ量
-#define DAMAGE_KICK							(50)						// ダメージ量
-#define DAMAGE_HADOU						(100)						// ダメージ量
-#define DAMAGE_SHORYU						(120)						// ダメージ量
-#define DAMAGE_SPATTACK						(400)						// ダメージ量
-#define DAMAGE_THROW						(150)						// ダメージ量
-
-// 当たり判定
-#define BODY_RADIUS							(10.0f)						// 体の当たり判定の半径
-#define ARM_RADIUS							(5.0f)						// 手の当たり判定の半径
-#define FOOT_RADIUS							(7.0f)						// 足の当たり判定の半径
-
-// アニメーションスピード
-#define ANIM_SPD_05							(0.5f)
-#define ANIM_SPD_1							(1.0f)
-#define ANIM_SPD_15							(1.5f)
-#define ANIM_SPD_2							(2.0f)
 
 // デストラクタ
 #define SAFE_DELETE(object)			{if(object){delete (object);		(object) = NULL;}}
@@ -175,5 +141,6 @@ void SetPhase(int phase);			// ゲームフェーズを変更する
 void ReInit(void);					// ゲームループのための最初期化処理
 float GetAspect(void);				// アスペクト比を取得する
 HRESULT LoadTexture(LPCSTR SrcFile, LPDIRECT3DTEXTURE9* TexturePtr, const char* ErrorSrc);	// テクスチャを読み込む
+bool GetRenderState(void);			// 描画モードのゲッター
 
 #endif

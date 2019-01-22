@@ -76,10 +76,7 @@ void UninitSkyBox(void)
 //=============================================================================
 void UpdateSkyBox(void)
 {
-	PLAYER *Player = GetPlayer();
-	CAMERA *Camera = GetCamera(0);
-
-	//skyWk.pos = Camera->at;
+	// ちょっとずつ回転
 	skyWk.rot.y += 0.0001f;
 
 	return;

@@ -60,8 +60,8 @@ void UninitWinner(void)
 //=============================================================================
 void UpdateWinner(void)
 {
-	PLAYER *player = GetPlayer();
-	ENEMY *enemy = GetEnemy();
+	CHARA *player = GetPlayer();
+	CHARA *enemy = GetEnemy();
 
 	if (player->HPzan > enemy->HPzan)
 	{

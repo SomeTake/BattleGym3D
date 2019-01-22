@@ -69,7 +69,7 @@ void UninitESpGuage(void)
 //=============================================================================
 void UpdateESpGuage(void)
 {
-	PLAYER *player = GetPlayer();
+	CHARA *player = GetPlayer();
 	ESPGUAGE *espguage = GetESpGuage(0);
 
 	if (espguage->use == true)

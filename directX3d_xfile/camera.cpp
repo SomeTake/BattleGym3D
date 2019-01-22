@@ -31,8 +31,8 @@ D3DXVECTOR3 NewCenterPos;			// 更新後の新しいプレイヤーとエネミーの間の位置
 //=============================================================================
 void InitCamera(void)
 {
-	PLAYER *playerWk = GetPlayer();
-	ENEMY *enemyWk = GetEnemy();
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 	CAMERA *cameraWk = GetCamera(0);
 
 	CenterPos = (playerWk->pos + enemyWk->pos) * 0.5f;
@@ -55,8 +55,8 @@ void InitCamera(void)
 //=============================================================================
 void UpdateCamera(void)
 {
-	PLAYER *playerWk = GetPlayer();
-	ENEMY *enemyWk = GetEnemy();
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 	CAMERA *cameraWk = GetCamera(0);
 
 	// PとEの中心位置

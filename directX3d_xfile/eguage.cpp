@@ -65,7 +65,7 @@ void UninitEGuage(void)
 //=============================================================================
 void UpdateEGuage(void)
 {
-	ENEMY *enemy = GetEnemy();
+	CHARA *enemy = GetEnemy();
 
 	if (eguage->use == true)
 	{
@@ -144,7 +144,7 @@ HRESULT MakeVertexEGuage(void)
 //=============================================================================
 void SetTextureEGuage(int cntPattern)
 {
-	ENEMY *enemy = GetEnemy();
+	CHARA *enemy = GetEnemy();
 
 	int x = cntPattern % EGUAGE_PATTERN_DIVIDE_X;
 	int y = cntPattern / EGUAGE_PATTERN_DIVIDE_X;
@@ -163,7 +163,7 @@ void SetTextureEGuage(int cntPattern)
 //=============================================================================
 void SetVertexEGuage(void)
 {
-	ENEMY *enemy = GetEnemy();
+	CHARA *enemy = GetEnemy();
 
 	// ’¸“_À•W‚ÌÝ’è
 	eguage->vertexWk[0].vtx = D3DXVECTOR3(eguage->pos.x, eguage->pos.y, eguage->pos.z);

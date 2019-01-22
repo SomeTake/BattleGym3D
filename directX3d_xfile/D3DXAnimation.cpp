@@ -492,8 +492,6 @@ D3DXANIMATION* CreateAnimationObject(void)
 //=============================================================================
 HRESULT AnimCallBackHandler::HandleCallback(UINT Track, LPVOID pCallbackData)
 {
-	PLAYER *Player = GetPlayer();
-
 	if (AnimPointer->KeyframeCount == 0)
 	{
 		AnimPointer->StopMove = true;

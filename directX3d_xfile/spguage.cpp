@@ -70,7 +70,7 @@ void UninitSpGuage(void)
 //=============================================================================
 void UpdateSpGuage(void)
 {
-	PLAYER *player = GetPlayer();
+	CHARA *player = GetPlayer();
 	SPGUAGE *spguage = GetSpGuage(0);
 
 	if (spguage->use == true)

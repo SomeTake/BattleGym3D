@@ -86,8 +86,8 @@ void UninitKnockout(void)
 //=============================================================================
 void UpdateKnockout(void)
 {
-	PLAYER *player = GetPlayer();
-	ENEMY *enemy = GetEnemy();
+	CHARA *player = GetPlayer();
+	CHARA *enemy = GetEnemy();
 
 	StopSound(BGM_BATTLE, 0);
 

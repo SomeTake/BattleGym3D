@@ -165,10 +165,10 @@
     <ClInclude Include="skybox.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
-    <ClInclude Include="CapsuleMesh.h">
+    <ClInclude Include="ball.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="ball.h">
+    <ClInclude Include="battle.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>
@@ -302,10 +302,10 @@
     <ClCompile Include="skybox.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
-    <ClCompile Include="CapsuleMesh.cpp">
+    <ClCompile Include="ball.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="ball.cpp">
+    <ClCompile Include="battle.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>

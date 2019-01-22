@@ -142,10 +142,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ball.h" />
+    <ClInclude Include="battle.h" />
     <ClInclude Include="blackscreen.h" />
     <ClInclude Include="CAllocateHierarchy.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="CapsuleMesh.h" />
     <ClInclude Include="company.h" />
     <ClInclude Include="countdown.h" />
     <ClInclude Include="D3DXAnimation.h" />
@@ -190,10 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ball.cpp" />
+    <ClCompile Include="battle.cpp" />
     <ClCompile Include="blackscreen.cpp" />
     <ClCompile Include="CAllocateHierarchy.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="CapsuleMesh.cpp" />
     <ClCompile Include="company.cpp" />
     <ClCompile Include="countdown.cpp" />
     <ClCompile Include="D3DXAnimation.cpp" />

@@ -278,13 +278,13 @@ int hitCheckMeshwall(D3DXVECTOR3 pos0, D3DXVECTOR3 pos1)
 		pos[2] = pVtx[2].vtx;
 		pos[3] = pVtx[3].vtx;
 
-		// 左下側ポリゴンと線分の当たり判定
-		ans = hitCheck(pos[0], pos[2], pos[3], pos0, pos1);
-		if (ans != 0) break;
+		//// 左下側ポリゴンと線分の当たり判定
+		//ans = hitCheck(pos[0], pos[2], pos[3], pos0, pos1);
+		//if (ans != 0) break;
 
-		// 右上側ポリゴンと線分の当たり判定
-		ans = hitCheck(pos[0], pos[3], pos[1], pos0, pos1);
-		if (ans != 0) break;
+		//// 右上側ポリゴンと線分の当たり判定
+		//ans = hitCheck(pos[0], pos[3], pos[1], pos0, pos1);
+		//if (ans != 0) break;
 
 	}
 

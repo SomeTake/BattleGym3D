@@ -114,7 +114,7 @@ void UninitParticle(void)
 void UpdateParticle(void)
 {
 	PARTICLE *particle = GetParticle(0);
-	PLAYER *playerWk = GetPlayer();
+	CHARA *playerWk = GetPlayer();
 
 
 	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)

@@ -9,6 +9,7 @@
 #include "spguage.h"
 #include "espguage.h"
 #include "sound.h"
+#include "battle.h"
 
 //*****************************************************************************
 // プロトタイプ宣言

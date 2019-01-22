@@ -46,6 +46,7 @@
 #include "effect.h"
 #include "skybox.h"
 #include "ball.h"
+#include "battle.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -65,6 +66,7 @@ void Draw(int no);
 void DrawFPS(void);
 #endif
 bool SetWindowCenter(HWND hWnd);
+bool RenderWireframe = false;						// ワイヤーフレームで描画
 
 //*****************************************************************************
 // グローバル変数:
@@ -546,8 +548,8 @@ void Update(void)
 
 #endif
 
-	PLAYER *playerWk = GetPlayer();
-	ENEMY *enemyWk = GetEnemy();
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 
 	////画面分割数の入力
 	//if (GetKeyboardTrigger(DIK_1))
@@ -566,6 +568,17 @@ void Update(void)
 	//{
 	//	PlayerMode = 4;
 	//}
+	
+	// 描画モードの切り替え
+	if (GetKeyboardTrigger(DIK_9))
+	{
+		RenderWireframe = true;
+	}
+	else if (GetKeyboardTrigger(DIK_0))
+	{
+		RenderWireframe = false;
+	}
+
 
 	// 入力更新
 	UpdateInput();
@@ -757,8 +770,8 @@ void Update(void)
 //=============================================================================
 void Draw(int no)
 {
-	PLAYER *playerWk = GetPlayer();
-	ENEMY *enemyWk = GetEnemy();
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 
 	// バックバッファ＆Ｚバッファのクリア
 	g_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
@@ -1230,3 +1243,10 @@ HRESULT LoadTexture(LPCSTR SrcFile, LPDIRECT3DTEXTURE9* TexturePtr, const char* 
 	return S_OK;
 }
 
+//=============================================================================
+// 描画情報（TRUE:ワイヤーフレーム描画 FALSE:ソリッド描画）
+//=============================================================================
+bool GetRenderState(void)
+{
+	return RenderWireframe;
+}
