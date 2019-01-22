@@ -62,6 +62,7 @@ typedef struct {
 	float				SizeShadow;			// 影のサイズ
 	D3DXCOLOR			ColShadow;			// 影の色
 	int					HP;					// 体力
+	int					SP;					// SPゲージ
 	int					HPzan;				// 残り体力
 	D3DXANIMATION		*Animation;			// アニメーション
 	BALL				HitBall[HIT_CHECK_NUM];	// 当たり判定用ボール
@@ -152,6 +153,10 @@ enum CharaHitNum
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
+bool HitBC(D3DXVECTOR3 AttackPos, D3DXVECTOR3 DefendPos, float AttackRange, float DefendRange);	// バウンディングサークル当たり判定
+bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara);		// キャラクター同士の当たり判定
 void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// 攻撃が当たったときの動き
+void SubDamage(CHARA *Chara, int add);							// ダメージを与える
+void AddSpGauge(CHARA *Chara, int add);							// SPゲージの増減
 
 #endif

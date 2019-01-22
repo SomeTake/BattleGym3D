@@ -6,7 +6,7 @@
 //=============================================================================
 #include "main.h"
 #include "espguage.h"
-#include "player.h"
+#include "enemy.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -40,7 +40,6 @@ HRESULT InitESpGuage(int type)
 	ESPGUAGE *espguage = GetESpGuage(0);
 	espguage->use = true;
 	espguage->pos = D3DXVECTOR3(ESPGUAGE_POS_X, ESPGUAGE_POS_Y, 0.0f);
-	espguage->sp = 0;
 	espguage->PatternAnim = 0;
 	espguage->CountAnim = 0;
 
@@ -69,7 +68,6 @@ void UninitESpGuage(void)
 //=============================================================================
 void UpdateESpGuage(void)
 {
-	CHARA *player = GetPlayer();
 	ESPGUAGE *espguage = GetESpGuage(0);
 
 	if (espguage->use == true)
@@ -156,10 +154,12 @@ void SetTextureESpGuage(int cntPattern)
 //=============================================================================
 void SetVertexESpGuage(void)
 {
+	CHARA *enemyWk = GetEnemy();
+
 	// 頂点座標の設定
-	espguage->vertexWk[0].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)espguage->sp / (float)FULL_SPGUAGE), espguage->pos.y, espguage->pos.z);
+	espguage->vertexWk[0].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)enemyWk->SP / (float)FULL_SPGUAGE), espguage->pos.y, espguage->pos.z);
 	espguage->vertexWk[1].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X, espguage->pos.y, espguage->pos.z);
-	espguage->vertexWk[2].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)espguage->sp / (float)FULL_SPGUAGE), espguage->pos.y + ESPGUAGE_SIZE_Y, espguage->pos.z);
+	espguage->vertexWk[2].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X - ESPGUAGE_SIZE_X * ((float)enemyWk->SP / (float)FULL_SPGUAGE), espguage->pos.y + ESPGUAGE_SIZE_Y, espguage->pos.z);
 	espguage->vertexWk[3].vtx = D3DXVECTOR3(espguage->pos.x + ESPGUAGE_SIZE_X, espguage->pos.y + ESPGUAGE_SIZE_Y, espguage->pos.z);
 }
 
@@ -169,25 +169,4 @@ void SetVertexESpGuage(void)
 ESPGUAGE *GetESpGuage(int gno)
 {
 	return &espguage[gno];
-}
-
-//=============================================================================
-// SPゲージの増加
-// 引数:add :追加する点数。マイナスも可能、初期化などに。
-//=============================================================================
-void AddESpGuage(int add)
-{
-	ESPGUAGE *espguage = GetESpGuage(0);
-	espguage->sp += add;
-
-	//カンスト処理
-	if (espguage->sp > FULL_SPGUAGE)
-	{
-		espguage->sp = FULL_SPGUAGE;
-	}
-	else if (espguage->sp < 0)
-	{
-		espguage->sp = 0;
-	}
-
 }

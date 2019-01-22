@@ -42,9 +42,6 @@
     <ClInclude Include="debugproc.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="HitCheck.h">
-      <Filter>ヘッダー ファイル\System</Filter>
-    </ClInclude>
     <ClInclude Include="Icon.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
@@ -180,9 +177,6 @@
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="debugproc.cpp">
-      <Filter>ソース ファイル\System</Filter>
-    </ClCompile>
-    <ClCompile Include="HitCheck.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

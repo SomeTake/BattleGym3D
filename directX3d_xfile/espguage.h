@@ -27,7 +27,6 @@ typedef struct {
 	D3DXVECTOR3				pos;							// ポリゴンの移動量
 	int						CountAnim;						// アニメーションカウント
 	int						PatternAnim;					// アニメーションパターンナンバー
-	int						sp;								// SPゲージの現在の値
 	bool					use;							// プレイヤーの使用判定
 }ESPGUAGE;
 
@@ -42,6 +41,5 @@ HRESULT MakeVertexESpGuage(void);
 void SetTextureESpGuage(int cntPattern);
 void SetVertexESpGuage(void);
 ESPGUAGE *GetESpGuage(int gno);		// ESPGAUGE構造体のゲッター
-void AddESpGuage(int add);			// エネミーSPゲージを増やすときに使用
 
 #endif

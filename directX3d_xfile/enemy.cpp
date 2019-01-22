@@ -12,7 +12,6 @@
 #include "D3DXAnimation.h"
 #include "debugproc.h"
 #include "player.h"
-#include "HitCheck.h"
 #include "meshwall.h"
 #include "particle.h"
 
@@ -39,6 +38,7 @@ HRESULT InitEnemy(int type)
 	enemyWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	enemyWk.HP = FULL_HP;
 	enemyWk.HPzan = enemyWk.HP;
+	enemyWk.SP = 0;
 	enemyWk.HitFrag = false;
 
 	if (type == 0)
@@ -132,7 +132,7 @@ HRESULT InitEnemy(int type)
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Guard, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Damage, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Down, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Downpose, 0.1f);
+		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Downpose, 1.0f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Getup, 1.0f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Punchi, 0.1f);
 		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Kick, 0.1f);
@@ -175,9 +175,10 @@ HRESULT InitEnemy(int type)
 		enemyWk.SizeShadow = 25.0f;
 		enemyWk.ColShadow = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f);
 	}
-
-	// 初期アニメーションを待機にする
-	enemyWk.Animation->CurrentAnimID = Idle;
+	else
+	{
+		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
+	}
 
 	return S_OK;
 }

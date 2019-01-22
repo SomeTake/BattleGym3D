@@ -12,7 +12,6 @@
 #include "D3DXAnimation.h"
 #include "enemy.h"
 #include "debugproc.h"
-#include "HitCheck.h"
 #include "meshwall.h"
 #include "particle.h"
 
@@ -41,6 +40,7 @@ HRESULT InitPlayer(int type)
 	playerWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	playerWk.HP = FULL_HP;
 	playerWk.HPzan = playerWk.HP;
+	playerWk.SP = 0;
 	playerWk.HitFrag = false;
 
 	if (type == 0)
@@ -145,7 +145,7 @@ HRESULT InitPlayer(int type)
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Guard, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Damage, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Down, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Downpose, 0.1f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, Downpose, 1.0f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Getup, 1.0f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Punchi, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Kick, 0.1f);
@@ -188,9 +188,10 @@ HRESULT InitPlayer(int type)
 		playerWk.SizeShadow = 25.0f;
 		playerWk.ColShadow = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f);	
 	}
-
-	// 初期アニメーションを待機にする
-	playerWk.Animation->CurrentAnimID = Idle;
+	else
+	{
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
+	}
 
 	return S_OK;
 }
@@ -297,7 +298,12 @@ void UpdatePlayer(void)
 	// 当たり判定
 	if (playerWk.HitFrag == false)
 	{
-		HitCheckPlayer();
+		// キャラクター同士の当たり判定
+		if (HitCheckCToC(&playerWk, enemyWk) == true)
+		{
+			// 当たった後の動き
+			HitAction(&playerWk, enemyWk);
+		}
 	}
 
 	// 影の位置設定
@@ -709,68 +715,6 @@ void MovePlayer(void)
 			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 360);
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 360);
-	}
-
-}
-
-//=============================================================================
-//当たり判定
-//=============================================================================
-void HitCheckPlayer(void)
-{
-	CHARA *enemyWk = GetEnemy();
-	D3DXVECTOR3 FirePos;		// 波動拳発射位置
-
-	switch (playerWk.Animation->CurrentAnimID)
-	{
-	case Punchi:
-		// 左手と相手の各部位との判定
-		for (int i = 0; i < HIT_CHECK_NUM; i++)
-		{
-			if (hitBC(playerWk.HitBall[LeftHand].pos, enemyWk->HitBall[i].pos, playerWk.HitBall[LeftHand].scl.x, enemyWk->HitBall[i].scl.x) == true)
-			{
-				HitAction(&playerWk, enemyWk);
-				break;
-			}
-		}
-		break;
-	case Kick:
-		// 右足と相手の各部位との判定
-		for (int i = 0; i < HIT_CHECK_NUM; i++)
-		{
-			if (hitBC(playerWk.HitBall[RightFoot].pos, enemyWk->HitBall[i].pos, playerWk.HitBall[RightFoot].scl.x, enemyWk->HitBall[i].scl.x) == true)
-			{
-				HitAction(&playerWk, enemyWk);
-				break;
-			}
-		}
-		break;
-	case Hadou:
-		// 弾の発射（右手と左手の間から出す）
-		FirePos = (playerWk.HitBall[RightHand].pos + playerWk.HitBall[LeftHand].pos) * 0.5f;
-		playerWk.HitFrag = true;
-		break;
-	case Shoryu:
-		// 両足と相手の各部位との判定
-		for (int i = 0; i < HIT_CHECK_NUM; i++)
-		{
-			// 左足との判定
-			if (hitBC(playerWk.HitBall[LeftFoot].pos, enemyWk->HitBall[i].pos, playerWk.HitBall[LeftFoot].scl.x, enemyWk->HitBall[i].scl.x) == true)
-			{
-				HitAction(&playerWk, enemyWk);
-				break;
-			}
-			// 右足との判定
-			else if (hitBC(playerWk.HitBall[RightFoot].pos, enemyWk->HitBall[i].pos, playerWk.HitBall[RightFoot].scl.x, enemyWk->HitBall[i].scl.x) == true)
-			{
-				HitAction(&playerWk, enemyWk);
-				break;
-			}
-		}
-		break;
-
-	default:
-		break;
 	}
 
 }

@@ -8,6 +8,8 @@
 #include "spmax.h"
 #include "spguage.h"
 #include "espguage.h"
+#include "player.h"
+#include "enemy.h"
 #include "sound.h"
 #include "battle.h"
 
@@ -78,8 +80,8 @@ void UninitSpmax(void)
 //=============================================================================
 void UpdateSpmax(void)
 {
-	SPGUAGE *spguage = GetSpGuage(0);
-	ESPGUAGE *espguage = GetESpGuage(0);
+	CHARA *enemyWk = GetEnemy();
+	CHARA *playerWk = GetPlayer();
 
 	//音を鳴らすためのフラグ
 	static bool soundflag = false;
@@ -88,7 +90,7 @@ void UpdateSpmax(void)
 	int phase = *GetPhase();
 
 	//プレイヤーのSPゲージがMAXの場合使う
-	if (spguage->sp == FULL_SPGUAGE)
+	if (playerWk->SP == FULL_SPGUAGE)
 	{
 		SpmaxUse = true;
 		//MAXになった瞬間音を鳴らす
@@ -98,7 +100,7 @@ void UpdateSpmax(void)
 			soundflag = true;
 		}
 	}
-	else if (spguage->sp < FULL_SPGUAGE)
+	else if (playerWk->SP < FULL_SPGUAGE)
 	{
 		SpmaxUse = false;
 		if (phase == PhaseGame)
@@ -108,7 +110,7 @@ void UpdateSpmax(void)
 	}
 
 	//エネミーのSPゲージがMAXの場合使う
-	if (espguage->sp == FULL_SPGUAGE)
+	if (enemyWk->SP == FULL_SPGUAGE)
 	{
 		ESpmaxUse = true;
 		//MAXになった瞬間音を鳴らす
@@ -118,7 +120,7 @@ void UpdateSpmax(void)
 			esoundflag = true;
 		}
 	}
-	else if (espguage->sp < FULL_SPGUAGE)
+	else if (enemyWk->SP < FULL_SPGUAGE)
 	{
 		ESpmaxUse = false;
 		if (phase == PhaseGame)

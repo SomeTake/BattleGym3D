@@ -27,7 +27,6 @@ typedef struct {
 	D3DXVECTOR3				pos;							// ポリゴンの移動量
 	int						CountAnim;						// アニメーションカウント
 	int						PatternAnim;					// アニメーションパターンナンバー
-	int						sp;								// SPゲージの現在の値
 	bool					use;							// プレイヤーの使用判定
 }SPGUAGE;
 
@@ -42,6 +41,5 @@ HRESULT MakeVertexSpGuage(void);
 void SetTextureSpGuage(int cntPattern);
 void SetVertexSpGuage(void);
 SPGUAGE *GetSpGuage(int gno);				// SPGAUGE構造体のゲッター
-void AddSpGuage(int add);					// SPゲージを増やすときに使用
 
 #endif

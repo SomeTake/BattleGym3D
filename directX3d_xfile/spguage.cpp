@@ -41,7 +41,6 @@ HRESULT InitSpGuage(int type)
 	SPGUAGE *spguage = GetSpGuage(0);
 	spguage->use = true;
 	spguage->pos = D3DXVECTOR3(SPGUAGE_POS_X, SPGUAGE_POS_Y, 0.0f);
-	spguage->sp = 0;
 	spguage->PatternAnim = 0;
 	spguage->CountAnim = 0;
 
@@ -159,12 +158,13 @@ void SetTextureSpGuage(int cntPattern)
 //=============================================================================
 void SetVertexSpGuage(void)
 {
+	CHARA *playerWk = GetPlayer();
 
 	// 頂点座標の設定
 	spguage->vertexWk[0].vtx = D3DXVECTOR3(spguage->pos.x, spguage->pos.y, spguage->pos.z);
-	spguage->vertexWk[1].vtx = D3DXVECTOR3(spguage->pos.x + SPGUAGE_SIZE_X * ((float)spguage->sp / (float)FULL_SPGUAGE), spguage->pos.y, spguage->pos.z);
+	spguage->vertexWk[1].vtx = D3DXVECTOR3(spguage->pos.x + SPGUAGE_SIZE_X * ((float)playerWk->SP / (float)FULL_SPGUAGE), spguage->pos.y, spguage->pos.z);
 	spguage->vertexWk[2].vtx = D3DXVECTOR3(spguage->pos.x, spguage->pos.y + SPGUAGE_SIZE_Y, spguage->pos.z);
-	spguage->vertexWk[3].vtx = D3DXVECTOR3(spguage->pos.x + SPGUAGE_SIZE_X * ((float)spguage->sp / (float)FULL_SPGUAGE), spguage->pos.y + SPGUAGE_SIZE_Y, spguage->pos.z);
+	spguage->vertexWk[3].vtx = D3DXVECTOR3(spguage->pos.x + SPGUAGE_SIZE_X * ((float)playerWk->SP / (float)FULL_SPGUAGE), spguage->pos.y + SPGUAGE_SIZE_Y, spguage->pos.z);
 }
 
 //=============================================================================
@@ -173,25 +173,4 @@ void SetVertexSpGuage(void)
 SPGUAGE *GetSpGuage(int gno)
 {
 	return &spguage[gno];
-}
-
-//=============================================================================
-// SPゲージの増加
-// 引数:add :追加する点数。マイナスも可能、初期化などに。
-//=============================================================================
-void AddSpGuage(int add)
-{
-	SPGUAGE *spguage = GetSpGuage(0);
-	spguage->sp += add;
-
-	//カンスト処理
-	if (spguage->sp > FULL_SPGUAGE)
-	{
-		spguage->sp = FULL_SPGUAGE;
-	}
-	else if (spguage->sp < 0)
-	{
-		spguage->sp = 0;
-	}
-
 }
