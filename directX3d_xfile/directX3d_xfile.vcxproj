@@ -161,6 +161,7 @@
     <ClInclude Include="frame.h" />
     <ClInclude Include="framespguage.h" />
     <ClInclude Include="guage.h" />
+    <ClInclude Include="hadou.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="knockout.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="frame.cpp" />
     <ClCompile Include="framespguage.cpp" />
     <ClCompile Include="guage.cpp" />
+    <ClCompile Include="hadou.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="knockout.cpp" />
     <ClCompile Include="light.cpp" />

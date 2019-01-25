@@ -170,7 +170,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 }
 //=============================================================================
 // ダメージを与える
-// 引数:CHARA:与える対象のキャラクタ add :追加する点数。マイナスも可能、初期化などに。
+// 引数:CHARA:与える対象のキャラクタ sub :減少させる点数。マイナスも可能、初期化などに。
 //=============================================================================
 void SubDamage(CHARA *Chara, int sub)
 {
@@ -179,7 +179,7 @@ void SubDamage(CHARA *Chara, int sub)
 	//カンスト処理
 	if (Chara->HPzan < 0)
 	{
-		Chara->SP = 0;
+		Chara->HPzan = 0;
 	}
 
 }
@@ -199,4 +199,56 @@ void AddSpGauge(CHARA *Chara, int add)
 		Chara->SP = FULL_SPGUAGE;
 	}
 
+}
+
+//=============================================================================
+// 波動拳の当たり判定及びダメージなどの処理
+// 引数:AttackChara:攻撃側 DefendChara:防御側
+//=============================================================================
+void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
+{
+	// 弾同士の当たり判定
+	if (DefendChara->HadouBullet.use == true)
+	{
+		if (HitBC(AttackChara->HadouBullet.pos, DefendChara->HadouBullet.pos, AttackChara->HadouBullet.scl.x, DefendChara->HadouBullet.scl.x) == true)
+		{
+			// エフェクト
+			//　使用フラグの変更
+			AttackChara->HadouBullet.use = false;
+			DefendChara->HadouBullet.use = false;
+		}
+	}
+	// 弾と相手キャラとの当たり判定
+	for (int i = 0; i < HIT_CHECK_NUM; i++)
+	{
+		if (HitBC(AttackChara->HadouBullet.pos, DefendChara->HitBall[i].pos, AttackChara->HadouBullet.scl.x, DefendChara->HitBall[i].scl.x) == true)
+		{
+			// 敵の状態確認
+			if (DefendChara->Animation->CurrentAnimID == Guard || DefendChara->Animation->CurrentAnimID == Down
+				|| DefendChara->Animation->CurrentAnimID == Downpose || DefendChara->Animation->CurrentAnimID == Getup)
+			{
+				// ダメージ
+				SubDamage(DefendChara, (int)(DAMAGE_HADOU * 0.1f));
+
+				// エフェクト
+
+			}
+			else
+			{
+				// 敵のモーション変更
+				DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Damage, ANIM_SPD_1);
+				// ダメージ
+				SubDamage(DefendChara, DAMAGE_HADOU);
+
+				// エフェクト
+			}
+			// SPゲージ増減
+			AddSpGauge(DefendChara, DAMAGE_HADOU);
+			AddSpGauge(AttackChara, DAMAGE_HADOU);
+
+			//　使用フラグの変更
+			AttackChara->HadouBullet.use = false;
+			break;
+		}
+	}
 }

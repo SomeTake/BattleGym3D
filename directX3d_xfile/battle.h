@@ -7,8 +7,10 @@
 #ifndef _BATTLE_H_
 #define _BATTLE_H_
 
+// \‘¢‘Ì‚É•K—v‚Èƒwƒbƒ_[
 #include "D3DXAnimation.h"
 #include "ball.h"
+#include "hadou.h"
 
 //*****************************************************************************
 // ƒ}ƒNƒ’è‹`
@@ -37,6 +39,7 @@
 #define DAMAGE_SHORYU						(120)						// ƒ_ƒ[ƒW—Ê
 #define DAMAGE_SPATTACK						(400)						// ƒ_ƒ[ƒW—Ê
 #define DAMAGE_THROW						(150)						// ƒ_ƒ[ƒW—Ê
+#define FIRE_FRAME							(25)						// ”g“®Œ‚Ì”­Ëƒ^ƒCƒ~ƒ“ƒO
 
 // “–‚½‚è”»’è
 #define BODY_RADIUS							(10.0f)						// ‘Ì‚Ì“–‚½‚è”»’è‚Ì”¼Œa
@@ -67,6 +70,7 @@ typedef struct {
 	D3DXANIMATION		*Animation;			// ƒAƒjƒ[ƒVƒ‡ƒ“
 	BALL				HitBall[HIT_CHECK_NUM];	// “–‚½‚è”»’è—pƒ{[ƒ‹
 	bool				HitFrag;			// UŒ‚‚ª“–‚½‚Á‚½‚©‚Ç‚¤‚©
+	HADOU				HadouBullet;		// ”g“®Œ\‘¢‘Ì
 }CHARA;
 
 // ƒLƒƒƒ‰ƒNƒ^[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“”Ô†
@@ -158,5 +162,6 @@ bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara);		// ƒLƒƒƒ‰ƒNƒ^[“¯m‚
 void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// UŒ‚‚ª“–‚½‚Á‚½‚Æ‚«‚Ì“®‚«
 void SubDamage(CHARA *Chara, int add);							// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 void AddSpGauge(CHARA *Chara, int add);							// SPƒQ[ƒW‚Ì‘Œ¸
+void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// ”g“®Œ‚Ì“–‚½‚è”»’è
 
 #endif

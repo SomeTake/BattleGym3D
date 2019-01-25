@@ -210,6 +210,7 @@ void UpdateEnemy(void)
 	// デバッグ表示
 	PrintDebugProc("エネミー座標 X:%f Y:%f Z:%f\n", enemyWk.pos.x, enemyWk.pos.y, enemyWk.pos.z);
 	PrintDebugProc("エネミー角度 X:%f Y:%f Z:%f\n", enemyWk.rot.x, enemyWk.rot.y, enemyWk.rot.z);
+	PrintDebugProc("エネミー残りHP:%d\n", enemyWk.HPzan);
 #endif
 
 	// 簡単入力

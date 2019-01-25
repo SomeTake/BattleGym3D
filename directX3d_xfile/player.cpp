@@ -183,6 +183,9 @@ HRESULT InitPlayer(int type)
 		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[RightLeg]);
 		InitBall(0, &playerWk.HitBall[12], Mtx, FOOT_RADIUS);
 
+		// 波動拳用バレットをセット
+		InitHadou(0, &playerWk.HadouBullet);
+
 		// 影の生成
 		playerWk.IdxShadow = CreateShadow(playerWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 		playerWk.SizeShadow = 25.0f;
@@ -209,6 +212,10 @@ void UninitPlayer(void)
 	{
 		UninitBall(&playerWk.HitBall[i]);
 	}
+
+	// 波動拳用バレットをリリース
+	UninitHadou(&playerWk.HadouBullet);
+
 }
 
 //=============================================================================
@@ -306,6 +313,15 @@ void UpdatePlayer(void)
 		}
 	}
 
+	// 波動拳用バレットの更新
+	UpdateHadou(&playerWk.HadouBullet);
+
+	// 波動拳の当たり判定
+	if (playerWk.HadouBullet.use == true)
+	{
+		HitHadou(&playerWk, enemyWk);
+	}
+
 	// 影の位置設定
 	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
 	SetVertexShadow(playerWk.IdxShadow, playerWk.SizeShadow, playerWk.SizeShadow);
@@ -363,6 +379,9 @@ void DrawPlayer(void)
 			DrawBall(&playerWk.HitBall[i]);
 		}
 	}
+
+	// 波動拳用バレットの描画
+	DrawHadou(&playerWk.HadouBullet);
 }
 
 //=============================================================================
@@ -378,6 +397,8 @@ CHARA *GetPlayer(void)
 //=============================================================================
 void EasyInputPlayer(void)
 {
+	static int HadouFrame = 0;	// モーションが始まってから波動拳発射までのフレーム数
+
 	switch (playerWk.Animation->CurrentAnimID)
 	{
 	case Idle:
@@ -562,6 +583,7 @@ void EasyInputPlayer(void)
 		if (playerWk.Animation->MotionEnd == true)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
+			HadouFrame = 0;
 		}
 		break;
 	case Down:
@@ -586,6 +608,7 @@ void EasyInputPlayer(void)
 		if (playerWk.Animation->MotionEnd == true)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
+			HadouFrame = 0;
 		}
 		break;
 	case Punchi:
@@ -605,10 +628,17 @@ void EasyInputPlayer(void)
 		}
 		break;
 	case Hadou:
+		// 一定フレーム経過で弾が出る
+		HadouFrame++;
+		if (HadouFrame == FIRE_FRAME)
+		{
+			SetHadou(&playerWk.HadouBullet, playerWk.HitBall, playerWk.rot);
+		}
 		// アニメーション終了で待機に戻る
 		if (playerWk.Animation->MotionEnd == true)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
+			HadouFrame = 0;
 			playerWk.HitFrag = false;
 		}
 		break;
