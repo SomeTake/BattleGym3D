@@ -14,6 +14,7 @@
 #include "player.h"
 #include "meshwall.h"
 #include "particle.h"
+#include "knockout.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -219,21 +220,33 @@ void UpdateEnemy(void)
 {
 	int *Phase = GetPhase();
 	CHARA *playerWk = GetPlayer();
+	bool ko = GetKnockout()->pushok;
 
 #ifdef _DEBUG
 	// デバッグ表示
 	PrintDebugProc("エネミー座標 X:%f Y:%f Z:%f\n", enemyWk.pos.x, enemyWk.pos.y, enemyWk.pos.z);
 	PrintDebugProc("エネミー角度 X:%f Y:%f Z:%f\n", enemyWk.rot.x, enemyWk.rot.y, enemyWk.rot.z);
-	PrintDebugProc("エネミー残りHP:%d\n", enemyWk.HPzan);
+	PrintDebugProc("エネミーアニメーション番号 No:%d\n", enemyWk.Animation->CurrentAnimID);
 #endif
 
-	// 簡単入力
-	EasyInput(&enemyWk, 1);
+	if (*Phase == PhaseGame)
+	{
+		// 簡単入力
+		EasyInput(&enemyWk, 1);
+	}
 
 	// 本格入力
 
-	// アニメーションを更新
-	enemyWk.Animation->UpdateAnimation(enemyWk.Animation, TIME_PER_FRAME);
+	// KO表示中は更新しない
+	if (*Phase == PhaseFinish && ko == false)
+	{
+
+	}
+	else
+	{
+		// アニメーションを更新
+		enemyWk.Animation->UpdateAnimation(enemyWk.Animation, TIME_PER_FRAME);
+	}
 
 	// 勝利時
 	if (*Phase == PhaseFinish && enemyWk.HPzan > playerWk->HPzan && enemyWk.Animation->CurrentAnimID == Idle)
@@ -244,7 +257,11 @@ void UpdateEnemy(void)
 	if (enemyWk.HPzan <= 0)
 	{
 		enemyWk.HPzan = 0;
-		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Down, 0.5f);
+		// 強制的にアニメーション変更
+		if (enemyWk.Animation->CurrentAnimID != Downpose)
+		{
+			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose, 0.5f);
+		}
 		SetPhase(PhaseFinish);
 	}
 

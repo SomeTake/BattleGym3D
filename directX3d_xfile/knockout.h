@@ -52,5 +52,6 @@ HRESULT MakeVertexKnockout(void);
 void SetTextureKnockout(int cntPattern);
 void SetVertexKnockout(void);
 void SetReflectKnockout(float per);
+KNOCKOUT *GetKnockout(void);
 
 #endif

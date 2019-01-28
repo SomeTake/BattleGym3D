@@ -14,6 +14,7 @@
 #include "debugproc.h"
 #include "meshwall.h"
 #include "particle.h"
+#include "knockout.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -231,6 +232,7 @@ void UpdatePlayer(void)
 {
 	int *Phase = GetPhase();
 	CHARA *enemyWk = GetEnemy();
+	bool ko = GetKnockout()->pushok;
 
 #ifdef _DEBUG
 	// デバッグ用入力
@@ -260,41 +262,41 @@ void UpdatePlayer(void)
 	PrintDebugProc("ワイヤーフレーム表示 キーボード:9 = OFF キーボード:0 = ON\n");
 #endif
 
-	// HP0&ダウンモーションが終了した場合、それ以上アニメーションを更新しない、操作できない
-	if (playerWk.Animation->CurrentAnimID == Downpose && playerWk.HPzan == 0)
+	if (*Phase == PhaseGame)
+	{
+		// 簡単入力
+		EasyInput(&playerWk, 0);
+	}
+
+	// 本格入力
+
+	// KO表示中は更新しない
+	if (*Phase == PhaseFinish && ko == false)
 	{
 
 	}
 	else
 	{
-		// 簡単入力
-		EasyInput(&playerWk, 0);
-
-		// 本格入力
-
 		// アニメーションを更新
 		playerWk.Animation->UpdateAnimation(playerWk.Animation, TIME_PER_FRAME);
+	}
 
-		// 勝利時
-		if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Animation->CurrentAnimID == Idle)
+	// 勝利時
+	if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Animation->CurrentAnimID == Idle)
+	{
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Win, 1.5f);
+	}
+
+	// 敗北時HP0になったらダウン
+	if (playerWk.HPzan <= 0)
+	{
+		playerWk.HPzan = 0;
+		// 強制的にアニメーション変更
+		if (playerWk.Animation->CurrentAnimID != Downpose)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Win, 1.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Downpose, 0.5f);
 		}
-		// 敗北時HP0になったらダウン
-		if (playerWk.HPzan <= 0)
-		{
-			playerWk.HPzan = 0;
-			// 強制的にアニメーション変更
-			if (playerWk.Animation->CurrentAnimID != Downpose && playerWk.Animation->CurrentAnimID != Down)
-			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down, 0.5f);
-			}
-			else if (playerWk.Animation->CurrentAnimID == Down && playerWk.Animation->MotionEnd == true)
-			{
-				playerWk.Animation->ChangeAnimation(playerWk.Animation, Down, ANIM_SPD_1);
-			}
-			SetPhase(PhaseFinish);
-		}
+		SetPhase(PhaseFinish);
 	}
 
 	// 座標移動

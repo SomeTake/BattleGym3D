@@ -537,7 +537,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		break;
 	case Downpose:
 		// アニメーション終了で起き上がりに移行
-		if (Chara->Animation->MotionEnd == true)
+		if (Chara->Animation->MotionEnd == true && Chara->HPzan > 0)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Getup, ANIM_SPD_15);
 		}

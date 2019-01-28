@@ -202,11 +202,23 @@ void SetVertexScore(int sno)
 {
 	SCORE *score = GetScore(sno);
 	// ’¸“_À•W‚ÌÝ’è
+	int phase = *GetPhase();
 
-	score->vertexWk[0].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * sno), (float)SCORE_POS_Y, score->pos.z);
-	score->vertexWk[1].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * (sno + 1)), (float)SCORE_POS_Y, score->pos.z);
-	score->vertexWk[2].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * sno), (float)SCORE_POS_Y + TEXTURE_SCORE00_SIZE_Y, score->pos.z);
-	score->vertexWk[3].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * (sno + 1)), (float)SCORE_POS_Y + TEXTURE_SCORE00_SIZE_Y, score->pos.z);
+	if (phase == PhaseCountdown || phase == PhaseGame || phase == PhaseFinish)
+	{
+		score->vertexWk[0].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * sno), (float)SCORE_POS_Y, score->pos.z);
+		score->vertexWk[1].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * (sno + 1)), (float)SCORE_POS_Y, score->pos.z);
+		score->vertexWk[2].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * sno), (float)SCORE_POS_Y + TEXTURE_SCORE00_SIZE_Y, score->pos.z);
+		score->vertexWk[3].vtx = D3DXVECTOR3((float)SCORE_POS_X + (TEXTURE_SCORE00_SIZE_X * (sno + 1)), (float)SCORE_POS_Y + TEXTURE_SCORE00_SIZE_Y, score->pos.z);
+	}
+	else if (phase == PhaseResult)
+	{
+		score->vertexWk[0].vtx = D3DXVECTOR3((float)RESULT_SCORE_POS_X + (RESULT_SCORE00_SIZE_X * sno), (float)RESULT_SCORE_POS_Y, score->pos.z);
+		score->vertexWk[1].vtx = D3DXVECTOR3((float)RESULT_SCORE_POS_X + (RESULT_SCORE00_SIZE_X * (sno + 1)), (float)RESULT_SCORE_POS_Y, score->pos.z);
+		score->vertexWk[2].vtx = D3DXVECTOR3((float)RESULT_SCORE_POS_X + (RESULT_SCORE00_SIZE_X * sno), (float)RESULT_SCORE_POS_Y + RESULT_SCORE00_SIZE_Y, score->pos.z);
+		score->vertexWk[3].vtx = D3DXVECTOR3((float)RESULT_SCORE_POS_X + (RESULT_SCORE00_SIZE_X * (sno + 1)), (float)RESULT_SCORE_POS_Y + RESULT_SCORE00_SIZE_Y, score->pos.z);
+	}
+	
 }
 
 //=============================================================================

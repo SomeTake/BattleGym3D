@@ -280,3 +280,11 @@ void SetReflectKnockout(float per)
 	knockout->vertexWk[2].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
 	knockout->vertexWk[3].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
 }
+
+//=============================================================================
+// ノックアウト構造体のゲッター
+//=============================================================================
+KNOCKOUT *GetKnockout(void)
+{
+	return &knockout[0];
+}
