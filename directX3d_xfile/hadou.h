@@ -23,6 +23,7 @@
 //*****************************************************************************
 typedef struct
 {
+	D3DXVECTOR3			firstpos;		// 発射された位置
 	D3DXVECTOR3			pos;			// 現在の位置
 	D3DXVECTOR3			rot;			// 回転
 	D3DXVECTOR3			scl;			// 大きさ
@@ -33,6 +34,8 @@ typedef struct
 	D3DXMATRIX			mtxWorld;		// ワールドマトリックス
 	bool				use;			// 使用しているかどうか
 	D3DXVECTOR3			move;			// 移動量
+	int					frame;			// モーションが始まってから発射されるまでの経過フレーム
+	float				dist;			// 発射位置と現在位置の距離
 
 } HADOU;
 

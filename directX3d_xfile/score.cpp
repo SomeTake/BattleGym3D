@@ -7,6 +7,8 @@
 #include "main.h"
 #include "score.h"
 #include "input.h"
+#include "battle.h"
+#include "player.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -49,8 +51,6 @@ HRESULT InitScore(int type)
 		score->CountAnim = 0;
 		score->PatternAnim = 0;
 
-		score->pScore = 0;
-
 		// 頂点情報の作成
 		MakeVertexScore(i);
 
@@ -83,9 +83,10 @@ void UpdateScore(void)
 {
 	int i;
 	SCORE *score = GetScore(0);
+	CHARA *playerWk = GetPlayer();
 
 	int kariScore[SCORE_MAX];
-	int num = score->pScore;
+	int num = playerWk->score;
 	
 	//スコアを一桁ずつバラす
 	for (i = 0; i < SCORE_MAX; i++)
@@ -116,10 +117,6 @@ void UpdateScore(void)
 		SetVertexScore(i);
 	}
 
-	if (GetKeyboardPress(DIK_SPACE))
-	{
-		AddScore(1);
-	}
 }
 
 //=============================================================================
@@ -218,26 +215,4 @@ void SetVertexScore(int sno)
 SCORE *GetScore(int sno)
 {
 	return &score[sno];
-}
-
-//=============================================================================
-// スコアの追加
-// 引数:add :追加する点数。マイナスも可能、初期化などに。
-//=============================================================================
-void AddScore(int add)
-{
-	SCORE *score = GetScore(0);
-
-	score->pScore += add;
-
-	//カンスト処理
-	if (score->pScore > FULL_SCORE)
-	{
-		score->pScore = FULL_SCORE;
-	}
-	else if (score->pScore < 0)
-	{
-		score->pScore = 0;
-	}
-
 }

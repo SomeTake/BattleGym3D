@@ -9,6 +9,7 @@
 
 #include "D3DXAnimation.h"
 #include "battle.h"
+#include "hadou.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -42,9 +43,6 @@ void UninitPlayer(void);
 void UpdatePlayer(void);
 void DrawPlayer(void);
 CHARA *GetPlayer(void);
-void EasyInputPlayer(void);		// 簡単入力
 void MovePlayer(void);			// 座標移動
-void HitCheckPlayer(void);		// 当たり判定
-void HitAction(D3DXANIMATION *Animation, CHARA *AttackChara, CHARA *DefendChara);			// 攻撃が当たったときの動き
 
 #endif

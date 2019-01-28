@@ -78,12 +78,12 @@ void UpdateEvaluation(void)
 	if (player->HPzan > enemy->HPzan)
 	{
 		//A•]‰¿
-		if (score->pScore >= SCORE_A)
+		if (player->score >= SCORE_A)
 		{
 			SetTextureEvaluation(0);
 		}
 		//B•]‰¿
-		else if (score->pScore < SCORE_A || score->pScore >= SCORE_B)
+		else if (player->score < SCORE_A || player->score >= SCORE_B)
 		{
 			SetTextureEvaluation(1);
 		}
@@ -96,12 +96,12 @@ void UpdateEvaluation(void)
 	else if (player->HPzan < enemy->HPzan)
 	{
 		//A•]‰¿
-		if (escore->eScore >= SCORE_A)
+		if (enemy->score >= SCORE_A)
 		{
 			SetTextureEvaluation(0);
 		}
 		//B•]‰¿
-		else if (escore->eScore < SCORE_A || escore->eScore >= SCORE_B)
+		else if (enemy->score < SCORE_A || enemy->score >= SCORE_B)
 		{
 			SetTextureEvaluation(1);
 		}

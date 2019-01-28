@@ -6,6 +6,8 @@
 //=============================================================================
 #include "main.h"
 #include "escore.h"
+#include "battle.h"
+#include "enemy.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -49,8 +51,6 @@ HRESULT InitEScore(int type)
 		escore->CountAnim = 0;
 		escore->PatternAnim = 0;
 
-		escore->eScore = 0;
-
 		// 頂点情報の作成
 		MakeVertexEScore(i);
 
@@ -83,9 +83,10 @@ void UpdateEScore(void)
 {
 	int i;
 	ESCORE *escore = GetEScore(0);
+	CHARA *enemyWk = GetEnemy();
 
 	int kariScore[ESCORE_MAX];
-	int num = escore->eScore;
+	int num = enemyWk->score;
 
 	//スコアを一桁ずつバラす
 	for (i = 0; i < ESCORE_MAX; i++)
@@ -225,25 +226,4 @@ void SetVertexEScore(int sno)
 ESCORE *GetEScore(int sno)
 {
 	return &EScore[sno];
-}
-
-//=============================================================================
-// スコアの追加
-// 引数:add :追加する点数。マイナスも可能、初期化などに。
-//=============================================================================
-void AddEScore(int add)
-{
-	ESCORE *escore = GetEScore(0);
-	escore->eScore += add;
-
-	//カンスト処理
-	if (escore->eScore > FULL_ESCORE)
-	{
-		escore->eScore = FULL_ESCORE;
-	}
-	else if (escore->eScore < 0)
-	{
-		escore->eScore = 0;
-	}
-
 }

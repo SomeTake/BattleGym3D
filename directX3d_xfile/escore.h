@@ -25,7 +25,6 @@
 #define TIME_ANIMATION_ESCORE		(1)		// アニメーションの切り替わるカウント
 
 #define ESCORE_MAX					(5)		//スコアの桁数
-#define FULL_ESCORE					(99999)	//スコアの最大数
 
 //PhaseGame,PhaseCountdown,PhaseFinishの時
 #define ESCORE_POS_X				(683)	//スコアの表示位置
@@ -42,7 +41,6 @@ typedef struct {
 	int						CountAnim;						// アニメーションカウント
 	int						PatternAnim;					// アニメーションパターンナンバー
 	bool					use;							// 使用中フラグ
-	int						eScore;							// バトルのスコア
 }ESCORE;
 
 //*****************************************************************************
@@ -56,6 +54,5 @@ HRESULT MakeVertexEScore(int sno);
 void SetTextureEScore(int cntPattern, int sno);
 void SetVertexEScore(int sno);
 ESCORE *GetEScore(int bno);		// ESCORE構造体のゲッター
-void AddEScore(int add);		// エネミースコアを増やすときに使用
 
 #endif

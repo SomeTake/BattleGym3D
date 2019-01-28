@@ -25,7 +25,6 @@
 #define TIME_ANIMATION_SCORE			(1)						// アニメーションの切り替わるカウント
 
 #define SCORE_MAX						(5)						//スコアの桁数
-#define FULL_SCORE						(99999)					//スコアの最大数
 
 //PhaseGame,PhaseCountdown,PhaseFinishの時
 #define SCORE_POS_X						(500)					//スコアの表示位置
@@ -41,8 +40,7 @@ typedef struct {
 	D3DXVECTOR3				pos;								// ポリゴンの移動量
 	int						CountAnim;							// アニメーションカウント
 	int						PatternAnim;						// アニメーションパターンナンバー
-	bool					use;								//弾を発射したかどうかのフラグ
-	int						pScore;								//バトルのスコア
+	bool					use;								// 使用中かどうかのフラグ
 }SCORE;
 
 //*****************************************************************************
@@ -56,6 +54,5 @@ HRESULT MakeVertexScore(int sno);
 void SetTextureScore(int cntPattern, int sno);
 void SetVertexScore(int sno);
 SCORE *GetScore(int bno);			// スコア構造体の取得
-void AddScore(int add);				// スコアを増やすときに使用
 
 #endif

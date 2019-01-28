@@ -31,10 +31,12 @@ HRESULT InitHadou(int type, HADOU *Hadou)
 	Hadou->D3DXMatBuff = NULL;
 
 	// 場所、大きさの設定
+	Hadou->firstpos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Hadou->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Hadou->rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Hadou->scl = D3DXVECTOR3(HADOU_SIZE, HADOU_SIZE, HADOU_SIZE);
 	Hadou->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	Hadou->frame = 0;
 
 	if (type == 0)
 	{
@@ -76,17 +78,19 @@ void UninitHadou(HADOU *Hadou)
 //=============================================================================
 void UpdateHadou(HADOU *Hadou)
 {
-	if (Hadou->use == true)
+	// 移動計算
+	Hadou->move.x -= sinf(Hadou->rot.y) * HADOU_SPEED_A;
+	Hadou->move.z -= cosf(Hadou->rot.y) * HADOU_SPEED_A;
+
+	Hadou->pos += Hadou->move;
+	Hadou->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	// 一定距離動いたら消えるように
+	D3DXVECTOR3 unit = Hadou->firstpos - Hadou->pos;
+	Hadou->dist = D3DXVec3Length(&unit);
+	if (Hadou->dist >= MAX_DISTANCE)
 	{
-		// 移動計算
-		Hadou->move.x -= sinf(Hadou->rot.y) * HADOU_SPEED_A;
-		Hadou->move.z -= cosf(Hadou->rot.y) * HADOU_SPEED_A;
-
-		Hadou->pos += Hadou->move;
-		Hadou->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-		// 一定距離動いたら消えるように
-
+		Hadou->use = false;
 	}
 }
 
@@ -99,50 +103,47 @@ void DrawHadou(HADOU *Hadou)
 	D3DXMATRIX mtxScl, mtxRot, mtxTranslate;
 	D3DXMATERIAL *pD3DXMat;
 
-	if (Hadou->use == true)
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&Hadou->mtxWorld);
+
+	// スケールを反映
+	D3DXMatrixScaling(&mtxScl, Hadou->scl.x, Hadou->scl.y, Hadou->scl.z);
+	D3DXMatrixMultiply(&Hadou->mtxWorld, &Hadou->mtxWorld, &mtxScl);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, Hadou->rot.y, Hadou->rot.x, Hadou->rot.z);
+	D3DXMatrixMultiply(&Hadou->mtxWorld, &Hadou->mtxWorld, &mtxRot);
+
+	// 移動を反映
+	D3DXMatrixTranslation(&mtxTranslate, Hadou->pos.x, Hadou->pos.y, Hadou->pos.z);
+	D3DXMatrixMultiply(&Hadou->mtxWorld, &Hadou->mtxWorld, &mtxTranslate);
+
+	// ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &Hadou->mtxWorld);
+
+	// マテリアル情報に対するポインタを取得
+	pD3DXMat = (D3DXMATERIAL*)Hadou->D3DXMatBuff->GetBufferPointer();
+
+	for (int nCntMat = 0; nCntMat < (int)Hadou->NumMat; nCntMat++)
 	{
-		// ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&Hadou->mtxWorld);
+		// マテリアルの設定
+		pDevice->SetMaterial(&pD3DXMat[nCntMat].MatD3D);
 
-		// スケールを反映
-		D3DXMatrixScaling(&mtxScl, Hadou->scl.x, Hadou->scl.y, Hadou->scl.z);
-		D3DXMatrixMultiply(&Hadou->mtxWorld, &Hadou->mtxWorld, &mtxScl);
+		// テクスチャの設定
+		pDevice->SetTexture(0, Hadou->D3DTexture);
 
-		// 回転を反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, Hadou->rot.y, Hadou->rot.x, Hadou->rot.z);
-		D3DXMatrixMultiply(&Hadou->mtxWorld, &Hadou->mtxWorld, &mtxRot);
+		// 描画
+		Hadou->Mesh->DrawSubset(nCntMat);
+	}
 
-		// 移動を反映
-		D3DXMatrixTranslation(&mtxTranslate, Hadou->pos.x, Hadou->pos.y, Hadou->pos.z);
-		D3DXMatrixMultiply(&Hadou->mtxWorld, &Hadou->mtxWorld, &mtxTranslate);
+	{// マテリアルをデフォルトに戻す
+		D3DXMATERIAL mat;
 
-		// ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &Hadou->mtxWorld);
+		mat.MatD3D.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
+		mat.MatD3D.Ambient = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
+		mat.MatD3D.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
 
-		// マテリアル情報に対するポインタを取得
-		pD3DXMat = (D3DXMATERIAL*)Hadou->D3DXMatBuff->GetBufferPointer();
-
-		for (int nCntMat = 0; nCntMat < (int)Hadou->NumMat; nCntMat++)
-		{
-			// マテリアルの設定
-			pDevice->SetMaterial(&pD3DXMat[nCntMat].MatD3D);
-
-			// テクスチャの設定
-			pDevice->SetTexture(0, Hadou->D3DTexture);
-
-			// 描画
-			Hadou->Mesh->DrawSubset(nCntMat);
-		}
-
-		{// マテリアルをデフォルトに戻す
-			D3DXMATERIAL mat;
-
-			mat.MatD3D.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f);
-			mat.MatD3D.Ambient = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
-			mat.MatD3D.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
-
-			pDevice->SetMaterial(&mat.MatD3D);
-		}
+		pDevice->SetMaterial(&mat.MatD3D);
 	}
 }
 
@@ -154,9 +155,10 @@ void SetHadou(HADOU *Hadou, BALL *HitBall, D3DXVECTOR3 CharaRot)
 	// 一発ごとにしか出せない
 	if (Hadou->use == false)
 	{
-		D3DXVECTOR3 FirePos = (HitBall[RightHand].pos + HitBall[LeftHand].pos) * 0.5f;	// 発射位置を両手の間にする
-		Hadou->pos = FirePos;
+		Hadou->firstpos = (HitBall[RightHand].pos + HitBall[LeftHand].pos) * 0.5f;	// 発射位置を両手の間にする
+		Hadou->pos = Hadou->firstpos;
 		Hadou->rot = CharaRot;	// 向きをキャラクタに合わせる
+		Hadou->dist = 0.0f;
 		Hadou->use = true;
 	}
 }

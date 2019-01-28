@@ -33,6 +33,7 @@
 #define MIN_DISTANCE						(30.0f)						// ƒvƒŒƒCƒ„[ŠÔ‚ÌÅ¬‹——£i‚±‚êˆÈã‚Í‹ß‚Ã‚¯‚È‚¢j
 #define FULL_HP								(1000)						// ƒQ[ƒW‚ÌÅ‘å’l
 #define FULL_SPGUAGE						(1000)						// ƒQ[ƒW‚ÌÅ‘å’l
+#define FULL_SCORE							(99999)						// ƒXƒRƒA‚ÌÅ‘å”
 #define DAMAGE_PUNCHI						(40)						// ƒ_ƒ[ƒW—Ê
 #define DAMAGE_KICK							(50)						// ƒ_ƒ[ƒW—Ê
 #define DAMAGE_HADOU						(100)						// ƒ_ƒ[ƒW—Ê
@@ -71,6 +72,7 @@ typedef struct {
 	BALL				HitBall[HIT_CHECK_NUM];	// “–‚½‚è”»’è—pƒ{[ƒ‹
 	bool				HitFrag;			// UŒ‚‚ª“–‚½‚Á‚½‚©‚Ç‚¤‚©
 	HADOU				HadouBullet;		// ”g“®Œ\‘¢‘Ì
+	int					score;				// ƒXƒRƒA
 }CHARA;
 
 // ƒLƒƒƒ‰ƒNƒ^[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“”Ô†
@@ -163,5 +165,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// UŒ‚‚ª“–‚½‚Á‚½‚Æ‚«‚
 void SubDamage(CHARA *Chara, int add);							// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 void AddSpGauge(CHARA *Chara, int add);							// SPƒQ[ƒW‚Ì‘Œ¸
 void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// ”g“®Œ‚Ì“–‚½‚è”»’è
+void EasyInput(CHARA *Chara, int ControllerNum);				// ŠÈ’P‘€ì
+void AddScore(CHARA *Chara, int add);							// ƒXƒRƒA‚Ì’Ç‰Á
 
 #endif

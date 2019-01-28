@@ -42,6 +42,7 @@ HRESULT InitPlayer(int type)
 	playerWk.HPzan = playerWk.HP;
 	playerWk.SP = 0;
 	playerWk.HitFrag = false;
+	playerWk.score = 0;
 
 	if (type == 0)
 	{
@@ -137,7 +138,7 @@ HRESULT InitPlayer(int type)
 		playerWk.Animation->CurrentAnimID = Idle;
 
 		// アニメーション感の補完を設定
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Idle, 0.5f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, Idle, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Frontwalk, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Backwalk, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Rightstep, 0.1f);
@@ -262,7 +263,7 @@ void UpdatePlayer(void)
 	else
 	{
 		// 簡単入力
-		EasyInputPlayer();
+		EasyInput(&playerWk, 0);
 
 		// 本格入力
 
@@ -313,12 +314,12 @@ void UpdatePlayer(void)
 		}
 	}
 
-	// 波動拳用バレットの更新
-	UpdateHadou(&playerWk.HadouBullet);
-
-	// 波動拳の当たり判定
 	if (playerWk.HadouBullet.use == true)
 	{
+		// 波動拳用バレットの更新
+		UpdateHadou(&playerWk.HadouBullet);
+
+		// 波動拳の当たり判定
 		HitHadou(&playerWk, enemyWk);
 	}
 
@@ -380,8 +381,11 @@ void DrawPlayer(void)
 		}
 	}
 
-	// 波動拳用バレットの描画
-	DrawHadou(&playerWk.HadouBullet);
+	if (playerWk.HadouBullet.use == true)
+	{
+		// 波動拳用バレットの描画
+		DrawHadou(&playerWk.HadouBullet);
+	}
 }
 
 //=============================================================================
@@ -390,270 +394,6 @@ void DrawPlayer(void)
 CHARA *GetPlayer(void)
 {
 	return &playerWk;
-}
-
-//=============================================================================
-//簡単入力（アニメーションの管理も）
-//=============================================================================
-void EasyInputPlayer(void)
-{
-	static int HadouFrame = 0;	// モーションが始まってから波動拳発射までのフレーム数
-
-	switch (playerWk.Animation->CurrentAnimID)
-	{
-	case Idle:
-		// 移動
-		// 前
-		if (GetKeyboardTrigger(DIK_RIGHT) || IsButtonTriggered(0, BUTTON_RIGHT) || IsButtonTriggered(0, STICK_RIGHT))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Frontwalk, ANIM_SPD_2);
-		}
-		// 後ろ
-		else if (GetKeyboardTrigger(DIK_LEFT) || IsButtonTriggered(0, BUTTON_LEFT) || IsButtonTriggered(0, STICK_LEFT))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Backwalk, ANIM_SPD_2);
-		}
-		// 手前
-		else if (GetKeyboardTrigger(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN) || IsButtonTriggered(0, STICK_DOWN))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Rightstep, ANIM_SPD_2);
-		}
-		// 奥
-		else if (GetKeyboardTrigger(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Leftstep, ANIM_SPD_2);
-		}
-
-		// 攻撃
-		// パンチ
-		else if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_A))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi, ANIM_SPD_15);
-		}
-		// キック
-		else if (GetKeyboardTrigger(DIK_M) || IsButtonTriggered(0, BUTTON_B))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick, ANIM_SPD_15);
-		}
-		// 波動拳
-		else if (GetKeyboardTrigger(DIK_N) || IsButtonTriggered(0, BUTTON_X))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou, ANIM_SPD_2);
-		}
-		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_H) || IsButtonTriggered(0, BUTTON_C))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu, ANIM_SPD_15);
-		}
-		// ガード
-		else if (GetKeyboardTrigger(DIK_G) || IsButtonTriggered(0, BUTTON_Y))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard, ANIM_SPD_1);
-		}
-		else
-		{
-		}
-		break;
-	case Frontwalk:
-		// 前
-		if (GetKeyboardPress(DIK_RIGHT) || IsButtonPressed(0, BUTTON_RIGHT) || IsButtonPressed(0, STICK_RIGHT))
-		{
-
-		}
-		// ボタンリリースで待機に戻る
-		else
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-		}
-
-		// 攻撃
-		// パンチ
-		if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_A))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi, ANIM_SPD_15);
-		}
-		// キック
-		else if (GetKeyboardTrigger(DIK_M) || IsButtonTriggered(0, BUTTON_B))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick, ANIM_SPD_15);
-		}
-		// 波動拳
-		else if (GetKeyboardTrigger(DIK_N) || IsButtonTriggered(0, BUTTON_X))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou, ANIM_SPD_2);
-		}
-		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_H) || IsButtonTriggered(0, BUTTON_C))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu, ANIM_SPD_15);
-		}
-		// ガード
-		else if (GetKeyboardTrigger(DIK_G) || IsButtonTriggered(0, BUTTON_Y))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard, ANIM_SPD_1);
-		}
-		break;
-	case Backwalk:
-		// 後ろ
-		if (GetKeyboardPress(DIK_LEFT) || IsButtonPressed(0, BUTTON_LEFT) || IsButtonPressed(0, STICK_LEFT))
-		{
-
-		}
-		// ボタンリリースで待機に戻る
-		else
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-		}
-
-		// 攻撃
-		// パンチ
-		if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_A))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi, ANIM_SPD_15);
-		}
-		// キック
-		else if (GetKeyboardTrigger(DIK_M) || IsButtonTriggered(0, BUTTON_B))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick, ANIM_SPD_15);
-		}
-		// 波動拳
-		else if (GetKeyboardTrigger(DIK_N) || IsButtonTriggered(0, BUTTON_X))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou, ANIM_SPD_2);
-		}
-		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_H) || IsButtonTriggered(0, BUTTON_C))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu, ANIM_SPD_15);
-		}
-		// ガード
-		else if (GetKeyboardTrigger(DIK_G) || IsButtonTriggered(0, BUTTON_Y))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Guard, ANIM_SPD_1);
-		}
-		break;
-	case Rightstep:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-		}
-		break;
-	case Leftstep:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-		}
-		break;
-	case Guard:
-		if (GetKeyboardPress(DIK_G) || IsButtonPressed(0, BUTTON_Y))
-		{
-
-		}
-			// ボタンリリースで待機に戻る
-		else
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-		}
-
-		// 攻撃
-		// パンチ
-		if (GetKeyboardTrigger(DIK_J) || IsButtonTriggered(0, BUTTON_A))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Punchi, ANIM_SPD_15);
-		}
-		// キック
-		else if (GetKeyboardTrigger(DIK_M) || IsButtonTriggered(0, BUTTON_B))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Kick, ANIM_SPD_15);
-		}
-		// 波動拳
-		else if (GetKeyboardTrigger(DIK_N) || IsButtonTriggered(0, BUTTON_X))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Hadou, ANIM_SPD_2);
-		}
-		// 昇竜拳
-		else if (GetKeyboardTrigger(DIK_H) || IsButtonTriggered(0, BUTTON_C))
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Shoryu, ANIM_SPD_15);
-		}
-	case Damage:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-			HadouFrame = 0;
-		}
-		break;
-	case Down:
-		// アニメーション終了で起き上がりに移行
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Downpose, ANIM_SPD_1);
-			// プレイヤー座標をモーション座標に合わせる
-			D3DXMATRIXA16 newmatrix;	// モーション座標を取得するための行列
-			newmatrix = GetBoneMatrix(playerWk.Animation, "Hips");
-			playerWk.pos = D3DXVECTOR3(newmatrix._41, 0.0f, newmatrix._43);
-		}
-		break;
-	case Downpose:
-		// アニメーション終了で起き上がりに移行
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Getup, ANIM_SPD_15);
-		}
-	case Getup:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-			HadouFrame = 0;
-		}
-		break;
-	case Punchi:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-			playerWk.HitFrag = false;
-		}
-		break;
-	case Kick:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-			playerWk.HitFrag = false;
-		}
-		break;
-	case Hadou:
-		// 一定フレーム経過で弾が出る
-		HadouFrame++;
-		if (HadouFrame == FIRE_FRAME)
-		{
-			SetHadou(&playerWk.HadouBullet, playerWk.HitBall, playerWk.rot);
-		}
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-			HadouFrame = 0;
-			playerWk.HitFrag = false;
-		}
-		break;
-	case Shoryu:
-		// アニメーション終了で待機に戻る
-		if (playerWk.Animation->MotionEnd == true)
-		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
-			playerWk.HitFrag = false;
-		}
-		break;
-	default:
-		break;
-	}
-
 }
 
 //=============================================================================

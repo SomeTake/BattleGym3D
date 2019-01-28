@@ -9,6 +9,7 @@
 
 #include "D3DXAnimation.h"
 #include "battle.h"
+#include "hadou.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -27,8 +28,6 @@ void UninitEnemy(void);
 void UpdateEnemy(void);
 void DrawEnemy(void);
 CHARA *GetEnemy(void);
-void EasyInputEnemy(void);		// 簡単入力
 void MoveEnemy(void);			// 座標移動
-void HitCheckEnemy(void);		// 当たり判定
 
 #endif
