@@ -171,9 +171,6 @@ HRESULT InitEnemy(int type)
 		Mtx = GetBoneMatrix(enemyWk.Animation, "RightLeg");
 		InitBall(0, &enemyWk.HitBall[12], Mtx, FOOT_RADIUS);
 
-		// 波動拳用バレットをセット
-		InitHadou(0, &enemyWk.HadouBullet);
-
 		// 影の生成
 		enemyWk.IdxShadow = CreateShadow(enemyWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 		enemyWk.SizeShadow = 25.0f;
@@ -183,6 +180,12 @@ HRESULT InitEnemy(int type)
 	{
 		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
 	}
+
+	// 波動拳用バレットをセット
+	InitHadou(type, &enemyWk.HadouBullet);
+
+	// 2P表示のビルボードを作成
+	InitPop(type, &enemyWk.Popup, 1);
 
 	return S_OK;
 }
@@ -203,6 +206,9 @@ void UninitEnemy(void)
 
 	// 波動拳用バレットをリリース
 	UninitHadou(&enemyWk.HadouBullet);
+
+	// 2P表示をリリース
+	UninitPop(&enemyWk.Popup);
 
 }
 
@@ -273,6 +279,8 @@ void UpdateEnemy(void)
 		HitHadou(&enemyWk, playerWk);
 	}
 
+	// 2P表示の位置更新
+	UpdatePop(&enemyWk.Popup, enemyWk.pos);
 
 	// 影の位置設定
 	SetPositionShadow(enemyWk.IdxShadow, D3DXVECTOR3(enemyWk.pos.x, 0.1f, enemyWk.pos.z));
@@ -338,6 +346,9 @@ void DrawEnemy(void)
 		// 波動拳用バレットの描画
 		DrawHadou(&enemyWk.HadouBullet);
 	}
+
+	// 2P表示用ビルボードを描画
+	DrawPop(&enemyWk.Popup);
 }
 
 //=============================================================================

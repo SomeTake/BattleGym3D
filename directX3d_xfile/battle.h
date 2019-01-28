@@ -11,6 +11,7 @@
 #include "D3DXAnimation.h"
 #include "ball.h"
 #include "hadou.h"
+#include "pop.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -73,6 +74,7 @@ typedef struct {
 	bool				HitFrag;			// 攻撃が当たったかどうか
 	HADOU				HadouBullet;		// 波動拳構造体
 	int					score;				// スコア
+	POP					Popup;				// 1Por1P表示のビルボード
 }CHARA;
 
 // キャラクターのアニメーション番号
