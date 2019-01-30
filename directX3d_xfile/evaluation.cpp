@@ -83,7 +83,7 @@ void UpdateEvaluation(void)
 			SetTextureEvaluation(0);
 		}
 		//B•]‰¿
-		else if (player->score < SCORE_A || player->score >= SCORE_B)
+		else if (player->score < SCORE_A && player->score >= SCORE_B)
 		{
 			SetTextureEvaluation(1);
 		}
@@ -101,7 +101,7 @@ void UpdateEvaluation(void)
 			SetTextureEvaluation(0);
 		}
 		//B•]‰¿
-		else if (enemy->score < SCORE_A || enemy->score >= SCORE_B)
+		else if (enemy->score < SCORE_A && enemy->score >= SCORE_B)
 		{
 			SetTextureEvaluation(1);
 		}

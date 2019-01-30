@@ -37,11 +37,16 @@ HRESULT InitEnemy(int type)
 	enemyWk.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	enemyWk.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	enemyWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	// ステータス等の初期設定
 	enemyWk.HP = FULL_HP;
 	enemyWk.HPzan = enemyWk.HP;
 	enemyWk.SP = 0;
 	enemyWk.HitFrag = false;
 	enemyWk.score = 0;
+	enemyWk.graceflag = false;
+	enemyWk.graceframe = 0;
+	enemyWk.gracetype = Idle;
 
 	if (type == 0)
 	{
@@ -297,7 +302,7 @@ void UpdateEnemy(void)
 	}
 
 	// 2P表示の位置更新
-	UpdatePop(&enemyWk.Popup, enemyWk.pos);
+	UpdatePop(&enemyWk.Popup, enemyWk.HitBall[Hips].pos);
 
 	// 影の位置設定
 	SetPositionShadow(enemyWk.IdxShadow, D3DXVECTOR3(enemyWk.pos.x, 0.1f, enemyWk.pos.z));

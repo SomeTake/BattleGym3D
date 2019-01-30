@@ -6,8 +6,8 @@
 //=============================================================================
 #include "main.h"
 #include "spmax.h"
-#include "spguage.h"
-#include "espguage.h"
+#include "spgauge.h"
+#include "espgauge.h"
 #include "player.h"
 #include "enemy.h"
 #include "sound.h"
@@ -90,7 +90,7 @@ void UpdateSpmax(void)
 	int phase = *GetPhase();
 
 	//プレイヤーのSPゲージがMAXの場合使う
-	if (playerWk->SP == FULL_SPGUAGE)
+	if (playerWk->SP == FULL_SPGAUGE)
 	{
 		SpmaxUse = true;
 		//MAXになった瞬間音を鳴らす
@@ -100,7 +100,7 @@ void UpdateSpmax(void)
 			soundflag = true;
 		}
 	}
-	else if (playerWk->SP < FULL_SPGUAGE)
+	else if (playerWk->SP < FULL_SPGAUGE)
 	{
 		SpmaxUse = false;
 		if (phase == PhaseGame)
@@ -110,7 +110,7 @@ void UpdateSpmax(void)
 	}
 
 	//エネミーのSPゲージがMAXの場合使う
-	if (enemyWk->SP == FULL_SPGUAGE)
+	if (enemyWk->SP == FULL_SPGAUGE)
 	{
 		ESpmaxUse = true;
 		//MAXになった瞬間音を鳴らす
@@ -120,7 +120,7 @@ void UpdateSpmax(void)
 			esoundflag = true;
 		}
 	}
-	else if (enemyWk->SP < FULL_SPGUAGE)
+	else if (enemyWk->SP < FULL_SPGAUGE)
 	{
 		ESpmaxUse = false;
 		if (phase == PhaseGame)
@@ -139,8 +139,8 @@ void UpdateSpmax(void)
 void DrawSpmax(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	SPGUAGE *spguage = GetSpGuage(0);
-	ESPGUAGE *espguage = GetESpGuage(0);
+	SPGAUGE *spgauge = GetSpGauge(0);
+	ESPGAUGE *espgauge = GetESpGauge(0);
 
 	//プレイヤーのSPゲージがMAXなら描画
 	if (SpmaxUse == true)

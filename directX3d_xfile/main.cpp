@@ -20,21 +20,21 @@
 #include "company.h"
 #include "countdown.h"
 #include "drawgame.h"
-#include "eguage.h"
-#include "eredguage.h"
+#include "egauge.h"
+#include "eredgauge.h"
 #include "escore.h"
-#include "espguage.h"
+#include "espgauge.h"
 #include "evaluation.h"
 #include "frame.h"
-#include "framespguage.h"
-#include "guage.h"
+#include "framespgauge.h"
+#include "gauge.h"
 #include "knockout.h"
 #include "modeselect.h"
 #include "pause.h"
-#include "redguage.h"
+#include "redgauge.h"
 #include "result.h"
 #include "resultstar.h"
-#include "spguage.h"
+#include "spgauge.h"
 #include "spmax.h"
 #include "timer.h"
 #include "title.h"
@@ -442,15 +442,15 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitFrame(0);
 	InitTitle(0);
 	InitResult(0);
-	InitGuage(0);
-	InitEGuage(0);
-	InitSpGuage(0);
-	InitESpGuage(0);
+	InitGauge(0);
+	InitEGauge(0);
+	InitSpGauge(0);
+	InitESpGauge(0);
 	InitTimer(0);
-	InitFrameSpguage(0);
+	InitFrameSpgauge(0);
 	InitSpmax(0);
-	InitRedGuage(0);
-	InitERedGuage(0);
+	InitRedGauge(0);
+	InitERedGauge(0);
 	InitCountdown(0);
 	InitKnockout(0);
 	InitResultstar(0);
@@ -513,15 +513,15 @@ void Uninit(void)
 	UninitFrame();
 	UninitTitle();
 	UninitResult();
-	UninitGuage();
-	UninitEGuage();
-	UninitSpGuage();
-	UninitESpGuage();
+	UninitGauge();
+	UninitEGauge();
+	UninitSpGauge();
+	UninitESpGauge();
 	UninitTimer();
-	UninitFrameSpguage();
+	UninitFrameSpgauge();
 	UninitSpmax();
-	UninitRedGuage();
-	UninitERedGuage();
+	UninitRedGauge();
+	UninitERedGauge();
 	UninitCountdown();
 	UninitKnockout();
 	UninitResultstar();
@@ -570,13 +570,9 @@ void Update(void)
 	//}
 	
 	// 描画モードの切り替え
-	if (GetKeyboardTrigger(DIK_9))
+if (GetKeyboardTrigger(DIK_0))
 	{
-		RenderWireframe = true;
-	}
-	else if (GetKeyboardTrigger(DIK_0))
-	{
-		RenderWireframe = false;
+		RenderWireframe = RenderWireframe ? false : true;
 	}
 
 
@@ -600,15 +596,15 @@ void Update(void)
 	case PhaseTutorial:
 		UpdatePlayer();
 		UpdateEnemy();
-		UpdateGuage();
-		UpdateEGuage();
+		UpdateGauge();
+		UpdateEGauge();
 		UpdateFrame();
-		UpdateSpGuage();
-		UpdateESpGuage();
-		UpdateFrameSpguage();
+		UpdateSpGauge();
+		UpdateESpGauge();
+		UpdateFrameSpgauge();
 		UpdateSpmax();
-		UpdateRedGuage();
-		UpdateERedGuage();
+		UpdateRedGauge();
+		UpdateERedGauge();
 		UpdateTutorial();
 		UpdateMeshField();
 		UpdateMeshWall();
@@ -625,15 +621,15 @@ void Update(void)
 	case PhaseTraining:
 		UpdatePlayer();
 		UpdateEnemy();
-		UpdateGuage();
-		UpdateEGuage();
+		UpdateGauge();
+		UpdateEGauge();
 		UpdateFrame();
-		UpdateSpGuage();
-		UpdateESpGuage();
-		UpdateFrameSpguage();
+		UpdateSpGauge();
+		UpdateESpGauge();
+		UpdateFrameSpgauge();
 		UpdateSpmax();
-		UpdateRedGuage();
-		UpdateERedGuage();
+		UpdateRedGauge();
+		UpdateERedGauge();
 		UpdateMeshField();
 		UpdateMeshWall();
 		UpdatePlayer();
@@ -663,16 +659,16 @@ void Update(void)
 		UpdateEnemy();
 		UpdateScore();
 		UpdateEScore();
-		UpdateGuage();
-		UpdateEGuage();
+		UpdateGauge();
+		UpdateEGauge();
 		UpdateFrame();
-		UpdateSpGuage();
-		UpdateESpGuage();
+		UpdateSpGauge();
+		UpdateESpGauge();
 		UpdateTimer();
-		UpdateFrameSpguage();
+		UpdateFrameSpgauge();
 		UpdateSpmax();
-		UpdateRedGuage();
-		UpdateERedGuage();
+		UpdateRedGauge();
+		UpdateERedGauge();
 		UpdateCountdown();
 		UpdateMeshField();
 		UpdateMeshWall();
@@ -694,16 +690,16 @@ void Update(void)
 		UpdateEffect();
 		UpdateScore();
 		UpdateEScore();
-		UpdateGuage();
-		UpdateEGuage();
+		UpdateGauge();
+		UpdateEGauge();
 		UpdateFrame();
-		UpdateSpGuage();
-		UpdateESpGuage();
+		UpdateSpGauge();
+		UpdateESpGauge();
 		UpdateTimer();
-		UpdateFrameSpguage();
+		UpdateFrameSpgauge();
 		UpdateSpmax();
-		UpdateRedGuage();
-		UpdateERedGuage();
+		UpdateRedGauge();
+		UpdateERedGauge();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -714,16 +710,16 @@ void Update(void)
 		UpdateEnemy();
 		UpdateScore();
 		UpdateEScore();
-		UpdateGuage();
-		UpdateEGuage();
+		UpdateGauge();
+		UpdateEGauge();
 		UpdateFrame();
-		UpdateSpGuage();
-		UpdateESpGuage();
+		UpdateSpGauge();
+		UpdateESpGauge();
 		UpdateTimer();
-		UpdateFrameSpguage();
+		UpdateFrameSpgauge();
 		UpdateSpmax();
-		UpdateRedGuage();
-		UpdateERedGuage();
+		UpdateRedGauge();
+		UpdateERedGauge();
 		UpdateKnockout();
 		UpdateMeshField();
 		UpdateMeshWall();
@@ -809,16 +805,16 @@ void Draw(int no)
 			DrawPlayer();
 
 			//画面上のUI
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			break;
@@ -838,16 +834,16 @@ void Draw(int no)
 			DrawPlayer();
 
 			//画面上のUI
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			DrawTutorial();
@@ -870,17 +866,17 @@ void Draw(int no)
 			//画面上のUI
 			DrawScore();
 			DrawEScore();
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 			DrawTimer();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			//ポーズ画面
@@ -905,16 +901,16 @@ void Draw(int no)
 			DrawPlayer();
 
 			//画面上のUI
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			//ポーズ画面
@@ -941,17 +937,17 @@ void Draw(int no)
 			//画面上のUI
 			DrawScore();
 			DrawEScore();
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 			DrawTimer();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			DrawCountdown();
@@ -974,17 +970,17 @@ void Draw(int no)
 			//画面上のUI
 			DrawScore();
 			DrawEScore();
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 			DrawTimer();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			break;
@@ -1006,17 +1002,17 @@ void Draw(int no)
 			//画面上のUI
 			DrawScore();
 			DrawEScore();
-			DrawRedGuage();
-			DrawERedGuage();
-			DrawGuage();
-			DrawEGuage();
+			DrawRedGauge();
+			DrawERedGauge();
+			DrawGauge();
+			DrawEGauge();
 			DrawFrame();
 			DrawTimer();
 
 			//画面下のUI
-			DrawSpGuage();
-			DrawESpGuage();
-			DrawFrameSpguage();
+			DrawSpGauge();
+			DrawESpGauge();
+			DrawFrameSpgauge();
 			DrawSpmax();
 
 			DrawKnockout();
@@ -1120,15 +1116,15 @@ void ReInit(void)
 	InitFrame(1);
 	InitTitle(1);
 	InitResult(1);
-	InitGuage(1);
-	InitEGuage(1);
-	InitSpGuage(1);
-	InitESpGuage(1);
+	InitGauge(1);
+	InitEGauge(1);
+	InitSpGauge(1);
+	InitESpGauge(1);
 	InitTimer(1);
-	InitFrameSpguage(1);
+	InitFrameSpgauge(1);
 	InitSpmax(1);
-	InitERedGuage(1);
-	InitRedGuage(1);
+	InitERedGauge(1);
+	InitRedGauge(1);
 	InitCountdown(1);
 	InitKnockout(1);
 	InitResultstar(1);

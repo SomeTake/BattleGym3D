@@ -7,6 +7,7 @@
 #include "main.h"
 #include "battle.h"
 #include "input.h"
+#include "camera.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -48,6 +49,8 @@ bool HitBC(D3DXVECTOR3 AttackPos, D3DXVECTOR3 DefendPos, float AttackRange, floa
 //=============================================================================
 bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara)
 {
+	float PEdistance = GetPEdistance();
+
 	switch (AttackChara->Animation->CurrentAnimID)
 	{
 	case Punchi:
@@ -90,7 +93,20 @@ bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara)
 			}
 		}
 		break;
-
+	case Throw:
+		if (PEdistance <= THROW_VALUE)
+		{
+			if (DefendChara->Animation->PreventAnimID != ThrowedPose)
+			{
+				DefendChara->Animation->ChangeAnimation(DefendChara->Animation, ThrowedPose, ANIM_SPD_1);
+			}
+			return true;
+		}
+		else
+		{
+			AttackChara->Animation->ChangeAnimation(AttackChara->Animation, Miss, ANIM_SPD_15);
+		}
+		break;
 	default:
 		break;
 	}
@@ -222,9 +238,9 @@ void AddSpGauge(CHARA *Chara, int add)
 	Chara->SP += add;
 
 	//カンスト処理
-	if (Chara->SP >= FULL_SPGUAGE)
+	if (Chara->SP >= FULL_SPGAUGE)
 	{
-		Chara->SP = FULL_SPGUAGE;
+		Chara->SP = FULL_SPGAUGE;
 	}
 
 }
@@ -296,6 +312,91 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 //=============================================================================
 void EasyInput(CHARA *Chara, int ControllerNum)
 {
+	if (Chara->graceflag == true)
+	{
+		Chara->graceframe++;
+		// 入力猶予範囲内に追加入力がなされた場合
+		if (Chara->graceframe < GRACE_VALUE)
+		{
+			switch (Chara->gracetype)
+			{
+			case Punchi:
+				if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K)
+					|| IsButtonTriggered(ControllerNum, BUTTON_B))
+				{
+					Chara->Animation->ChangeAnimation(Chara->Animation, Throw, ANIM_SPD_1);
+					Chara->graceflag = false;
+					Chara->graceframe = 0;
+				}
+				break;
+			case Kick:
+				if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
+					|| IsButtonTriggered(ControllerNum, BUTTON_A))
+				{
+					Chara->Animation->ChangeAnimation(Chara->Animation, Throw, ANIM_SPD_1);
+					Chara->graceflag = false;
+					Chara->graceframe = 0;
+				}
+				break;
+			case Hadou:
+				if (Chara->SP == FULL_SPGAUGE &&
+					((ControllerNum == 0 ? DIK_H : DIK_O)
+					|| IsButtonTriggered(ControllerNum, BUTTON_C)))
+				{
+					Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, ANIM_SPD_2);
+					Chara->graceflag = false;
+					Chara->graceframe = 0;
+				}
+				break;
+			case Shoryu:
+				if (Chara->SP == FULL_SPGAUGE &&
+					((ControllerNum == 0 ? DIK_N : DIK_L)
+					|| IsButtonTriggered(ControllerNum, BUTTON_X)))
+				{
+					Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, ANIM_SPD_2);
+					Chara->graceflag = false;
+					Chara->graceframe = 0;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		// 追加入力がされなかった場合
+		else if(Chara->graceframe >= GRACE_VALUE)
+		{
+			switch (Chara->gracetype)
+			{
+			case Punchi:
+				Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, ANIM_SPD_15);
+				Chara->graceflag = false;
+				Chara->graceframe = 0;
+				break;
+			case Kick:
+				Chara->Animation->ChangeAnimation(Chara->Animation, Kick, ANIM_SPD_15);
+				Chara->graceflag = false;
+				Chara->graceframe = 0;
+				break;
+			case Hadou:
+				// 発射されていない場合
+				if (Chara->HadouBullet.use == false)
+				{
+					Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, ANIM_SPD_2);
+					Chara->graceflag = false;
+					Chara->graceframe = 0;
+				}
+				break;
+			case Shoryu:
+				Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, ANIM_SPD_15);
+				Chara->graceflag = false;
+				Chara->graceframe = 0;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	switch (Chara->Animation->CurrentAnimID)
 	{
 	case Idle:
@@ -326,33 +427,46 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 
 		// 攻撃
+		// 投げ
+		else if ((GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K))
+			|| (IsButtonTriggered(ControllerNum, BUTTON_A) && IsButtonTriggered(ControllerNum, BUTTON_B)))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, ANIM_SPD_1);
+		}
+		// SP技
+		else if (Chara->SP == FULL_SPGAUGE &&
+			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
+			|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, ANIM_SPD_2);
+		}
 		// パンチ
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
 			|| IsButtonTriggered(ControllerNum, BUTTON_A))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Punchi;
 		}
 		// キック
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K)
 			|| IsButtonTriggered(ControllerNum, BUTTON_B))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Kick;
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L) 
 			|| IsButtonTriggered(ControllerNum, BUTTON_X))
 		{
-			// 発射されていない場合
-			if (Chara->HadouBullet.use == false)
-			{
-				Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, ANIM_SPD_2);
-			}
+			Chara->graceflag = true;
+			Chara->gracetype = Hadou;
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O)
 			|| IsButtonTriggered(ControllerNum, BUTTON_C))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Shoryu;
 		}
 		// ガード
 		else if (GetKeyboardPress(ControllerNum == 0 ? DIK_G : DIK_P) 
@@ -378,33 +492,50 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 
 		// 攻撃
+		// 投げ
+		if ((GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K))
+			|| (IsButtonTriggered(ControllerNum, BUTTON_A) && IsButtonTriggered(ControllerNum, BUTTON_B)))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, ANIM_SPD_1);
+		}
+		// SP技
+		else if (Chara->SP == FULL_SPGAUGE &&
+			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
+			|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, ANIM_SPD_2);
+		}
 		// パンチ
-		if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
+		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
 			|| IsButtonTriggered(ControllerNum, BUTTON_A))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Punchi;
 		}
 		// キック
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K)
 			|| IsButtonTriggered(ControllerNum, BUTTON_B))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Kick;
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L) 
 			|| IsButtonTriggered(ControllerNum, BUTTON_X))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, ANIM_SPD_2);
+			// 発射されていない場合のみ
+			if (Chara->HadouBullet.use == false)
+			{
+				Chara->graceflag = true;
+				Chara->gracetype = Hadou;
+			}
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O)
 			|| IsButtonTriggered(ControllerNum, BUTTON_C))
 		{
-			// 発射されていない場合のみ
-			if (Chara->HadouBullet.use == false)
-			{
-				Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, ANIM_SPD_15);
-			}
+			Chara->graceflag = true;
+			Chara->gracetype = Shoryu;
 		}
 		// ガード
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_G : DIK_P) 
@@ -427,17 +558,32 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 
 		// 攻撃
+		// 投げ
+		if ((GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K))
+			|| (IsButtonTriggered(ControllerNum, BUTTON_A) && IsButtonTriggered(ControllerNum, BUTTON_B)))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, ANIM_SPD_1);
+		}
+		// SP技
+		else if (Chara->SP == FULL_SPGAUGE &&
+			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
+				|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, ANIM_SPD_2);
+		}
 		// パンチ
-		if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
+		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
 			|| IsButtonTriggered(ControllerNum, BUTTON_A))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Punchi;
 		}
 		// キック
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K) 
 			|| IsButtonTriggered(ControllerNum, BUTTON_B))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Kick;
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L) 
@@ -446,14 +592,16 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 			// 発射されていない場合のみ
 			if (Chara->HadouBullet.use == false)
 			{
-				Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, ANIM_SPD_2);
+				Chara->graceflag = true;
+				Chara->gracetype = Hadou;
 			}
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) 
 			|| IsButtonTriggered(ControllerNum, BUTTON_C))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Shoryu;
 		}
 		// ガード
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_G : DIK_P)
@@ -489,17 +637,32 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 
 		// 攻撃
+		// 投げ
+		if ((GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K))
+			|| (IsButtonTriggered(ControllerNum, BUTTON_A) && IsButtonTriggered(ControllerNum, BUTTON_B)))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, ANIM_SPD_1);
+		}
+		// SP技
+		else if (Chara->SP == FULL_SPGAUGE &&
+			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
+				|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, ANIM_SPD_2);
+		}
 		// パンチ
-		if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
+		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_J : DIK_I)
 			|| IsButtonTriggered(ControllerNum, BUTTON_A))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Punchi;
 		}
 		// キック
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_M : DIK_K) 
 			|| IsButtonTriggered(ControllerNum, BUTTON_B))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Kick;
 		}
 		// 波動拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L)
@@ -507,14 +670,16 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		{
 			if (Chara->HadouBullet.use == false)
 			{
-				Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, ANIM_SPD_2);
+				Chara->graceflag = true;
+				Chara->gracetype = Hadou;
 			}
 		}
 		// 昇竜拳
 		else if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O)
 			|| IsButtonTriggered(ControllerNum, BUTTON_C))
 		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, ANIM_SPD_15);
+			Chara->graceflag = true;
+			Chara->gracetype = Shoryu;
 		}
 	case Damage:
 		// アニメーション終了で待機に戻る
@@ -529,10 +694,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		if (Chara->Animation->MotionEnd == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Downpose, ANIM_SPD_1);
-			// プレイヤー座標をモーション座標に合わせる
-			D3DXMATRIXA16 newmatrix;	// モーション座標を取得するための行列
-			newmatrix = GetBoneMatrix(Chara->Animation, "Hips");
-			Chara->pos = D3DXVECTOR3(newmatrix._41, 0.0f, newmatrix._43);
+			// モーション座標にキャラクター座標を合わせる
+			Chara->pos = D3DXVECTOR3(Chara->HitBall[Hips].pos.x, 0.0f, Chara->HitBall[Hips].pos.z);
 		}
 		break;
 	case Downpose:
@@ -586,6 +749,49 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, ANIM_SPD_1);
 			Chara->HitFrag = false;
+		}
+		break;
+	case SPattack:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, ANIM_SPD_1);
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
+			// モーション座標にキャラクター座標を合わせる
+			Chara->pos = D3DXVECTOR3(Chara->HitBall[Hips].pos.x, 0.0f, Chara->HitBall[Hips].pos.z);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Throw:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, ANIM_SPD_1);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Win:
+		break;
+	case Miss:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, ANIM_SPD_1);
+			Chara->HitFrag = false;
+		}
+		break;
+	case ThrowedPose:
+		if (Chara->Animation->PreventAnimID != ThrowedPose)
+		{
+			Chara->framecount++;
+		}
+		// 一定時間経過で相手の投げアニメーションに合わせてダウンモーションに移行
+		if (Chara->framecount == THROW_FRAME)
+		{
+			SubDamage(Chara, DAMAGE_THROW);
+			Chara->Animation->ChangeAnimation(Chara->Animation, Down, ANIM_SPD_1);
+			Chara->framecount = 0;
 		}
 		break;
 	default:

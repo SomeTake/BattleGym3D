@@ -33,7 +33,7 @@
 #define MAX_DISTANCE						(250.0f)					// プレイヤー間の最大距離（これ以上は遠ざかれない）
 #define MIN_DISTANCE						(30.0f)						// プレイヤー間の最小距離（これ以上は近づけない）
 #define FULL_HP								(1000)						// ゲージの最大値
-#define FULL_SPGUAGE						(1000)						// ゲージの最大値
+#define FULL_SPGAUGE						(1000)						// ゲージの最大値
 #define FULL_SCORE							(99999)						// スコアの最大数
 #define DAMAGE_PUNCHI						(40)						// ダメージ量
 #define DAMAGE_KICK							(50)						// ダメージ量
@@ -42,11 +42,14 @@
 #define DAMAGE_SPATTACK						(400)						// ダメージ量
 #define DAMAGE_THROW						(150)						// ダメージ量
 #define FIRE_FRAME							(25)						// 波動拳の発射タイミング
+#define THROW_FRAME							(180)						// 投げアニメーションの途中でダメージを与える＆相手のアニメーションを変更させるタイミング
+#define GRACE_VALUE							(3)							// 入力猶予の範囲フレーム数
 
 // 当たり判定
 #define BODY_RADIUS							(10.0f)						// 体の当たり判定の半径
 #define ARM_RADIUS							(5.0f)						// 手の当たり判定の半径
 #define FOOT_RADIUS							(7.0f)						// 足の当たり判定の半径
+#define THROW_VALUE							(40.0f)						// 投げの当たる範囲
 
 // アニメーションスピード
 #define ANIM_SPD_05							(0.5f)
@@ -74,7 +77,11 @@ typedef struct {
 	bool				HitFrag;			// 攻撃が当たったかどうか
 	HADOU				HadouBullet;		// 波動拳構造体
 	int					score;				// スコア
-	POP					Popup;				// 1Por1P表示のビルボード
+	POP					Popup;				// 1Por2P表示のビルボード
+	int					framecount;			// アニメーションの途中で処理をするためタイミングを測るカウンタ
+	int					gracetype;			// 入力猶予の種類
+	int					graceframe;			// 入力猶予の時間
+	bool				graceflag;			// 入力猶予の有効フラグ
 }CHARA;
 
 // キャラクターのアニメーション番号
@@ -96,7 +103,9 @@ static const char* CharaStateAnim[] =
 	"shoryu",			// 昇竜拳。バックフリップ
 	"SPattack",			// SP技。めっちゃ回転する
 	"throw",			// 投げ。掴んで膝入れてアッパー
-	"win"				// ガッツポーズ（勝利時）
+	"win",				// ガッツポーズ（勝利時）
+	"miss",				// 投げスカり
+	"throwedpose"		// 投げられている最中のポーズ
 };
 
 // キャラクターのアニメーション番号と連動（CharaStateAnim）
@@ -118,7 +127,9 @@ enum CharaStateNum
 	Shoryu,
 	SPattack,
 	Throw,
-	Win
+	Win,
+	Miss,
+	ThrowedPose,
 };
 
 // 当たり判定を発生させる場所

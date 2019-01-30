@@ -39,11 +39,16 @@ HRESULT InitPlayer(int type)
 	playerWk.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	playerWk.scl = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	playerWk.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	
+	// ステータス等の初期設定
 	playerWk.HP = FULL_HP;
 	playerWk.HPzan = playerWk.HP;
 	playerWk.SP = 0;
 	playerWk.HitFrag = false;
 	playerWk.score = 0;
+	playerWk.graceflag = false;
+	playerWk.graceframe = 0;
+	playerWk.gracetype = Idle;
 
 	if (type == 0)
 	{
@@ -127,6 +132,12 @@ HRESULT InitPlayer(int type)
 		{
 			return E_FAIL;
 		}
+		// 投げスカり
+		if (FAILED(SetupCallbackKeyframes(playerWk.Animation, CharaStateAnim[Miss])))
+		{
+			return E_FAIL;
+		}
+
 
 		// AnimationSetを初期化する
 		for (int i = 0; i < playerWk.Animation->AnimSetNum; i++)
@@ -156,6 +167,8 @@ HRESULT InitPlayer(int type)
 		playerWk.Animation->SetShiftTime(playerWk.Animation, SPattack, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Throw, 0.1f);
 		playerWk.Animation->SetShiftTime(playerWk.Animation, Win, 0.1f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, Miss, 0.1f);
+		playerWk.Animation->SetShiftTime(playerWk.Animation, ThrowedPose, 0.1f);
 
 		// 当たり判定用ボールを生成
 		D3DXMATRIX Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[Hips]);
@@ -250,21 +263,30 @@ void UpdatePlayer(void)
 	{
 		enemyWk->HPzan = 0;
 	}
+	// 両方SPゲージMAX
 	else if (GetKeyboardTrigger(DIK_4))
 	{
-		playerWk.Animation->ChangeAnimation(playerWk.Animation, Damage, 1.5f);
+		AddSpGauge(&playerWk, FULL_SPGAUGE);
+		AddSpGauge(enemyWk, FULL_SPGAUGE);
+	}
+	// 両方体力MAX
+	else if (GetKeyboardTrigger(DIK_5))
+	{
+		SubDamage(&playerWk, -FULL_HP);
+		SubDamage(enemyWk, -FULL_HP);
 	}
 
 	// デバッグ表示
 	PrintDebugProc("プレイヤー座標 X:%f Y:%f Z:%f\n", playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
 	PrintDebugProc("プレイヤー角度 X:%f Y:%f Z:%f\n", playerWk.rot.x, playerWk.rot.y, playerWk.rot.z);
 	PrintDebugProc("プレイヤーアニメーション番号 X:%d\n", playerWk.Animation->CurrentAnimID);
-	PrintDebugProc("ワイヤーフレーム表示 キーボード:9 = OFF キーボード:0 = ON\n");
+	PrintDebugProc("ワイヤーフレーム表示 キーボード:0 = ON or OFF\n");
+	PrintDebugProc("プレイヤー入力猶予フラグ %s\n", playerWk.graceflag ? "ON" : "OFF");
 #endif
 
-	if (*Phase == PhaseGame)
+	if (*Phase != PhaseCountdown)
 	{
-		// 簡単入力
+		// 簡単入力&アニメーションの変更
 		EasyInput(&playerWk, 0);
 	}
 
@@ -331,7 +353,7 @@ void UpdatePlayer(void)
 	}
 
 	// 1P表示の位置更新
-	UpdatePop(&playerWk.Popup, playerWk.pos);
+	UpdatePop(&playerWk.Popup, playerWk.HitBall[Hips].pos);
 
 	// 影の位置設定
 	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
