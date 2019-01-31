@@ -455,5 +455,34 @@ void MoveEnemy(void)
 	enemyWk.move.y = 0;
 	enemyWk.move.z = 0;
 
+	// 移動中のエフェクトの発生
+	if (enemyWk.Animation->CurrentAnimID == Frontwalk || enemyWk.Animation->CurrentAnimID == Backwalk ||
+		enemyWk.Animation->CurrentAnimID == Rightstep || enemyWk.Animation->CurrentAnimID == Leftstep)
+	{
+		D3DXVECTOR3 pos;
+
+		pos.x = enemyWk.HitBall[RightFoot].pos.x;
+		pos.y = -5.0f;
+		pos.z = enemyWk.HitBall[RightFoot].pos.z;
+
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, PARTICLE_TIME_C);
+
+		pos.x = enemyWk.HitBall[LeftFoot].pos.x;
+		pos.y = -5.0f;
+		pos.z = enemyWk.HitBall[LeftFoot].pos.z;
+
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_C);
+
+	}
 
 }

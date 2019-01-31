@@ -20,6 +20,14 @@
 #define CIRCLE_RADIUS			(100.0f)							// 円の半径
 #define	MAX_PARTICLE			(8192)								// パーティクル最大数
 
+// 足元の砂煙
+#define PARTICLE_SIZE_A			D3DXVECTOR2(10.0f, 10.0f)
+#define PARTICLE_SIZE_B			D3DXVECTOR2(7.0f, 7.0f)
+#define PARTICLE_SIZE_C			D3DXVECTOR2(3.0f, 3.0f)
+#define PARTICLE_TIME_A			(20)
+#define PARTICLE_TIME_B			(40)
+#define PARTICLE_TIME_C			(60)
+
 //*****************************************************************************
 // 構造体定義
 //*****************************************************************************
@@ -53,5 +61,6 @@ void SetColorParticle(int nIdxParticle, D3DXCOLOR col);
 
 int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, float fHeight, int Time);	// パーティクル発生用(場所, 移動量, 色, 幅, 高さ, 時間)
 PARTICLE *GetParticle(int no);																				// パーティクル構造体のゲッター
+int NumParticle(void);	// 使用している数を数える
 
 #endif

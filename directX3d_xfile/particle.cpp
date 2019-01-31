@@ -122,13 +122,13 @@ void UpdateParticle(void)
 		if (particle->bUse == true)
 		{
 			// パーティクルの動き
-			particle->pos.y -= 5.0f;
+			//particle->pos.y -= 5.0f;
 
-			if (particle->pos.y <= 0.0f - PARTICLE_HEIGHT)
-			{
-				particle->bUse =false;
-				ReleaseShadow(particle->nIdxShadow);
-			}
+			//if (particle->pos.y <= 0.0f - PARTICLE_HEIGHT)
+			//{
+			//	particle->bUse =false;
+			//	ReleaseShadow(particle->nIdxShadow);
+			//}
 
 			particle->pos.x += particle->move.x;
 			particle->pos.z += particle->move.z;
@@ -137,6 +137,7 @@ void UpdateParticle(void)
 			if (particle->col.a <= 0.0f)
 			{
 				particle->col.a = 0.0f;
+				particle->bUse = false;
 			}
 			SetColorParticle(nCntParticle,
 				D3DXCOLOR(Particle->col.r, particle->col.b,
@@ -532,7 +533,7 @@ int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, 
 	PARTICLE *particle = GetParticle(0);
 	int nIdxParticle = -1;
 
-	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
+	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)
 	{
 		if (!particle->bUse)
 		{
@@ -551,9 +552,7 @@ int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, 
 			SetVertexParticle(nCntParticle, fWidth, fHeight);
 
 			// 頂点カラーの設定
-			SetColorParticle(nCntParticle,
-				D3DXCOLOR(particle->col.r, particle->col.b,
-					particle->col.b, particle->col.a));
+			SetColorParticle(nCntParticle,particle->col);
 
 			nIdxParticle = nCntParticle;
 
@@ -572,3 +571,22 @@ PARTICLE *GetParticle(int no)
 	return &Particle[no];
 }
 
+//=============================================================================
+// 使用しているパーティクルの数を数える
+//=============================================================================
+int NumParticle(void)
+{
+	PARTICLE *particle = GetParticle(0);
+
+	int Num = 0;
+
+	for (int i = 0; i < MAX_PARTICLE; i++, particle++)
+	{
+		if (particle->bUse == true)
+		{
+			Num++;
+		}
+	}
+
+	return Num;
+}

@@ -276,12 +276,15 @@ void UpdatePlayer(void)
 		SubDamage(enemyWk, -FULL_HP);
 	}
 
+	int Num = NumParticle();
+
 	// デバッグ表示
 	PrintDebugProc("プレイヤー座標 X:%f Y:%f Z:%f\n", playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
 	PrintDebugProc("プレイヤー角度 X:%f Y:%f Z:%f\n", playerWk.rot.x, playerWk.rot.y, playerWk.rot.z);
 	PrintDebugProc("プレイヤーアニメーション番号 X:%d\n", playerWk.Animation->CurrentAnimID);
 	PrintDebugProc("ワイヤーフレーム表示 キーボード:0 = ON or OFF\n");
 	PrintDebugProc("プレイヤー入力猶予フラグ %s\n", playerWk.graceflag ? "ON" : "OFF");
+	PrintDebugProc("使用しているパーティクルの数 %d\n", Num);
 #endif
 
 	if (*Phase != PhaseCountdown)
@@ -510,16 +513,28 @@ void MovePlayer(void)
 	{
 		D3DXVECTOR3 pos;
 
-		pos.x = playerWk.pos.x + sinf(playerWk.rot.y) * 10.0f;
-		pos.y = playerWk.pos.y + 2.0f;
-		pos.z = playerWk.pos.z + cosf(playerWk.rot.y) * 10.0f;
+		pos.x = playerWk.HitBall[RightFoot].pos.x;
+		pos.y = -5.0f;
+		pos.z = playerWk.HitBall[RightFoot].pos.z;
 
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.85f, 0.05f, 0.65f, 0.50f), 14.0f, 14.0f, 360);
+			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.65f, 0.85f, 0.05f, 0.30f), 10.0f, 10.0f, 360);
+			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
 		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			D3DXCOLOR(0.45f, 0.45f, 0.05f, 0.15f), 5.0f, 5.0f, 360);
+			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, PARTICLE_TIME_C);
+
+		pos.x = playerWk.HitBall[LeftFoot].pos.x;
+		pos.y = -5.0f;
+		pos.z = playerWk.HitBall[LeftFoot].pos.z;
+
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_C);
+
 	}
 
 }

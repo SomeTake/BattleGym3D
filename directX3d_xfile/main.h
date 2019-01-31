@@ -87,6 +87,9 @@
 
 #define GetMonitorRect(rc) SystemParametersInfo(SPI_GETWORKAREA, 0, rc, 0)	// モニター矩形
 
+// 色
+#define SAND(Alpha)					D3DXCOLOR(1.00f, 0.84f, 0.56f, Alpha)	// 砂色
+
 // 上記２Ｄポリゴン頂点フォーマットに合わせた構造体を定義
 typedef struct
 {
