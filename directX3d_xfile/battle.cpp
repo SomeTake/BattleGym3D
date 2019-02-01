@@ -108,6 +108,24 @@ bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara)
 			AttackChara->Animation->ChangeAnimation(AttackChara->Animation, Miss, Data[Miss].Spd);
 		}
 		break;
+	case SPattack:
+		// 両足と相手の各部位との判定
+		for (int i = 0; i < HIT_CHECK_NUM; i++)
+		{
+			// 左足との判定
+			if (HitBC(AttackChara->HitBall[LeftFoot].pos, DefendChara->HitBall[i].pos,
+				AttackChara->HitBall[LeftFoot].scl.x, DefendChara->HitBall[i].scl.x) == true)
+			{
+				return true;
+			}
+			// 右足との判定
+			else if (HitBC(AttackChara->HitBall[RightFoot].pos, DefendChara->HitBall[i].pos,
+				AttackChara->HitBall[RightFoot].scl.x, DefendChara->HitBall[i].scl.x) == true)
+			{
+				return true;
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -218,6 +236,23 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// 音
 			PlaySound(SE_HIT1, 0, 0);
 		}
+		//　ヒットフラグの変更
+		AttackChara->HitFrag = true;
+		break;
+	case SPattack:
+		// 敵のモーション変更
+		DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Down, Data[Down].Spd);
+		// ダメージ
+		SubDamage(DefendChara, Data[SPattack].Damage);
+		// SPゲージ増減
+		AddSpGauge(AttackChara, Data[SPattack].Damage);
+		AddSpGauge(DefendChara, Data[SPattack].Damage);
+		// エフェクト
+
+		// スコア
+		AddScore(AttackChara, Data[SPattack].Damage);
+		// 音
+		PlaySound(SE_HIT1, 0, 0);
 		//　ヒットフラグの変更
 		AttackChara->HitFrag = true;
 		break;

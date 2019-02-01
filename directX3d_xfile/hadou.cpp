@@ -99,7 +99,44 @@ void UpdateHadou(HADOU *Hadou)
 	// エフェクト
 	if (Hadou->use == true)
 	{
-		
+		D3DXVECTOR3 pos = Hadou->pos;
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), Hadou->scl.x * 2.0f, Hadou->scl.y * 2.0f, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), Hadou->scl.x * 1.5f, Hadou->scl.y * 1.5f, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), Hadou->scl.x, Hadou->scl.y, PARTICLE_TIME_C);
+
+		pos.x = Hadou->pos.x;
+		pos.y = Hadou->pos.y - Hadou->scl.y * 2.0f;
+		pos.z = Hadou->pos.z;
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), Hadou->scl.x * 2.0f, Hadou->scl.y * 2.0f, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), Hadou->scl.x * 1.5f, Hadou->scl.y * 1.5f, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), Hadou->scl.x, Hadou->scl.y, PARTICLE_TIME_C);
+
+		pos.x = Hadou->pos.x + Hadou->scl.x;
+		pos.y = Hadou->pos.y - Hadou->scl.y;
+		pos.z = Hadou->pos.z + Hadou->scl.z;
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), Hadou->scl.x * 2.0f, Hadou->scl.y * 2.0f, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), Hadou->scl.x * 1.5f, Hadou->scl.y * 1.5f, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), Hadou->scl.x, Hadou->scl.y, PARTICLE_TIME_C);
+
+		pos.x = Hadou->pos.x - Hadou->scl.x;
+		pos.y = Hadou->pos.y - Hadou->scl.y;
+		pos.z = Hadou->pos.z - Hadou->scl.z;
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.50f), Hadou->scl.x * 2.0f, Hadou->scl.y * 2.0f, PARTICLE_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.30f), Hadou->scl.x * 1.5f, Hadou->scl.y * 1.5f, PARTICLE_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), Hadou->scl.x, Hadou->scl.y, PARTICLE_TIME_C);
+
 	}
 }
 
