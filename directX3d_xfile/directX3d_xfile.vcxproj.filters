@@ -132,9 +132,6 @@
     <ClInclude Include="thanks.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
-    <ClInclude Include="effect.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
     <ClInclude Include="particle.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
@@ -173,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="redgauge.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -272,9 +272,6 @@
     <ClCompile Include="thanks.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
-    <ClCompile Include="effect.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
     <ClCompile Include="particle.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
@@ -313,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="redgauge.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

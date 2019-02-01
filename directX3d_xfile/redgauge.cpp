@@ -174,3 +174,11 @@ void SetVertexRedGauge(void)
 	redgauge->vertexWk[2].vtx = D3DXVECTOR3(redgauge->pos.x + REDGAUGE_SIZE_X * ((float)(player->HP - redgauge->value) / player->HP), redgauge->pos.y + REDGAUGE_SIZE_Y, redgauge->pos.z);
 	redgauge->vertexWk[3].vtx = D3DXVECTOR3(redgauge->pos.x + REDGAUGE_SIZE_X, redgauge->pos.y + REDGAUGE_SIZE_Y, redgauge->pos.z);
 }
+
+//=============================================================================
+// 赤ゲージのプレイヤー側ゲッター
+//=============================================================================
+REDGAUGE *GetRedGauge(void)
+{
+	return &redgauge[0];
+}

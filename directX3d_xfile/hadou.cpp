@@ -9,6 +9,8 @@
 #include "enemy.h"
 #include "hadou.h"
 #include "D3DXAnimation.h"
+#include "particle.h"
+#include "battle.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -25,11 +27,6 @@ HRESULT InitHadou(int type, HADOU *Hadou)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
-	// ポインタの初期化
-	Hadou->D3DTexture = NULL;
-	Hadou->Mesh = NULL;
-	Hadou->D3DXMatBuff = NULL;
-
 	// 場所、大きさの設定
 	Hadou->firstpos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	Hadou->pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -40,6 +37,11 @@ HRESULT InitHadou(int type, HADOU *Hadou)
 
 	if (type == 0)
 	{
+		// ポインタの初期化
+		Hadou->D3DTexture = NULL;
+		Hadou->Mesh = NULL;
+		Hadou->D3DXMatBuff = NULL;
+
 		// Xファイルの読み込み
 		if (FAILED(D3DXLoadMeshFromX(BALL_XFILE,
 			D3DXMESH_SYSTEMMEM,
@@ -52,6 +54,7 @@ HRESULT InitHadou(int type, HADOU *Hadou)
 		{
 			return E_FAIL;
 		}
+
 	}
 	return S_OK;
 }
@@ -91,6 +94,12 @@ void UpdateHadou(HADOU *Hadou)
 	if (Hadou->dist >= MAX_DISTANCE)
 	{
 		Hadou->use = false;
+	}
+
+	// エフェクト
+	if (Hadou->use == true)
+	{
+		
 	}
 }
 

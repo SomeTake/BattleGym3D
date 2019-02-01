@@ -1,52 +1,71 @@
 //=============================================================================
 //
-// エフェクト処理 [effect.h]
+// 1P2P表示処理 [effect.h]
 // Author : HAL東京 GP11B341-17 80277 染谷武志
 //
 //=============================================================================
 #ifndef _EFFECT_H_
 #define _EFFECT_H_
 
-#include "main.h"
-
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_EFFECT			"data/TEXTURE/effect000.jpg"	// 読み込むテクスチャファイル名
-#define	EFFECT_SIZE_X			(50.0f)							// ビルボードの幅
-#define	EFFECT_SIZE_Y			(50.0f)							// ビルボードの高さ
-#define	VALUE_MOVE_BULLET		(2.0f)							// 移動速度
+#define	TEXTURE_HIT00		"data/EFFECT/hit000.png"		// 読み込むテクスチャファイル名
+#define	TEXTURE_HIT01		"data/EFFECT/hit001.png"		// 読み込むテクスチャファイル名
+#define	TEXTURE_GUARD00		"data/EFFECT/guard000.png"		// 読み込むテクスチャファイル名
+#define	TEXTURE_CHARGE00	"data/EFFECT/charge000.png"	// 読み込むテクスチャファイル名
+#define	EFFECT_WIDTH			(20.0f)						// 半径高さ
+#define	EFFECT_HEIGHT			(20.0f)						// 半径幅
 
-#define	MAX_EFFECT				(4096)							// エフェクト最大数
+#define HIT00_PATTERN_DIVIDE_X	(2)										// アニメパターンのテクスチャ内分割数（X)
+#define HIT00_PATTERN_DIVIDE_Y	(5)										// アニメパターンのテクスチャ内分割数（Y)
+#define ANIM_PATTERN_NUM_HIT00	(HIT00_PATTERN_DIVIDE_X*HIT00_PATTERN_DIVIDE_Y)	// アニメーションパターン数
+#define HIT01_PATTERN_DIVIDE_X	(3)										// アニメパターンのテクスチャ内分割数（X)
+#define HIT01_PATTERN_DIVIDE_Y	(5)										// アニメパターンのテクスチャ内分割数（Y)
+#define ANIM_PATTERN_NUM_HIT01	(HIT01_PATTERN_DIVIDE_X*HIT01_PATTERN_DIVIDE_Y)	// アニメーションパターン数
+#define GUARD_PATTERN_DIVIDE_X	(2)										// アニメパターンのテクスチャ内分割数（X)
+#define GUARD_PATTERN_DIVIDE_Y	(5)										// アニメパターンのテクスチャ内分割数（Y)
+#define ANIM_PATTERN_NUM_GUARD	(GUARD_PATTERN_DIVIDE_X*GUARD_PATTERN_DIVIDE_Y)	// アニメーションパターン数
+#define CHARGE_PATTERN_DIVIDE_X	(3)										// アニメパターンのテクスチャ内分割数（X)
+#define CHARGE_PATTERN_DIVIDE_Y	(5)										// アニメパターンのテクスチャ内分割数（Y)
+#define ANIM_PATTERN_NUM_CHARGE	(CHARGE_PATTERN_DIVIDE_X*CHARGE_PATTERN_DIVIDE_Y)	// アニメーションパターン数
+
+#define EFFECT_MAX				(4)	// エフェクトの種類
 
 //*****************************************************************************
 // 構造体定義
 //*****************************************************************************
 typedef struct
 {
-	D3DXVECTOR3 pos;		// 位置
-	D3DXVECTOR3 rot;		// 回転
-	D3DXVECTOR3 scale;		// スケール
-	D3DXVECTOR3 move;		// 移動量
-	D3DXCOLOR col;			// 色
-	float fSizeX;			// 幅
-	float fSizeY;			// 高さ
-	int nTimer;				// タイマー
-	float nDecAlpha;		// 減衰値
-	bool bUse;				// 使用しているかどうか
+	LPDIRECT3DTEXTURE9		D3DTexture[EFFECT_MAX] = {};		// テクスチャへのポインタ
+	LPDIRECT3DVERTEXBUFFER9 D3DVtxBuff = NULL;		// 頂点バッファインターフェースへのポインタ
+	D3DXMATRIX				mtxWorld;				// ワールドマトリックス
+	D3DXVECTOR3				pos;					// 位置
+	D3DXVECTOR3				scl;					// スケール
+	float					width;					// 幅
+	float					height;					// 高さ
+	int						cntPattern;				// アニメーション番号
+	int						num;					// 使用するテクスチャの番号
+	bool					use;					// 使用しているかどうか
 } EFFECT;
+
+// エフェクト番号（EFFECT構造体のnumに入れて使用）
+enum EffecuNum
+{
+	hit00,
+	hit01,
+	guard00,
+	charge00
+};
 
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitEffect(int type);
-void UninitEffect(void);
-void UpdateEffect(void);
-void DrawEffect(void);
-HRESULT MakeVertexEffect(LPDIRECT3DDEVICE9 pDevice);
-void SetVertexEffect(int nIdxEffect, float fSizeX, float fSizeY);
-void SetColorEffect(int nIdxEffect, D3DXCOLOR col);
-
-int SetEffect(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fSizeX, float fSizeY, int nTimer);
+HRESULT InitEffect(int type, EFFECT *EffectWk);
+void UninitEffect(EFFECT *EffectWk);
+void UpdateEffect(EFFECT *EffectWk);
+void DrawEffect(EFFECT *EffectWk);
+int SetEffect(EFFECT *EffectWk, D3DXVECTOR3 pos, float fWidth, float fHeight, D3DXCOLOR col, int num);
+void SetTextureEffect(EFFECT *EffectWk, int cntPattern);
 
 #endif

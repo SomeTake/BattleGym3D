@@ -15,6 +15,8 @@
 #include "meshwall.h"
 #include "particle.h"
 #include "knockout.h"
+#include "eredgauge.h"
+#include "sound.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -47,6 +49,7 @@ HRESULT InitEnemy(int type)
 	enemyWk.graceflag = false;
 	enemyWk.graceframe = 0;
 	enemyWk.gracetype = Idle;
+	enemyWk.damagecount = 0;
 
 	if (type == 0)
 	{
@@ -184,7 +187,7 @@ HRESULT InitEnemy(int type)
 	}
 	else
 	{
-		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, ANIM_SPD_1);
+		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, Data[Idle].Spd);
 	}
 
 	// 波動拳用バレットをセット
@@ -233,14 +236,27 @@ void UpdateEnemy(void)
 	PrintDebugProc("エネミー角度 X:%f Y:%f Z:%f\n", enemyWk.rot.x, enemyWk.rot.y, enemyWk.rot.z);
 	PrintDebugProc("エネミーアニメーション番号 No:%d\n", enemyWk.Animation->CurrentAnimID);
 #endif
+	// チュートリアル用
+	if (*Phase == PhaseTutorial)
+	{
+		REDGAUGE *RedWk = GetERedGauge();
+		SetupTutorial(&enemyWk, RedWk);
+	}
 
-	if (*Phase == PhaseGame)
+	if (*Phase != PhaseCountdown && *Phase != PhaseTraining && enemyWk.HPzan > 0)
 	{
 		// 簡単入力
 		EasyInput(&enemyWk, 1);
+
+		// 本格入力
+
 	}
 
-	// 本格入力
+	if (*Phase == PhaseTraining)
+	{
+		// AIが操作
+		BattleAI(&enemyWk, playerWk);
+	}
 
 	// KO表示中は更新しない
 	if (*Phase == PhaseFinish && ko == false)
@@ -256,17 +272,18 @@ void UpdateEnemy(void)
 	// 勝利時
 	if (*Phase == PhaseFinish && enemyWk.HPzan > playerWk->HPzan && enemyWk.Animation->CurrentAnimID == Idle)
 	{
-		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Win, 1.5f);
+		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Win, Data[Win].Spd);
 	}
 	// 敗北時HP0になったらダウン
-	if (enemyWk.HPzan <= 0)
+	if (enemyWk.HPzan <= 0 && *Phase != PhaseTutorial)
 	{
 		enemyWk.HPzan = 0;
 		// 強制的にアニメーション変更
 		if (enemyWk.Animation->CurrentAnimID != Downpose)
 		{
-			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose, 0.5f);
+			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose, Data[Downpose].Spd);
 		}
+		PlaySound(SE_KO, 0, 0);
 		SetPhase(PhaseFinish);
 	}
 
@@ -454,6 +471,24 @@ void MoveEnemy(void)
 	enemyWk.move.x = 0;
 	enemyWk.move.y = 0;
 	enemyWk.move.z = 0;
+
+	// 画面外判定
+	if (enemyWk.pos.x > MOVABLE_AREA)
+	{
+		enemyWk.pos.x = MOVABLE_AREA;
+	}
+	else if (enemyWk.pos.x < -MOVABLE_AREA)
+	{
+		enemyWk.pos.x = -MOVABLE_AREA;
+	}
+	if (enemyWk.pos.z > MOVABLE_AREA)
+	{
+		enemyWk.pos.z = MOVABLE_AREA;
+	}
+	else if (enemyWk.pos.z < -MOVABLE_AREA)
+	{
+		enemyWk.pos.z = -MOVABLE_AREA;
+	}
 
 	// 移動中のエフェクトの発生
 	if (enemyWk.Animation->CurrentAnimID == Frontwalk || enemyWk.Animation->CurrentAnimID == Backwalk ||

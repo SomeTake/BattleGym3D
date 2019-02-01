@@ -15,6 +15,8 @@
 #include "meshwall.h"
 #include "particle.h"
 #include "knockout.h"
+#include "redgauge.h"
+#include "sound.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -49,6 +51,7 @@ HRESULT InitPlayer(int type)
 	playerWk.graceflag = false;
 	playerWk.graceframe = 0;
 	playerWk.gracetype = Idle;
+	playerWk.damagecount = 0;
 
 	if (type == 0)
 	{
@@ -205,7 +208,7 @@ HRESULT InitPlayer(int type)
 	}
 	else
 	{
-		playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, ANIM_SPD_1);
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, Data[Idle].Spd);
 	}
 
 	// 波動拳用バレットをセット
@@ -213,6 +216,9 @@ HRESULT InitPlayer(int type)
 
 	// 1P表示のビルボードを作成
 	InitPop(type, &playerWk.Popup, 0);
+
+	// エフェクトをセット
+	//InitEffect(type, &playerWk.effect);
 
 	return S_OK;
 }
@@ -236,6 +242,9 @@ void UninitPlayer(void)
 
 	// 1P表示をリリース
 	UninitPop(&playerWk.Popup);
+
+	// エフェクトをリリース
+	//UninitEffect(&playerWk.effect);
 }
 
 //=============================================================================
@@ -286,14 +295,21 @@ void UpdatePlayer(void)
 	PrintDebugProc("プレイヤー入力猶予フラグ %s\n", playerWk.graceflag ? "ON" : "OFF");
 	PrintDebugProc("使用しているパーティクルの数 %d\n", Num);
 #endif
+	// チュートリアル用
+	if (*Phase == PhaseTutorial)
+	{
+		REDGAUGE *RedWk = GetRedGauge();
+		SetupTutorial(&playerWk, RedWk);
+	}
 
-	if (*Phase != PhaseCountdown)
+	if (*Phase != PhaseCountdown && playerWk.HPzan > 0)
 	{
 		// 簡単入力&アニメーションの変更
 		EasyInput(&playerWk, 0);
-	}
 
-	// 本格入力
+		// 本格入力
+
+	}
 
 	// KO表示中は更新しない
 	if (*Phase == PhaseFinish && ko == false)
@@ -309,18 +325,19 @@ void UpdatePlayer(void)
 	// 勝利時
 	if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Animation->CurrentAnimID == Idle)
 	{
-		playerWk.Animation->ChangeAnimation(playerWk.Animation, Win, 1.5f);
+		playerWk.Animation->ChangeAnimation(playerWk.Animation, Win, Data[Win].Spd);
 	}
 
 	// 敗北時HP0になったらダウン
-	if (playerWk.HPzan <= 0)
+	if (playerWk.HPzan <= 0 && *Phase != PhaseTutorial)
 	{
 		playerWk.HPzan = 0;
 		// 強制的にアニメーション変更
 		if (playerWk.Animation->CurrentAnimID != Downpose)
 		{
-			playerWk.Animation->ChangeAnimation(playerWk.Animation, Downpose, 0.5f);
+			playerWk.Animation->ChangeAnimation(playerWk.Animation, Downpose, Data[Downpose].Spd);
 		}
+		PlaySound(SE_KO, 0, 0);
 		SetPhase(PhaseFinish);
 	}
 
@@ -357,6 +374,12 @@ void UpdatePlayer(void)
 
 	// 1P表示の位置更新
 	UpdatePop(&playerWk.Popup, playerWk.HitBall[Hips].pos);
+
+	// エフェクトの更新
+	if (playerWk.effect.use == true)
+	{
+		//UpdateEffect(&playerWk.effect);
+	}
 
 	// 影の位置設定
 	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
@@ -424,6 +447,12 @@ void DrawPlayer(void)
 
 	// 1P表示用ビルボードを描画
 	DrawPop(&playerWk.Popup);
+
+	if (playerWk.effect.use == true)
+	{
+		// エフェクトの描画
+		//DrawEffect(&playerWk.effect);
+	}
 }
 
 //=============================================================================
@@ -506,6 +535,24 @@ void MovePlayer(void)
 	playerWk.move.x = 0.0f;
 	playerWk.move.y = 0.0f;
 	playerWk.move.z = 0.0f;	
+
+	// 画面外判定
+	if (playerWk.pos.x > MOVABLE_AREA)
+	{
+		playerWk.pos.x = MOVABLE_AREA;
+	}
+	else if (playerWk.pos.x < -MOVABLE_AREA)
+	{
+		playerWk.pos.x = -MOVABLE_AREA;
+	}
+	if (playerWk.pos.z > MOVABLE_AREA)
+	{
+		playerWk.pos.z = MOVABLE_AREA;
+	}
+	else if (playerWk.pos.z < -MOVABLE_AREA)
+	{
+		playerWk.pos.z = -MOVABLE_AREA;
+	}
 
 	// 移動中のエフェクトの発生
 	if (playerWk.Animation->CurrentAnimID == Frontwalk || playerWk.Animation->CurrentAnimID == Backwalk ||

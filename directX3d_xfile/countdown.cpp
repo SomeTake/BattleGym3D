@@ -7,6 +7,7 @@
 #include "main.h"
 #include "countdown.h"
 #include "sound.h"
+#include "modeselect.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -76,6 +77,7 @@ void UninitCountdown(void)
 void UpdateCountdown(void)
 {
 	static bool flag = false;
+	bool next = GetNextPhase();
 
 	//カウントダウン音
 	if (flag == false)
@@ -109,9 +111,18 @@ void UpdateCountdown(void)
 	// 秒数が0になったらバトル開始
 	if (CountdownSecond > FULL_COUNTDOWN - 1)
 	{
-		PlaySound(BGM_BATTLE, 1, 1);
-		SetPhase(PhaseGame);
-		flag = false;
+		if (next == false)
+		{
+			PlaySound(BGM_BATTLE, 1, 1);
+			SetPhase(PhaseGame);
+			flag = false;
+		}
+		else if (next == true)
+		{
+			PlaySound(BGM_TRAINING, 1, 1);
+			SetPhase(PhaseTraining);
+			flag = false;
+		}
 	}
 }
 

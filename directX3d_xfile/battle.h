@@ -7,11 +7,13 @@
 #ifndef _BATTLE_H_
 #define _BATTLE_H_
 
-// 構造体に必要なヘッダー
+// 構造体やプロトタイプ宣言に必要なヘッダー
 #include "D3DXAnimation.h"
 #include "ball.h"
 #include "hadou.h"
 #include "pop.h"
+#include "redgauge.h"
+#include "effect.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -29,33 +31,25 @@
 #define	RATE_MOVE_MODEL		(0.20f)										// 移動慣性係数
 #define	RATE_ROTATE_MODEL	(0.20f)										// 回転慣性係数
 
+#define MOVABLE_AREA	(385.0f)										// 動き回れるフィールドの広さ
+
 // バトル関係
+// その他モーションごとの詳細データは下のData構造体配列で管理
 #define MAX_DISTANCE						(250.0f)					// プレイヤー間の最大距離（これ以上は遠ざかれない）
 #define MIN_DISTANCE						(30.0f)						// プレイヤー間の最小距離（これ以上は近づけない）
 #define FULL_HP								(1000)						// ゲージの最大値
 #define FULL_SPGAUGE						(1000)						// ゲージの最大値
 #define FULL_SCORE							(99999)						// スコアの最大数
-#define DAMAGE_PUNCHI						(40)						// ダメージ量
-#define DAMAGE_KICK							(50)						// ダメージ量
-#define DAMAGE_HADOU						(100)						// ダメージ量
-#define DAMAGE_SHORYU						(120)						// ダメージ量
-#define DAMAGE_SPATTACK						(400)						// ダメージ量
-#define DAMAGE_THROW						(150)						// ダメージ量
 #define FIRE_FRAME							(25)						// 波動拳の発射タイミング
 #define THROW_FRAME							(180)						// 投げアニメーションの途中でダメージを与える＆相手のアニメーションを変更させるタイミング
 #define GRACE_VALUE							(3)							// 入力猶予の範囲フレーム数
+#define HPHEAL								(10)						// チュートリアルモードでのHPの回復量
 
 // 当たり判定
 #define BODY_RADIUS							(10.0f)						// 体の当たり判定の半径
 #define ARM_RADIUS							(5.0f)						// 手の当たり判定の半径
 #define FOOT_RADIUS							(7.0f)						// 足の当たり判定の半径
 #define THROW_VALUE							(40.0f)						// 投げの当たる範囲
-
-// アニメーションスピード
-#define ANIM_SPD_05							(0.5f)
-#define ANIM_SPD_1							(1.0f)
-#define ANIM_SPD_15							(1.5f)
-#define ANIM_SPD_2							(2.0f)
 
 //*****************************************************************************
 // グローバル変数
@@ -82,6 +76,8 @@ typedef struct {
 	int					gracetype;			// 入力猶予の種類
 	int					graceframe;			// 入力猶予の時間
 	bool				graceflag;			// 入力猶予の有効フラグ
+	int					damagecount;		// ダメージを回復するカウント
+	EFFECT				effect;				// エフェクトのビルボード
 }CHARA;
 
 // キャラクターのアニメーション番号
@@ -130,6 +126,37 @@ enum CharaStateNum
 	Win,
 	Miss,
 	ThrowedPose,
+	AnimMax,
+};
+
+// バトル用データ構造体
+typedef struct
+{
+	int Damage;
+	float Spd;
+}BATTLEDATA;
+
+// バトル用データ構造体配列
+static BATTLEDATA Data[AnimMax] = {
+	{0, 1.0f},	// Idle
+{ 0, 2.0f },	// Frontwalk
+{ 0, 2.0f },	// Backwalk
+{ 0, 2.0f },	// Rightstep
+{ 0, 2.0f },	// Leftstep
+{ 0, 1.0f },	// Guard
+{ 0, 1.0f },	// Damage
+{ 0, 1.0f },	// Down
+{ 0, 1.0f },	// Downpose
+{ 0, 1.5f },	// Getup
+{ 40, 1.5f },	// Punchi
+{ 50, 1.5f },	// Kick
+{ 100, 2.0f },	// Hadou
+{ 120, 1.5f },	// Shoryu
+{ 400, 1.5f },	// SPattack
+{ 150, 1.0f },	// Throw
+{ 0, 1.5f },	// Win
+{ 0, 1.0f },	// Miss
+{ 0, 1.0f },	// Throwpose
 };
 
 // 当たり判定を発生させる場所
@@ -175,10 +202,12 @@ enum CharaHitNum
 bool HitBC(D3DXVECTOR3 AttackPos, D3DXVECTOR3 DefendPos, float AttackRange, float DefendRange);	// バウンディングサークル当たり判定
 bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara);		// キャラクター同士の当たり判定
 void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// 攻撃が当たったときの動き
-void SubDamage(CHARA *Chara, int add);							// ダメージを与える
+void SubDamage(CHARA *Chara, int sub);							// ダメージを与える
 void AddSpGauge(CHARA *Chara, int add);							// SPゲージの増減
 void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// 波動拳の当たり判定
 void EasyInput(CHARA *Chara, int ControllerNum);				// 簡単操作
 void AddScore(CHARA *Chara, int add);							// スコアの追加
+void BattleAI(CHARA *AIChara, CHARA *AnotherChara);				// バトル用AI
+void SetupTutorial(CHARA *Chara, REDGAUGE *Gauge);				// チュートリアルモードでのキャラクターのHPなどの管理
 
 #endif

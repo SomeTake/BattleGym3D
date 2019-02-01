@@ -5,6 +5,7 @@
 //
 //=============================================================================
 #include "main.h"
+#include "redgauge.h"
 #include "eredgauge.h"
 #include "enemy.h"
 
@@ -17,7 +18,7 @@
 //*****************************************************************************
 LPDIRECT3DTEXTURE9		g_pD3DTextureERedGauge = NULL;		// テクスチャへのポインタ
 
-EREDGAUGE eredgauge[EREDGAUGE_MAX];
+REDGAUGE eredgauge[EREDGAUGE_MAX];
 
 //=============================================================================
 // 初期化処理
@@ -175,7 +176,10 @@ void SetVertexERedGauge(void)
 	eredgauge->vertexWk[3].vtx = D3DXVECTOR3(eredgauge->pos.x + EREDGAUGE_SIZE_X * ((float)eredgauge->value / (float)enemy->HP), eredgauge->pos.y + EREDGAUGE_SIZE_Y, eredgauge->pos.z);
 }
 
-EREDGAUGE *GetERedGauge(int eno)
+//=============================================================================
+// 赤ゲージのエネミー側ゲッター
+//=============================================================================
+REDGAUGE *GetERedGauge(void)
 {
-	return &eredgauge[eno];
+	return &eredgauge[0];
 }

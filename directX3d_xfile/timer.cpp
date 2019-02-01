@@ -92,7 +92,7 @@ void UpdateTimer(void)
 	int phase = *GetPhase();
 
 	//60ƒtƒŒ[ƒ€‚Å1•bŒo‰ß‚³‚¹‚é
-	if (phase == PhaseGame)
+	if (phase == PhaseGame || phase == PhaseTraining)
 	{
 		TimerFrame++;
 	}

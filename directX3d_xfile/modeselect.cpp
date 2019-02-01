@@ -28,6 +28,7 @@ MODESELECT modeselectWk[MODESELECT_MAX];				// 構造体
 int titleselect = 0;									// タイトル画面でモードセレクトを行うための変数
 int pauseselect = 0;									// ポーズ画面でモードセレクトを行うための変数
 int buttoncount = 0;									// 擬似的にボタンリピートを作るためのカウント
+bool nextphase;											// カウントダウンフェーズが終了後をトレーニングモードにするかVSモードにするか
 
 //=============================================================================
 // 初期化処理
@@ -48,6 +49,7 @@ HRESULT InitModeselect(int type)
 
 	titleselect = 0;
 	pauseselect = 0;
+	nextphase = false;
 
 	// 初期化処理
 	for (int i = 0; i < MODESELECT_MAX; i++, modeselect++)
@@ -152,9 +154,9 @@ void UpdateModeselect(void)
 			{
 				PlaySound(SE_SELECT1, 0, 0);
 				StopSound(BGM_TITLE, 0);
-				PlaySound(BGM_TRAINING, 1, 1);
 				ReInit();
-				SetPhase(PhaseTraining);
+				SetPhase(PhaseCountdown);
+				nextphase = true;
 			}
 			else if (titleselect == 2)
 			{
@@ -162,6 +164,7 @@ void UpdateModeselect(void)
 				StopSound(BGM_TITLE, 0);
 				ReInit();
 				SetPhase(PhaseCountdown);
+				nextphase = false;
 			}
 			else if (titleselect == 3)
 			{
@@ -229,7 +232,7 @@ void UpdateModeselect(void)
 			{
 				PlaySound(SE_SELECT1, 0, 0);
 				ReInit();
-				SetPhase(PhaseTraining);
+				SetPhase(PhaseCountdown);
 				PlaySound(BGM_TRAINING, 0, 1);
 			}
 			else if (pauseselect == 2)
@@ -443,4 +446,12 @@ void SetReflectModeselect(float per)
 MODESELECT *GetModeselect(int no)
 {
 	return(&modeselectWk[no]);
+}
+
+//=============================================================================
+// 次のフェーズを取得するフラグ
+//=============================================================================
+bool GetNextPhase(void)
+{
+	return nextphase;
 }

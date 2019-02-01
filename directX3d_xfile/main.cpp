@@ -43,7 +43,6 @@
 #include "sound.h"
 #include "meshwall.h"
 #include "thanks.h"
-#include "effect.h"
 #include "skybox.h"
 #include "ball.h"
 #include "battle.h"
@@ -436,7 +435,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitShadow(0);
 	InitPlayer(0);
 	InitEnemy(0);
-	InitEffect(0);
 	InitScore(0);
 	InitEScore(0);
 	InitFrame(0);
@@ -507,7 +505,6 @@ void Uninit(void)
 	UninitMeshField();
 	UninitMeshWall();
 	UninitShadow();
-	UninitEffect();
 	UninitScore();
 	UninitEScore();
 	UninitFrame();
@@ -608,11 +605,9 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateTutorial();
 		UpdateMeshField();
 		UpdateMeshWall();
-		UpdatePlayer();
 		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateEffect();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -632,13 +627,12 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateERedGauge();
 		UpdateMeshField();
 		UpdateMeshWall();
-		UpdatePlayer();
 		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateEffect();
 		UpdateParticle();
 		UpdateSkyBox();
+		UpdateTimer();
 
 		break;
 
@@ -674,7 +668,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateMeshWall();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateEffect();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -687,7 +680,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateEffect();
 		UpdateScore();
 		UpdateEScore();
 		UpdateGauge();
@@ -725,7 +717,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateMeshWall();
 		UpdateCamera();
 		UpdateShadow();
-		UpdateEffect();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -797,7 +788,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -810,6 +800,7 @@ void Draw(int no)
 			DrawGauge();
 			DrawEGauge();
 			DrawFrame();
+			DrawTimer();
 
 			//画面下のUI
 			DrawSpGauge();
@@ -826,7 +817,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -856,7 +846,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -893,7 +882,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -906,6 +894,7 @@ void Draw(int no)
 			DrawGauge();
 			DrawEGauge();
 			DrawFrame();
+			DrawTimer();
 
 			//画面下のUI
 			DrawSpGauge();
@@ -927,7 +916,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -960,7 +948,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -992,7 +979,6 @@ void Draw(int no)
 			DrawMeshWall();
 
 			//エフェクト
-			DrawEffect();
 			DrawParticle();
 
 			// キャラクター等
@@ -1110,7 +1096,6 @@ void ReInit(void)
 	InitPlayer(1);
 	InitEnemy(1);
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 1);
-	InitEffect(1);
 	InitScore(1);
 	InitEScore(1);
 	InitFrame(1);

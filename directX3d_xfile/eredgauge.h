@@ -21,16 +21,6 @@
 #define TIME_ANIMATION_EREDGAUGE	(4)										// アニメーションの切り替わるカウント
 #define EREDGAUGE_MAX				(1)										// ゲージの個数
 
-//HPゲージの構造体
-typedef struct {
-	VERTEX_2D				vertexWk[NUM_VERTEX];			// 頂点情報格納ワーク
-	D3DXVECTOR3				pos;							// ポリゴンの移動量
-	int						CountAnim;						// アニメーションカウント
-	int						PatternAnim;					// アニメーションパターンナンバー
-	bool					use;							// プレイヤーの使用判定
-	int						value;							// 赤ゲージをHPゲージと合わせるときに増減させる
-}EREDGAUGE;
-
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -41,6 +31,6 @@ void DrawERedGauge(void);
 HRESULT MakeVertexERedGauge(void);
 void SetTextureERedGauge(int cntPattern);
 void SetVertexERedGauge(void);
-EREDGAUGE *GetERedGauge(int eno);		// EREDGAUGE構造体のゲッター
+REDGAUGE *GetERedGauge(void);		// EREDGAUGE構造体のゲッター
 
 #endif

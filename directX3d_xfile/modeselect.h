@@ -45,5 +45,6 @@ HRESULT MakeVertexModeselect(int no);
 void SetTextureModeselect(int cntPattern);
 void SetVertexModeselect(void);
 void SetReflectModeselect(float per);		// 透明度の設定
+bool GetNextPhase(void);					// 次のフェーズを選択するフラグ
 
 #endif

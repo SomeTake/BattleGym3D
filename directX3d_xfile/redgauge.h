@@ -41,5 +41,6 @@ void DrawRedGauge(void);
 HRESULT MakeVertexRedGauge(void);
 void SetTextureRedGauge(int cntPattern);
 void SetVertexRedGauge(void);
+REDGAUGE *GetRedGauge(void);
 
 #endif
