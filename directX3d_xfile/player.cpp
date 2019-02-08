@@ -152,26 +152,11 @@ HRESULT InitPlayer(int type)
 		}
 		playerWk.Animation->CurrentAnimID = Idle;
 
-		// アニメーション感の補完を設定
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Idle, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Frontwalk, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Backwalk, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Rightstep, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Leftstep, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Guard, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Damage, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Down, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Downpose, 1.0f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Getup, 1.0f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Punchi, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Kick, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Hadou, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Shoryu, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, SPattack, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Throw, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Win, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, Miss, 0.1f);
-		playerWk.Animation->SetShiftTime(playerWk.Animation, ThrowedPose, 0.1f);
+		// アニメーション間の補完を設定
+		for (int i = 0; i < AnimMax; i++)
+		{
+			playerWk.Animation->SetShiftTime(playerWk.Animation, i, Data[i].ShiftTime);
+		}
 
 		// 当たり判定用ボールを生成
 		D3DXMATRIX Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[Hips]);
@@ -285,6 +270,12 @@ void UpdatePlayer(void)
 		SubDamage(enemyWk, -FULL_HP);
 	}
 
+	// 入力モードの切替
+	if (GetKeyboardTrigger(DIK_9))
+	{
+		playerWk.CommandInput = playerWk.CommandInput ? false : true;
+	}
+
 	int Num = NumParticle();
 
 	// デバッグ表示
@@ -294,6 +285,7 @@ void UpdatePlayer(void)
 	PrintDebugProc("ワイヤーフレーム表示 キーボード:0 = ON or OFF\n");
 	PrintDebugProc("プレイヤー入力猶予フラグ %s\n", playerWk.graceflag ? "ON" : "OFF");
 	PrintDebugProc("使用しているパーティクルの数 %d\n", Num);
+	PrintDebugProc("現在の入力モード Player:%s 切り替え9キー\n", playerWk.CommandInput ? "CommandInput" : "EasyInput");
 #endif
 	// チュートリアル用
 	if (*Phase == PhaseTutorial)
@@ -304,11 +296,15 @@ void UpdatePlayer(void)
 
 	if (*Phase != PhaseCountdown && playerWk.HPzan > 0)
 	{
-		// 簡単入力&アニメーションの変更
-		EasyInput(&playerWk, 0);
-
-		// 本格入力
-
+		// 入力切替
+		if (playerWk.CommandInput == false)
+		{
+			EasyInput(&playerWk, 0);
+		}
+		else if (playerWk.CommandInput == true)
+		{
+			CommandInput(&playerWk, 0);
+		}
 	}
 
 	// KO表示中は更新しない
@@ -338,6 +334,8 @@ void UpdatePlayer(void)
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Downpose, Data[Downpose].Spd);
 		}
 		PlaySound(SE_KO, 0, 0);
+		StopSound(BGM_BATTLE, 0);
+		StopSound(BGM_TRAINING, 0);
 		SetPhase(PhaseFinish);
 	}
 
@@ -374,12 +372,6 @@ void UpdatePlayer(void)
 
 	// 1P表示の位置更新
 	UpdatePop(&playerWk.Popup, playerWk.HitBall[Hips].pos);
-
-	// エフェクトの更新
-	if (playerWk.effect.use == true)
-	{
-		//UpdateEffect(&playerWk.effect);
-	}
 
 	// 影の位置設定
 	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
@@ -448,11 +440,6 @@ void DrawPlayer(void)
 	// 1P表示用ビルボードを描画
 	DrawPop(&playerWk.Popup);
 
-	if (playerWk.effect.use == true)
-	{
-		// エフェクトの描画
-		//DrawEffect(&playerWk.effect);
-	}
 }
 
 //=============================================================================
@@ -514,9 +501,10 @@ void MovePlayer(void)
 		break;
 	}
 
-	// 攻撃モーション時以外に中心を向く
+	// 攻撃時&ダウン時以外に中心を向く
 	if (playerWk.Animation->CurrentAnimID == Punchi || playerWk.Animation->CurrentAnimID == Kick 
-		|| playerWk.Animation->CurrentAnimID == Hadou || playerWk.Animation->CurrentAnimID == Shoryu)
+		|| playerWk.Animation->CurrentAnimID == Hadou || playerWk.Animation->CurrentAnimID == Shoryu
+		|| playerWk.Animation->CurrentAnimID == Down || playerWk.Animation->CurrentAnimID == Downpose)
 	{
 	}
 	else

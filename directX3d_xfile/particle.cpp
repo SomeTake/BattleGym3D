@@ -119,6 +119,7 @@ void UpdateParticle(void)
 
 	for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++, particle++)
 	{
+		// 使用しているもののみ更新
 		if (particle->bUse == true)
 		{
 			// パーティクルの動き
@@ -130,20 +131,25 @@ void UpdateParticle(void)
 			//	ReleaseShadow(particle->nIdxShadow);
 			//}
 
+			// 運動量に合わせて動く
 			particle->pos.x += particle->move.x;
 			particle->pos.z += particle->move.z;
 
+			// 透明度を減衰値に合わせて追加
 			particle->col.a -= particle->DecAlpha;
 			if (particle->col.a <= 0.0f)
 			{
+				// 全て透明になったら使用をやめる
 				particle->col.a = 0.0f;
 				particle->bUse = false;
 			}
+			// 色の設定
 			SetColorParticle(nCntParticle,
 				D3DXCOLOR(Particle->col.r, particle->col.b,
 					particle->col.b, particle->col.a));
 
-			particle->time;
+			// 表示時間の更新
+			particle->time--;
 			if (particle->time <= 0)
 			{
 				particle->bUse = false;
@@ -356,7 +362,15 @@ void DrawParticle(void)
 			matrix.view = cameraWk->mtxView;
 
 			// ポリゴンを正面に向ける
-
+			particle->mtxWorld._11 = matrix.view._11;
+			particle->mtxWorld._12 = matrix.view._21;
+			particle->mtxWorld._13 = matrix.view._31;
+			particle->mtxWorld._21 = matrix.view._12;
+			particle->mtxWorld._22 = matrix.view._22;
+			particle->mtxWorld._23 = matrix.view._32;
+			particle->mtxWorld._31 = matrix.view._13;
+			particle->mtxWorld._32 = matrix.view._23;
+			particle->mtxWorld._33 = matrix.view._33;
 
 #if 1
 			// 逆行列をもとめる
@@ -589,4 +603,145 @@ int NumParticle(void)
 	}
 
 	return Num;
+}
+
+//=============================================================================
+// 攻撃ヒット時に使用するパーティクルエフェクト
+//=============================================================================
+void SetHitParticle(D3DXVECTOR3 AttackPos)
+{
+	D3DXVECTOR3 pos = AttackPos;
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.30f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.15f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.07f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, PARTICLE_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, 0.0f),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, 0.0f),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, 0.0f),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, 0.0f, ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, 0.0f, ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, 0.0f, ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(0.0f, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(0.0f, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(0.0f, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, 0.0f),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, 0.0f),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, 0.0f),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, 0.0f, -ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, 0.0f, -ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, 0.0f, -ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(0.0f, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(0.0f, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(0.0f, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, 0.0f, 0.0f),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, 0.0f, 0.0f),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, 0.0f, 0.0f),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(0.0f, ATTACK_MOVE, 0.0f),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(0.0f, ATTACK_MOVE, 0.0f),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(0.0f, ATTACK_MOVE, 0.0f),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, 0.0f, 0.0f),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, 0.0f, 0.0f),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, 0.0f, 0.0f),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(0.0f, -ATTACK_MOVE, 0.0f),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(0.0f, -ATTACK_MOVE, 0.0f),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(0.0f, -ATTACK_MOVE, 0.0f),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, -ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, -ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, -ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, -ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, -ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, -ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(ATTACK_MOVE, -ATTACK_MOVE, -ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.30f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.15f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+	SetParticle(pos, D3DXVECTOR3(-ATTACK_MOVE, -ATTACK_MOVE, ATTACK_MOVE),
+		SAND(0.07f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
 }

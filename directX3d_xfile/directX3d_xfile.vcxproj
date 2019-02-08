@@ -148,10 +148,10 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="company.h" />
     <ClInclude Include="countdown.h" />
+    <ClInclude Include="cursor.h" />
     <ClInclude Include="D3DXAnimation.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="drawgame.h" />
-    <ClInclude Include="effect.h" />
     <ClInclude Include="egauge.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="eredgauge.h" />
@@ -164,6 +164,7 @@
     <ClInclude Include="hadou.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="inputselect.h" />
     <ClInclude Include="knockout.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
@@ -197,10 +198,10 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="company.cpp" />
     <ClCompile Include="countdown.cpp" />
+    <ClCompile Include="cursor.cpp" />
     <ClCompile Include="D3DXAnimation.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="drawgame.cpp" />
-    <ClCompile Include="effect.cpp" />
     <ClCompile Include="egauge.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="eredgauge.cpp" />
@@ -212,6 +213,7 @@
     <ClCompile Include="gauge.cpp" />
     <ClCompile Include="hadou.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="inputselect.cpp" />
     <ClCompile Include="knockout.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />

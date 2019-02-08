@@ -31,6 +31,12 @@
     <Filter Include="ヘッダー ファイル\2DUI">
       <UniqueIdentifier>{9d5735c0-239b-4f4f-9e53-15843e066c92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\2DUI\Battle">
+      <UniqueIdentifier>{34350f6b-b687-4e51-a098-1ca79800cf18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\2DUI\Battle">
+      <UniqueIdentifier>{3aaffd83-24b7-4cbb-8cee-2f5f38c76d7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAllocateHierarchy.h">
@@ -87,13 +93,7 @@
     <ClInclude Include="drawgame.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
-    <ClInclude Include="escore.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
     <ClInclude Include="evaluation.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="frame.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="knockout.h">
@@ -109,15 +109,6 @@
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="resultstar.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="score.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="spmax.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="title.h">
@@ -150,29 +141,47 @@
     <ClInclude Include="pop.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
-    <ClInclude Include="gauge.h">
+    <ClInclude Include="inputselect.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
     <ClInclude Include="egauge.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="spgauge.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="espgauge.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
-    </ClInclude>
-    <ClInclude Include="framespgauge.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
     </ClInclude>
     <ClInclude Include="eredgauge.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="escore.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="espgauge.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="frame.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="framespgauge.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="gauge.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
     </ClInclude>
     <ClInclude Include="redgauge.h">
-      <Filter>ヘッダー ファイル\2DUI</Filter>
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="effect.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
+    <ClInclude Include="score.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="spgauge.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="spmax.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="cursor.h">
+      <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -209,13 +218,7 @@
     <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
-    <ClCompile Include="escore.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
     <ClCompile Include="evaluation.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="frame.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="knockout.cpp">
@@ -251,15 +254,6 @@
     <ClCompile Include="resultstar.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
-    <ClCompile Include="score.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="spmax.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="timer.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
     <ClCompile Include="title.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
@@ -290,29 +284,47 @@
     <ClCompile Include="pop.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
-    <ClCompile Include="gauge.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="framespgauge.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="espgauge.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="eredgauge.cpp">
+    <ClCompile Include="inputselect.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="egauge.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="spgauge.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
+    <ClCompile Include="eredgauge.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="escore.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="espgauge.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="frame.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="framespgauge.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="gauge.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
     </ClCompile>
     <ClCompile Include="redgauge.cpp">
-      <Filter>ソース ファイル\2DUI</Filter>
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="effect.cpp">
-      <Filter>ソース ファイル\3D</Filter>
+    <ClCompile Include="score.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="spgauge.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="spmax.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="cursor.cpp">
+      <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

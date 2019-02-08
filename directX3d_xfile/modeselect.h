@@ -33,6 +33,23 @@ typedef struct	// モードセレクト構造体
 
 } MODESELECT;
 
+// タイトル画面のセレクト番号
+enum TitleNum
+{
+	NextTutorial,
+	NextTraining,
+	NextGame,
+	NextThankyou
+};
+
+// ポーズ画面のセレクト番号
+enum PauseNum
+{
+	NextPauseGame,
+	NextPauseCountdown,
+	NextPauseTitle,
+};
+
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -45,6 +62,7 @@ HRESULT MakeVertexModeselect(int no);
 void SetTextureModeselect(int cntPattern);
 void SetVertexModeselect(void);
 void SetReflectModeselect(float per);		// 透明度の設定
-bool GetNextPhase(void);					// 次のフェーズを選択するフラグ
+int GetNextPhase(void);						// 次のフェーズを選択する番号
+bool GetTitleSelect(void);					// タイトル画面のセレクトが終了しているかどうか取得
 
 #endif

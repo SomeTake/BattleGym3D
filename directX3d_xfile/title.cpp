@@ -6,6 +6,9 @@
 //=============================================================================
 #include "main.h"
 #include "title.h"
+#include "inputselect.h"
+#include "modeselect.h"
+#include "cursor.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -36,6 +39,10 @@ HRESULT InitTitle(int type)
 	// 頂点情報の作成
 	MakeVertexTitle();
 
+	InitInputselect(type);
+
+	InitCursor(type);
+
 	return S_OK;
 }
 
@@ -49,6 +56,10 @@ void UninitTitle(void)
 		g_pD3DTextureTitleLogo->Release();
 		g_pD3DTextureTitleLogo = NULL;
 	}
+
+	UninitInputselect();
+
+	UninitCursor();
 }
 
 //=============================================================================
@@ -56,6 +67,14 @@ void UninitTitle(void)
 //=============================================================================
 void UpdateTitle(void)
 {
+	bool SelectOk = GetTitleSelect();
+
+	if (SelectOk == true)
+	{
+		UpdateInputselect();
+
+		UpdateCursor();
+	}
 }
 
 //=============================================================================
@@ -64,7 +83,8 @@ void UpdateTitle(void)
 void DrawTitle(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-	
+	bool SelectOk = GetTitleSelect();
+
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
@@ -73,6 +93,13 @@ void DrawTitle(void)
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, g_vertexWkTitleLogo, sizeof(VERTEX_2D));
+
+	if (SelectOk == true)
+	{
+		DrawCursor();
+
+		DrawInputselect();
+	}
 }
 
 //=============================================================================

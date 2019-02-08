@@ -5,10 +5,11 @@
 //
 //=============================================================================
 #include "main.h"
-#include "battle.h"
 #include "input.h"
+#include "battle.h"
 #include "camera.h"
 #include "sound.h"
+#include "particle.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -164,7 +165,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddSpGauge(AttackChara, Data[Punchi].Damage);
 			AddSpGauge(DefendChara, Data[Punchi].Damage);
 			// エフェクト
-			//SetEffect(&AttackChara->effect, AttackChara->HitBall[RightHand].pos, EFFECT_WIDTH, EFFECT_HEIGHT, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), hit00);
+			//SetHitParticle(AttackChara->HitBall[LeftHand].pos);
 			// スコア
 			AddScore(AttackChara, Data[Punchi].Damage);
 			// 音
@@ -936,7 +937,7 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		AttackFlag = false;
 	}
 
-	int ActRand = rand() % 300;
+	int ActRand = rand() % 100;
 
 	switch (AIChara->Animation->CurrentAnimID)
 	{
@@ -1190,4 +1191,519 @@ void SetupTutorial(CHARA *Chara, REDGAUGE *Gauge)
 
 	Chara->SP = FULL_SPGAUGE;
 
+}
+
+//=============================================================================
+// コマンド操作モード
+//=============================================================================
+void CommandInput(CHARA *Chara, int ControllerNum)
+{
+	int input = 0;
+
+	// 押したボタンに応じて、ビットをオンにする
+	if (IsButtonTriggered(ControllerNum, BUTTON_UP))
+	{
+		input |= BUTTON_UP;
+	}
+	else if (IsButtonTriggered(ControllerNum, BUTTON_DOWN))
+	{
+		input |= BUTTON_DOWN;
+	}
+	// 2P側は左右を反転する
+	else if (IsButtonPressed(ControllerNum, BUTTON_RIGHT))
+	{
+		input |= (ControllerNum == 0 ? BUTTON_RIGHT : BUTTON_LEFT);
+	}
+	else if (IsButtonPressed(ControllerNum, BUTTON_LEFT))
+	{
+		input |= (ControllerNum == 0 ? BUTTON_LEFT : BUTTON_RIGHT);
+	}
+	else if (IsButtonPressed(ControllerNum, BUTTON_LEFTUP))
+	{
+		input |= (ControllerNum == 0 ? BUTTON_LEFTUP : BUTTON_RIGHTUP);
+	}
+	else if (IsButtonPressed(ControllerNum, BUTTON_RIGHTUP))
+	{
+		input |= (ControllerNum == 0 ? BUTTON_RIGHTUP : BUTTON_LEFTUP);
+	}
+	else if (IsButtonPressed(ControllerNum, BUTTON_LEFTDOWN))
+	{
+		input |= (ControllerNum == 0 ? BUTTON_LEFTDOWN : BUTTON_RIGHTDOWN);
+	}
+	else if (IsButtonPressed(ControllerNum, BUTTON_RIGHTDOWN))
+	{
+		input |= (ControllerNum == 0 ? BUTTON_RIGHTDOWN : BUTTON_LEFTDOWN);
+	}
+
+	// 何も十字キーを入力していない場合
+	if(!IsButtonTriggered(ControllerNum, BUTTON_UP) && !IsButtonTriggered(ControllerNum, BUTTON_DOWN)
+		&& !IsButtonTriggered(ControllerNum, BUTTON_RIGHT) && !IsButtonTriggered(ControllerNum, BUTTON_LEFT)
+		&& !IsButtonTriggered(ControllerNum, BUTTON_RIGHTUP) && !IsButtonTriggered(ControllerNum, BUTTON_LEFTUP)
+		&& !IsButtonTriggered(ControllerNum, BUTTON_RIGHTDOWN) && !IsButtonTriggered(ControllerNum, BUTTON_LEFTDOWN))
+	{
+		input |= BUTTON_DEFAULT;
+	}
+
+	if (IsButtonTriggered(ControllerNum, BUTTON_A))
+	{
+		input |= BUTTON_A;
+	}
+	if (IsButtonTriggered(ControllerNum, BUTTON_B))
+	{
+		input |= BUTTON_B;
+	}
+	if (IsButtonTriggered(ControllerNum, BUTTON_C))
+	{
+		input |= BUTTON_C;
+	}
+	if (IsButtonTriggered(ControllerNum, BUTTON_X))
+	{
+		input |= BUTTON_X;
+	}
+	if (IsButtonTriggered(ControllerNum, BUTTON_START))
+	{
+		input |= BUTTON_START;
+	}
+	if (IsButtonTriggered(ControllerNum, BUTTON_M))
+	{
+		input |= BUTTON_M;
+	}
+	if (IsButtonPressed(ControllerNum, BUTTON_Y))
+	{
+		input |= BUTTON_Y;
+	}
+
+	// 配列を一つずつ右に移動させる
+	for (int i = INPUT_MAX - 1; i > 0; i--)
+	{
+		Chara->Input[i] = Chara->Input[i - 1];
+	}
+
+	// 配列0番に今入力したものを入れる
+	Chara->Input[0] = input;
+
+	switch (Chara->Animation->CurrentAnimID)
+	{
+	case Idle:
+		// 入力されたコマンドに応じてアニメーションを変更させる
+		// 攻撃
+		// SP技
+		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
+		}
+		// 投げ
+		else if (CheckInput(Chara->Input, CMD_Throw) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
+		}
+		// 波動拳
+		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
+		}
+		// 昇竜拳
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
+		}
+		// パンチ
+		else if (CheckInput(Chara->Input, CMD_Punchi) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, Data[Punchi].Spd);
+		}
+		// キック
+		else if (CheckInput(Chara->Input, CMD_Kick) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, Data[Kick].Spd);
+		}
+		// ガード
+		else if (CheckInput(Chara->Input, CMD_Guard) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Guard, Data[Guard].Spd);
+		}
+
+		// 移動
+		if (CheckInput(Chara->Input, CMD_Frontwalk) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Frontwalk, Data[Frontwalk].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Backwalk) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Backwalk, Data[Backwalk].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Rightstep) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Rightstep, Data[Rightstep].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Leftstep) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Leftstep, Data[Leftstep].Spd);
+		}
+
+		break;
+	case Frontwalk:
+		// 入力されたコマンドに応じてアニメーションを変更させる
+		// 攻撃
+		// SP技
+		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
+		}
+		// 投げ
+		else if (CheckInput(Chara->Input, CMD_Throw) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
+		}
+		// 波動拳
+		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
+		}
+		// 昇竜拳
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
+		}
+		// パンチ
+		else if (CheckInput(Chara->Input, CMD_Punchi) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, Data[Punchi].Spd);
+		}
+		// キック
+		else if (CheckInput(Chara->Input, CMD_Kick) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, Data[Kick].Spd);
+		}
+		// ガード
+		else if (CheckInput(Chara->Input, CMD_Guard) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Guard, Data[Guard].Spd);
+		}
+
+		// 移動
+		else if (CheckInput(Chara->Input, CMD_Frontwalk) == true)
+		{
+		}
+		else if (CheckInput(Chara->Input, CMD_Backwalk) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Backwalk, Data[Backwalk].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Rightstep) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Rightstep, Data[Rightstep].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Leftstep) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Leftstep, Data[Leftstep].Spd);
+		}
+
+		// キーリリースで待機に戻る
+		else
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+		}
+		break;
+	case Backwalk:
+		// 入力されたコマンドに応じてアニメーションを変更させる
+		// 攻撃
+		// SP技
+		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
+		}
+		// 投げ
+		else if(CheckInput(Chara->Input, CMD_Throw) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
+		}
+		// 波動拳
+		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
+		}
+		// 昇竜拳
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
+		}
+		// パンチ
+		else if (CheckInput(Chara->Input, CMD_Punchi) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, Data[Punchi].Spd);
+		}
+		// キック
+		else if (CheckInput(Chara->Input, CMD_Kick) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, Data[Kick].Spd);
+		}
+		// ガード
+		else if (CheckInput(Chara->Input, CMD_Guard) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Guard, Data[Guard].Spd);
+		}
+
+		// 移動
+		else if (CheckInput(Chara->Input, CMD_Frontwalk) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Frontwalk, Data[Frontwalk].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Backwalk) == true)
+		{
+		}
+		else if (CheckInput(Chara->Input, CMD_Rightstep) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Rightstep, Data[Rightstep].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Leftstep) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Leftstep, Data[Leftstep].Spd);
+		}
+
+		// キーリリースで待機に戻る
+		else
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+		}
+		break;
+	case Rightstep:
+		// SP技
+		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
+		}
+		// 波動拳
+		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
+		}
+		// 昇竜拳
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
+		}
+
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Leftstep:
+		// SP技
+		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
+		}
+		// 波動拳
+		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
+		}
+		// 昇竜拳
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
+		}
+
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Guard:
+		// 攻撃
+		// SP技
+		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
+		}
+		// 投げ
+		else if (CheckInput(Chara->Input, CMD_Throw) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
+		}
+		// 波動拳
+		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
+		}
+		// 昇竜拳
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
+		}
+		// パンチ
+		else if (CheckInput(Chara->Input, CMD_Punchi) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Punchi, Data[Punchi].Spd);
+		}
+		// キック
+		else if (CheckInput(Chara->Input, CMD_Kick) == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Kick, Data[Kick].Spd);
+		}
+		else if (CheckInput(Chara->Input, CMD_Guard) == true)
+		{
+		}
+		// キーリリースで待機に戻る
+		else
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+		}
+		break;
+	case Damage:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Down:
+		// アニメーション終了で起き上がりに移行
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Downpose, Data[Downpose].Spd);
+			// モーション座標にキャラクター座標を合わせる
+			Chara->pos = D3DXVECTOR3(Chara->HitBall[Hips].pos.x, 0.0f, Chara->HitBall[Hips].pos.z);
+		}
+		break;
+	case Downpose:
+		// アニメーション終了で起き上がりに移行
+		if (Chara->Animation->MotionEnd == true && Chara->HPzan > 0)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Getup, Data[Getup].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Getup:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Punchi:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Kick:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Hadou:
+		// 一定フレーム経過で弾が出る
+		Chara->HadouBullet.frame++;
+		if (Chara->HadouBullet.frame == FIRE_FRAME)
+		{
+			SetHadou(&Chara->HadouBullet, Chara->HitBall, Chara->rot);
+		}
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HadouBullet.frame = 0;
+			Chara->HitFrag = false;
+		}
+		break;
+	case Shoryu:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case SPattack:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Throw:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case Win:
+		break;
+	case Miss:
+		// アニメーション終了で待機に戻る
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HitFrag = false;
+		}
+		break;
+	case ThrowedPose:
+		if (Chara->Animation->PreventAnimID != ThrowedPose)
+		{
+			Chara->framecount++;
+		}
+		// 一定時間経過で相手の投げアニメーションに合わせてダウンモーションに移行
+		if (Chara->framecount == THROW_FRAME)
+		{
+			SubDamage(Chara, Data[Throw].Damage);
+			Chara->Animation->ChangeAnimation(Chara->Animation, Down, Data[Down].Spd);
+			Chara->framecount = 0;
+		}
+		break;
+	}
+
+}
+
+//=============================================================================
+// 入力の判定
+//=============================================================================
+bool CheckInput(int Input[],const int *command)
+{
+	int i = 0;
+
+	// コマンドの最後を調べる
+	while (!(command[i] & INPUT_END))
+	{
+		i++;
+	}
+
+	// 入力猶予時間を設定する
+	int time = command[i] & ~INPUT_END;
+	
+	// 入力履歴を調べて、コマンドが正しく入力されていればtrueされていなかったらfalse
+	for (i--; i >= 0; i--)
+	{
+		int input = command[i];
+		// 履歴からコマンドの要素を探す
+		int j = 0;
+		while (j < INPUT_MAX && (Input[j] & input) != input)
+		{
+			j++;
+		}
+
+		// 入力時間を超えたり、履歴の末尾に達したらfalse
+		if (j >= time || j == INPUT_MAX)
+		{
+			return false;
+		}
+	}
+
+	// コマンドの全ての要素を見つけることができたらtrue
+	return true;
 }

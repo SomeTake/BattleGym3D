@@ -12,7 +12,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_PARTICLE		"data/TEXTURE/shadow000.jpg"		// 読み込むテクスチャファイル名
+#define	TEXTURE_PARTICLE		"data/TEXTURE/effect000.jpg"		// 読み込むテクスチャファイル名
 #define	PARTICLE_WIDTH			(10.0f)								// 木の幅
 #define	PARTICLE_HEIGHT			(10.0f)								// 木の高さ
 #define	VALUE_MOVE_PARTICLE		(3.00f)								// 移動速度
@@ -27,6 +27,16 @@
 #define PARTICLE_TIME_A			(20)
 #define PARTICLE_TIME_B			(40)
 #define PARTICLE_TIME_C			(60)
+
+// 攻撃時
+#define ATTACK_MOVE				(1.0f)
+#define ATTACK_SIZE_A			D3DXVECTOR2(5.0f, 5.0f)
+#define ATTACK_SIZE_B			D3DXVECTOR2(3.0f, 3.0f)
+#define ATTACK_SIZE_C			D3DXVECTOR2(1.0f, 1.0f)
+#define ATTACK_TIME_A			(5)
+#define ATTACK_TIME_B			(8)
+#define ATTACK_TIME_C			(10)
+
 
 //*****************************************************************************
 // 構造体定義
@@ -61,6 +71,7 @@ void SetColorParticle(int nIdxParticle, D3DXCOLOR col);
 
 int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, float fHeight, int Time);	// パーティクル発生用(場所, 移動量, 色, 幅, 高さ, 時間)
 PARTICLE *GetParticle(int no);																				// パーティクル構造体のゲッター
-int NumParticle(void);	// 使用している数を数える
+int NumParticle(void);						// 使用している数を数える
+void SetHitParticle(D3DXVECTOR3 AttackPos);	// 攻撃ヒット時に使用するパーティクルエフェクト
 
 #endif

@@ -23,16 +23,6 @@
 #define STICK_LEFT		0x00000004l	// 方向キー左(.IX<0)
 #define STICK_RIGHT		0x00000008l	// 方向キー右(.IX>0)
 
-//十字キー
-#define BUTTON_UP		0x00004000l
-#define BUTTON_DOWN		(BUTTON_UP<<1)
-#define BUTTON_RIGHT	(BUTTON_DOWN<<1)
-#define BUTTON_LEFT		(BUTTON_RIGHT<<1)
-#define BUTTON_RIGHTUP	(BUTTON_LEFT<<1)
-#define BUTTON_RIGHTDOWN	(BUTTON_RIGHTUP<<1)
-#define BUTTON_LEFTDOWN	(BUTTON_RIGHTDOWN<<1)
-#define BUTTON_LEFTUP	(BUTTON_LEFTDOWN<<1)
-
 #define BUTTON_A		0x00000010l	// Ａボタン(.rgbButtons[0]&0x80) PS4コン□ボタン
 #define BUTTON_B		0x00000020l	// Ｂボタン(.rgbButtons[1]&0x80) PS4コン×ボタン
 #define BUTTON_C		0x00000040l	// Ｃボタン(.rgbButtons[2]&0x80) PS4コン△ボタン
@@ -45,8 +35,24 @@
 #define BUTTON_M		0x00002000l	// Ｍボタン(.rgbButtons[9]&0x80) PS4コンOPTIONSボタン
 #define GAMEPADMAX		2			// 同時に接続するジョイパッドの最大数をセット
 
+//十字キー
+#define BUTTON_UP		0x00004000l
+#define BUTTON_DOWN		(BUTTON_UP<<1)
+#define BUTTON_RIGHT	(BUTTON_DOWN<<1)
+#define BUTTON_LEFT		(BUTTON_RIGHT<<1)
+#define BUTTON_RIGHTUP	(BUTTON_LEFT<<1)
+#define BUTTON_RIGHTDOWN	(BUTTON_RIGHTUP<<1)
+#define BUTTON_LEFTDOWN	(BUTTON_RIGHTDOWN<<1)
+#define BUTTON_LEFTUP	(BUTTON_LEFTDOWN<<1)
+
+#define BUTTON_DEFAULT	(BUTTON_LEFTUP)		// 十字キーデフォルト状態
+
+#define INPUT_END		(BUTTON_DEFAULT<<1)	// 入力終了
+
 #define REPEAT_FRAME	(16)		// ボタンのリピートを有効にするまでのフレーム数
 #define REPEAT_TIME		(6)			// リピートが有効になってからのフレーム数
+
+#define INPUT_MAX		(60)		// 入力用配列の最大数
 
 //*****************************************************************************
 // プロトタイプ宣言

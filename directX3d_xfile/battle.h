@@ -13,7 +13,7 @@
 #include "hadou.h"
 #include "pop.h"
 #include "redgauge.h"
-#include "effect.h"
+#include "input.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -77,7 +77,8 @@ typedef struct {
 	int					graceframe;			// 入力猶予の時間
 	bool				graceflag;			// 入力猶予の有効フラグ
 	int					damagecount;		// ダメージを回復するカウント
-	EFFECT				effect;				// エフェクトのビルボード
+	int					Input[INPUT_MAX];	// 入力処理用配列
+	bool				CommandInput;		// コマンド入力をONにするフラグ（true:CommandInput、false:EasyInput）
 }CHARA;
 
 // キャラクターのアニメーション番号
@@ -126,38 +127,53 @@ enum CharaStateNum
 	Win,
 	Miss,
 	ThrowedPose,
-	AnimMax,
+	AnimMax,			// アニメーションの最大数
 };
 
 // バトル用データ構造体
 typedef struct
 {
-	int Damage;
-	float Spd;
+	int Damage;			// そのモーションによって与えるダメージ量（SPゲージ、スコアなども）
+	float Spd;			// アニメーションを再生するスピード
+	float ShiftTime;	// アニメーションの切り替え時間
 }BATTLEDATA;
 
 // バトル用データ構造体配列
 static BATTLEDATA Data[AnimMax] = {
-	{0, 1.0f},	// Idle
-{ 0, 2.0f },	// Frontwalk
-{ 0, 2.0f },	// Backwalk
-{ 0, 2.0f },	// Rightstep
-{ 0, 2.0f },	// Leftstep
-{ 0, 1.0f },	// Guard
-{ 0, 1.0f },	// Damage
-{ 0, 1.0f },	// Down
-{ 0, 1.0f },	// Downpose
-{ 0, 1.5f },	// Getup
-{ 40, 1.5f },	// Punchi
-{ 50, 1.5f },	// Kick
-{ 100, 2.0f },	// Hadou
-{ 120, 1.5f },	// Shoryu
-{ 400, 1.5f },	// SPattack
-{ 150, 1.0f },	// Throw
-{ 0, 1.5f },	// Win
-{ 0, 1.0f },	// Miss
-{ 0, 1.0f },	// Throwpose
+	{0, 1.5f, 0.1f },	// Idle
+{ 0, 2.0f, 0.1f },		// Frontwalk
+{ 0, 2.0f, 0.1f },		// Backwalk
+{ 0, 2.0f, 0.1f },		// Rightstep
+{ 0, 2.0f, 0.1f },		// Leftstep
+{ 0, 1.0f, 0.1f },		// Guard
+{ 0, 1.5f, 0.1f },		// Damage
+{ 0, 1.5f, 0.1f },		// Down
+{ 0, 1.0f, 0.1f },		// Downpose
+{ 0, 1.5f, 0.1f },		// Getup
+{ 40, 2.5f, 0.1f },		// Punchi
+{ 50, 2.5f, 0.1f },		// Kick
+{ 100, 3.0f, 0.1f },	// Hadou
+{ 120, 2.0f, 0.1f },	// Shoryu
+{ 400, 1.5f, 0.1f },	// SPattack
+{ 150, 1.0f, 0.1f },	// Throw
+{ 0, 2.0f, 0.1f },		// Win
+{ 0, 1.5f, 0.1f },		// Miss
+{ 0, 1.0f, 0.1f },		// Throwpose
 };
+
+// コマンド表（優先度高い順）
+static const int
+CMD_SPattack[] = { BUTTON_RIGHT, BUTTON_RIGHTDOWN, BUTTON_DOWN, BUTTON_LEFTDOWN, BUTTON_LEFT, BUTTON_A | BUTTON_B, INPUT_END | 20 },
+CMD_Hadou[] = { BUTTON_DOWN, BUTTON_RIGHTDOWN, BUTTON_RIGHT, BUTTON_A, INPUT_END | 15 },
+CMD_Shoryu[] = { BUTTON_RIGHT, BUTTON_DOWN, BUTTON_RIGHTDOWN, BUTTON_B, INPUT_END | 15 },
+CMD_Throw[] = { BUTTON_A | BUTTON_B, INPUT_END | 3 },
+CMD_Punchi[] = { BUTTON_A, INPUT_END | 1 },
+CMD_Kick[] = { BUTTON_B, INPUT_END | 1 },
+CMD_Guard[] = { BUTTON_Y, INPUT_END | 1 },
+CMD_Frontwalk[] = { BUTTON_RIGHT, INPUT_END | 1 },
+CMD_Backwalk[] = { BUTTON_LEFT, INPUT_END | 1 },
+CMD_Rightstep[] = { BUTTON_DEFAULT, BUTTON_DOWN, BUTTON_DEFAULT, BUTTON_DOWN, INPUT_END | 10 },
+CMD_Leftstep[] = { BUTTON_DEFAULT, BUTTON_UP, BUTTON_DEFAULT, BUTTON_UP, INPUT_END | 10 };
 
 // 当たり判定を発生させる場所
 static const char* CharaHitPos[] =
@@ -195,7 +211,6 @@ enum CharaHitNum
 	RightLeg
 };
 
-
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -209,5 +224,7 @@ void EasyInput(CHARA *Chara, int ControllerNum);				// 簡単操作
 void AddScore(CHARA *Chara, int add);							// スコアの追加
 void BattleAI(CHARA *AIChara, CHARA *AnotherChara);				// バトル用AI
 void SetupTutorial(CHARA *Chara, REDGAUGE *Gauge);				// チュートリアルモードでのキャラクターのHPなどの管理
+void CommandInput(CHARA *Chara, int ControllerNum);				// コマンド操作
+bool CheckInput(int Input[], const int *command);				// 入力判定
 
 #endif

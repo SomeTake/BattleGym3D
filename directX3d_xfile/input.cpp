@@ -525,6 +525,13 @@ void UpdatePad(void)
 		// 十字キー左上
 		if (dijs.rgdwPOV[0] == 31500)		padState[i] |= BUTTON_LEFTUP;
 
+		//// 十字キーデフォルト
+		//if (dijs.rgdwPOV[0] != 0 && dijs.rgdwPOV[0] != 45000 && dijs.rgdwPOV[0] != 9000 && dijs.rgdwPOV[0] != 13500 && dijs.rgdwPOV[0] != 18000
+		//	&& dijs.rgdwPOV[0] != 22500 && dijs.rgdwPOV[0] != 27000 && dijs.rgdwPOV[0] != 31500)
+		//{
+		//	padState[i] |= BUTTON_DEFAULT;
+		//}
+
 		//* Ａボタン
 		if (dijs.rgbButtons[0] & 0x80)	padState[i] |= BUTTON_A;
 		//* Ｂボタン

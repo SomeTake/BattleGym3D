@@ -585,8 +585,8 @@ if (GetKeyboardTrigger(DIK_0))
 
 	case PhaseTitle:
 		UpdateBlackscreen();
-		UpdateModeselect();
 		UpdateTitle();
+		UpdateModeselect();
 
 		break;
 
@@ -605,7 +605,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateTutorial();
 		UpdateMeshField();
 		UpdateMeshWall();
-		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
 		UpdateParticle();
@@ -627,7 +626,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateERedGauge();
 		UpdateMeshField();
 		UpdateMeshWall();
-		UpdateEnemy();
 		UpdateCamera();
 		UpdateShadow();
 		UpdateParticle();

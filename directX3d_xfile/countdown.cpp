@@ -77,7 +77,7 @@ void UninitCountdown(void)
 void UpdateCountdown(void)
 {
 	static bool flag = false;
-	bool next = GetNextPhase();
+	int next = GetNextPhase();
 
 	//カウントダウン音
 	if (flag == false)
@@ -111,13 +111,13 @@ void UpdateCountdown(void)
 	// 秒数が0になったらバトル開始
 	if (CountdownSecond > FULL_COUNTDOWN - 1)
 	{
-		if (next == false)
+		if (next == NextGame)
 		{
 			PlaySound(BGM_BATTLE, 1, 1);
 			SetPhase(PhaseGame);
 			flag = false;
 		}
-		else if (next == true)
+		else if (next == NextTraining)
 		{
 			PlaySound(BGM_TRAINING, 1, 1);
 			SetPhase(PhaseTraining);

@@ -134,23 +134,10 @@ HRESULT InitEnemy(int type)
 		enemyWk.Animation->CurrentAnimID = Idle;
 		
 		// アニメーション間の補完を設定
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Idle, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Frontwalk, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Backwalk, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Rightstep, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Leftstep, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Guard, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Damage, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Down, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Downpose, 1.0f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Getup, 1.0f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Punchi, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Kick, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Hadou, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Shoryu, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, SPattack, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Throw, 0.1f);
-		enemyWk.Animation->SetShiftTime(enemyWk.Animation, Win, 0.1f);
+		for (int i = 0; i < AnimMax; i++)
+		{
+			enemyWk.Animation->SetShiftTime(enemyWk.Animation, i, Data[i].ShiftTime);
+		}
 
 		// 当たり判定用ボールを生成
 		D3DXMATRIX Mtx = GetBoneMatrix(enemyWk.Animation, "Hips");
@@ -231,10 +218,17 @@ void UpdateEnemy(void)
 	bool ko = GetKnockout()->pushok;
 
 #ifdef _DEBUG
+	// 入力モードの切替
+	if (GetKeyboardTrigger(DIK_8))
+	{
+		enemyWk.CommandInput = enemyWk.CommandInput ? false : true;
+	}
 	// デバッグ表示
 	PrintDebugProc("エネミー座標 X:%f Y:%f Z:%f\n", enemyWk.pos.x, enemyWk.pos.y, enemyWk.pos.z);
 	PrintDebugProc("エネミー角度 X:%f Y:%f Z:%f\n", enemyWk.rot.x, enemyWk.rot.y, enemyWk.rot.z);
 	PrintDebugProc("エネミーアニメーション番号 No:%d\n", enemyWk.Animation->CurrentAnimID);
+	PrintDebugProc("現在の入力モード Enemy:%s 切り替え8キー\n", enemyWk.CommandInput ? "CommandInput" : "EasyInput");
+
 #endif
 	// チュートリアル用
 	if (*Phase == PhaseTutorial)
@@ -245,11 +239,15 @@ void UpdateEnemy(void)
 
 	if (*Phase != PhaseCountdown && *Phase != PhaseTraining && enemyWk.HPzan > 0)
 	{
-		// 簡単入力
-		EasyInput(&enemyWk, 1);
-
-		// 本格入力
-
+		// 入力切替
+		if (enemyWk.CommandInput == false)
+		{
+			EasyInput(&enemyWk, 1);
+		}
+		else if (enemyWk.CommandInput == true)
+		{
+			CommandInput(&enemyWk, 1);
+		}
 	}
 
 	if (*Phase == PhaseTraining)
@@ -284,6 +282,8 @@ void UpdateEnemy(void)
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose, Data[Downpose].Spd);
 		}
 		PlaySound(SE_KO, 0, 0);
+		StopSound(BGM_BATTLE, 0);
+		StopSound(BGM_TRAINING, 0);
 		SetPhase(PhaseFinish);
 	}
 
@@ -451,9 +451,10 @@ void MoveEnemy(void)
 		break;
 	}
 
-	// 攻撃時以外常に中心を向く
-	if (enemyWk.Animation->CurrentAnimID == Punchi || enemyWk.Animation->CurrentAnimID == Kick ||
-		enemyWk.Animation->CurrentAnimID == Hadou || enemyWk.Animation->CurrentAnimID == Shoryu)
+	// 攻撃時&ダウン時以外常に中心を向く
+	if (enemyWk.Animation->CurrentAnimID == Punchi || enemyWk.Animation->CurrentAnimID == Kick 
+		|| enemyWk.Animation->CurrentAnimID == Hadou || enemyWk.Animation->CurrentAnimID == Shoryu
+		|| enemyWk.Animation->CurrentAnimID == Down || enemyWk.Animation->CurrentAnimID == Downpose)
 	{
 
 	}
