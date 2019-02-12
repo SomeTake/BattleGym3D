@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AI.h" />
     <ClInclude Include="ball.h" />
     <ClInclude Include="battle.h" />
     <ClInclude Include="blackscreen.h" />
@@ -179,7 +180,6 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="resultstar.h" />
     <ClInclude Include="score.h" />
-    <ClInclude Include="shadow.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="spgauge.h" />
@@ -191,6 +191,7 @@
     <ClInclude Include="winner.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI.cpp" />
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="battle.cpp" />
     <ClCompile Include="blackscreen.cpp" />
@@ -228,7 +229,6 @@
     <ClCompile Include="result.cpp" />
     <ClCompile Include="resultstar.cpp" />
     <ClCompile Include="score.cpp" />
-    <ClCompile Include="shadow.cpp" />
     <ClCompile Include="skybox.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="spgauge.cpp" />

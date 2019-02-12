@@ -293,7 +293,6 @@ e_Exit:
 
 //--------------------------------------------------------------------------------------
 // Name: AllocateHierarchy::DestroyFrame()
-// Desc: 釋放框架
 //--------------------------------------------------------------------------------------
 HRESULT AllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 {
@@ -305,7 +304,6 @@ HRESULT AllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameToFree)
 
 //--------------------------------------------------------------------------------------
 // Name: AllocateHierarchy::DestroyMeshContainer()
-// Desc: 釋放網格容器
 //--------------------------------------------------------------------------------------
 HRESULT AllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
 {

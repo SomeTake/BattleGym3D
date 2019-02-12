@@ -10,7 +10,6 @@
 #include "meshfield.h"
 #include "camera.h"
 #include "light.h"
-#include "shadow.h"
 #include "enemy.h"
 #include "debugproc.h"
 #include "particle.h"
@@ -432,7 +431,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -WALL_POS), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
 	
-	InitShadow(0);
 	InitPlayer(0);
 	InitEnemy(0);
 	InitScore(0);
@@ -504,7 +502,6 @@ void Uninit(void)
 	UninitEnemy();
 	UninitMeshField();
 	UninitMeshWall();
-	UninitShadow();
 	UninitScore();
 	UninitEScore();
 	UninitFrame();
@@ -606,7 +603,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateMeshField();
 		UpdateMeshWall();
 		UpdateCamera();
-		UpdateShadow();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -627,7 +623,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateMeshField();
 		UpdateMeshWall();
 		UpdateCamera();
-		UpdateShadow();
 		UpdateParticle();
 		UpdateSkyBox();
 		UpdateTimer();
@@ -665,7 +660,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateMeshField();
 		UpdateMeshWall();
 		UpdateCamera();
-		UpdateShadow();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -677,7 +671,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdatePlayer();
 		UpdateEnemy();
 		UpdateCamera();
-		UpdateShadow();
 		UpdateScore();
 		UpdateEScore();
 		UpdateGauge();
@@ -714,7 +707,6 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateMeshField();
 		UpdateMeshWall();
 		UpdateCamera();
-		UpdateShadow();
 		UpdateParticle();
 		UpdateSkyBox();
 
@@ -1093,7 +1085,6 @@ MATRIX *GetMatrix(void)
 //=============================================================================
 void ReInit(void)
 {
-	InitShadow(1);
 	// ÉÇÉfÉãÇÃèâä˙âª
 	InitPlayer(1);
 	InitEnemy(1);

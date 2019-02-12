@@ -8,7 +8,6 @@
 #include "player.h"
 #include "input.h"
 #include "camera.h"
-#include "shadow.h"
 #include "D3DXAnimation.h"
 #include "enemy.h"
 #include "debugproc.h"
@@ -159,37 +158,12 @@ HRESULT InitPlayer(int type)
 		}
 
 		// 当たり判定用ボールを生成
-		D3DXMATRIX Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[Hips]);
-		InitBall(0, &playerWk.HitBall[0], Mtx, BODY_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[Neck]);
-		InitBall(0, &playerWk.HitBall[1], Mtx, BODY_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[Head]);
-		InitBall(0, &playerWk.HitBall[2], Mtx, BODY_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[LeftShoulder]);
-		InitBall(0, &playerWk.HitBall[3], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[RightShoulder]);
-		InitBall(0, &playerWk.HitBall[4], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[LeftHand]);
-		InitBall(0, &playerWk.HitBall[5], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[RightHand]);
-		InitBall(0, &playerWk.HitBall[6], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[LeftFoot]);
-		InitBall(0, &playerWk.HitBall[7], Mtx, FOOT_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[RightFoot]);
-		InitBall(0, &playerWk.HitBall[8], Mtx, FOOT_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[LeftForeArm]);
-		InitBall(0, &playerWk.HitBall[9], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[RightForeArm]);
-		InitBall(0, &playerWk.HitBall[10], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[LeftLeg]);
-		InitBall(0, &playerWk.HitBall[11], Mtx, FOOT_RADIUS);
-		Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[RightLeg]);
-		InitBall(0, &playerWk.HitBall[12], Mtx, FOOT_RADIUS);
+		for (int i = 0; i < HIT_CHECK_NUM; i++)
+		{
+			D3DXMATRIX Mtx = GetBoneMatrix(playerWk.Animation, CharaHitPos[i]);
+			InitBall(0, &playerWk.HitBall[i], Mtx, HitRadius[i]);
+		}
 
-		// 影の生成
-		playerWk.IdxShadow = CreateShadow(playerWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
-		playerWk.SizeShadow = 25.0f;
-		playerWk.ColShadow = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f);	
 	}
 	else
 	{
@@ -201,9 +175,6 @@ HRESULT InitPlayer(int type)
 
 	// 1P表示のビルボードを作成
 	InitPop(type, &playerWk.Popup, 0);
-
-	// エフェクトをセット
-	//InitEffect(type, &playerWk.effect);
 
 	return S_OK;
 }
@@ -227,9 +198,6 @@ void UninitPlayer(void)
 
 	// 1P表示をリリース
 	UninitPop(&playerWk.Popup);
-
-	// エフェクトをリリース
-	//UninitEffect(&playerWk.effect);
 }
 
 //=============================================================================
@@ -339,9 +307,17 @@ void UpdatePlayer(void)
 		SetPhase(PhaseFinish);
 	}
 
-	// 座標移動
-	MovePlayer();
-	
+	// KO表示中は更新しない
+	if (*Phase == PhaseFinish && ko == false)
+	{
+
+	}
+	else
+	{
+		// 座標移動
+		MovePlayer();
+	}
+
 	// 当たり判定用ボール座標の更新
 	D3DXMATRIX Mtx;
 	for (int i = 0; i < HIT_CHECK_NUM; i++)
@@ -372,11 +348,6 @@ void UpdatePlayer(void)
 
 	// 1P表示の位置更新
 	UpdatePop(&playerWk.Popup, playerWk.HitBall[Hips].pos);
-
-	// 影の位置設定
-	SetPositionShadow(playerWk.IdxShadow, D3DXVECTOR3(playerWk.pos.x, 0.1f, playerWk.pos.z));
-	SetVertexShadow(playerWk.IdxShadow, playerWk.SizeShadow, playerWk.SizeShadow);
-	SetColorShadow(playerWk.IdxShadow, playerWk.ColShadow);
 }
 
 //=============================================================================
@@ -389,6 +360,9 @@ void DrawPlayer(void)
 	D3DXMATRIX ScaleMatrix, RotMatrix, TransMatrix, CapsuleMatrix, BallMatrix;
 	bool RenderState = GetRenderState();
 
+
+	// 影の描画
+	playerWk.scl.y = 0.01f;
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&WorldMtxPlayer);
 
@@ -422,6 +396,41 @@ void DrawPlayer(void)
 	// マテリアルをデフォルトに戻す
 	pDevice->SetMaterial(&matDef);
 
+	playerWk.scl.y = 1.0f;
+
+	// ワールドマトリックスの初期化
+	D3DXMatrixIdentity(&WorldMtxPlayer);
+
+	// スケールを反映
+	D3DXMatrixScaling(&ScaleMatrix, playerWk.scl.x, playerWk.scl.y, playerWk.scl.z);
+	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &ScaleMatrix);
+
+	// 回転を反映
+	D3DXMatrixRotationYawPitchRoll(&ScaleMatrix, playerWk.rot.y, playerWk.rot.x, playerWk.rot.z);
+	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &ScaleMatrix);
+
+	// 移動を反映
+	D3DXMatrixTranslation(&TransMatrix, playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
+	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &TransMatrix);
+
+	// ワールドマトリックスの設定
+	pDevice->SetTransform(D3DTS_WORLD, &WorldMtxPlayer);
+
+	// 現在のマテリアルを取得
+	pDevice->GetMaterial(&matDef);
+
+	// 描画モードをワイヤーフレームに切り替える
+	if (RenderState == true)
+	{
+		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	}
+
+	// レンダリング
+	playerWk.Animation->DrawAnimation(playerWk.Animation, &WorldMtxPlayer);
+	
+	// マテリアルをデフォルトに戻す
+	pDevice->SetMaterial(&matDef);
+
 	if (RenderState == true)
 	{
 		for (int i = 0; i < HIT_CHECK_NUM; i++)
@@ -439,7 +448,6 @@ void DrawPlayer(void)
 
 	// 1P表示用ビルボードを描画
 	DrawPop(&playerWk.Popup);
-
 }
 
 //=============================================================================
@@ -497,6 +505,16 @@ void MovePlayer(void)
 		playerWk.move.x -= sinf(playerWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		playerWk.move.z -= cosf(playerWk.rot.y - D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		break;
+	case Shoryu:
+		playerWk.move.x -= sinf(playerWk.rot.y) * VALUE_FRONTWALK;
+		playerWk.move.z -= cosf(playerWk.rot.y) * VALUE_FRONTWALK;
+		// 相手に接触していた場合、相手を押す
+		if (PEdistance <= MIN_DISTANCE)
+		{
+			enemyWk->move.x -= sinf(enemyWk->rot.y + D3DX_PI) * VALUE_FRONTWALK;
+			enemyWk->move.z -= cosf(enemyWk->rot.y + D3DX_PI) * VALUE_FRONTWALK;
+		}
+		break;
 	default:
 		break;
 	}
@@ -545,31 +563,12 @@ void MovePlayer(void)
 	// 移動中のエフェクトの発生
 	if (playerWk.Animation->CurrentAnimID == Frontwalk || playerWk.Animation->CurrentAnimID == Backwalk ||
 		playerWk.Animation->CurrentAnimID == Rightstep || playerWk.Animation->CurrentAnimID == Leftstep)
-	{
-		D3DXVECTOR3 pos;
+	{		
+		// 右足
+		SetWalkParticle(D3DXVECTOR3(playerWk.HitBall[RightFoot].pos.x, -5.0f, playerWk.HitBall[RightFoot].pos.z));
 
-		pos.x = playerWk.HitBall[RightFoot].pos.x;
-		pos.y = -5.0f;
-		pos.z = playerWk.HitBall[RightFoot].pos.z;
-
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, PARTICLE_TIME_C);
-
-		pos.x = playerWk.HitBall[LeftFoot].pos.x;
-		pos.y = -5.0f;
-		pos.z = playerWk.HitBall[LeftFoot].pos.z;
-
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_C);
+		// 左足
+		SetWalkParticle(D3DXVECTOR3(playerWk.HitBall[LeftFoot].pos.x, -5.0f, playerWk.HitBall[LeftFoot].pos.z));
 
 	}
-
 }

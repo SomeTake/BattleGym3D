@@ -44,11 +44,6 @@
 #define THROW_FRAME							(180)						// 投げアニメーションの途中でダメージを与える＆相手のアニメーションを変更させるタイミング
 #define GRACE_VALUE							(3)							// 入力猶予の範囲フレーム数
 #define HPHEAL								(10)						// チュートリアルモードでのHPの回復量
-
-// 当たり判定
-#define BODY_RADIUS							(10.0f)						// 体の当たり判定の半径
-#define ARM_RADIUS							(5.0f)						// 手の当たり判定の半径
-#define FOOT_RADIUS							(7.0f)						// 足の当たり判定の半径
 #define THROW_VALUE							(40.0f)						// 投げの当たる範囲
 
 //*****************************************************************************
@@ -60,9 +55,6 @@ typedef struct {
 	D3DXVECTOR3			move;				// モデルの移動量
 	D3DXVECTOR3			rot;				// 現在の向き
 	D3DXVECTOR3			scl;				// モデルの大きさ(スケール)
-	int					IdxShadow;			// 影ID
-	float				SizeShadow;			// 影のサイズ
-	D3DXCOLOR			ColShadow;			// 影の色
 	int					HP;					// 体力
 	int					SP;					// SPゲージ
 	int					HPzan;				// 残り体力
@@ -208,7 +200,25 @@ enum CharaHitNum
 	LeftForeArm,
 	RightForeArm,
 	LeftLeg,
-	RightLeg
+	RightLeg,
+};
+
+// 当たり判定の半径（上の発生場所と連動）
+static float HitRadius[] = 
+{
+	10.0f,
+	10.0f,
+	10.0f,
+	5.0f,
+	5.0f,
+	5.0f,
+	5.0f,
+	7.0f,
+	7.0f,
+	5.0f,
+	5.0f,
+	7.0f,
+	7.0f
 };
 
 //*****************************************************************************

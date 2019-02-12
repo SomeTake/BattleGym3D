@@ -8,7 +8,6 @@
 #include "enemy.h"
 #include "input.h"
 #include "camera.h"
-#include "shadow.h"
 #include "D3DXAnimation.h"
 #include "debugproc.h"
 #include "player.h"
@@ -122,6 +121,11 @@ HRESULT InitEnemy(int type)
 		{
 			return E_FAIL;
 		}
+		// 投げスカり
+		if (FAILED(SetupCallbackKeyframes(enemyWk.Animation, CharaStateAnim[Miss])))
+		{
+			return E_FAIL;
+		}
 
 		// AnimationSetを初期化する
 		for (int i = 0; i < enemyWk.Animation->AnimSetNum; i++)
@@ -140,37 +144,12 @@ HRESULT InitEnemy(int type)
 		}
 
 		// 当たり判定用ボールを生成
-		D3DXMATRIX Mtx = GetBoneMatrix(enemyWk.Animation, "Hips");
-		InitBall(0, &enemyWk.HitBall[0], Mtx, BODY_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "Neck");
-		InitBall(0, &enemyWk.HitBall[1], Mtx, BODY_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "Head");
-		InitBall(0, &enemyWk.HitBall[2], Mtx, BODY_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "LeftShoulder");
-		InitBall(0, &enemyWk.HitBall[3], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "RightShoulder");
-		InitBall(0, &enemyWk.HitBall[4], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "LeftHand");
-		InitBall(0, &enemyWk.HitBall[5], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "RightHand");
-		InitBall(0, &enemyWk.HitBall[6], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "LeftFoot");
-		InitBall(0, &enemyWk.HitBall[7], Mtx, FOOT_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "RightFoot");
-		InitBall(0, &enemyWk.HitBall[8], Mtx, FOOT_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "LeftForeArm");
-		InitBall(0, &enemyWk.HitBall[9], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "RightForeArm");
-		InitBall(0, &enemyWk.HitBall[10], Mtx, ARM_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "LeftLeg");
-		InitBall(0, &enemyWk.HitBall[11], Mtx, FOOT_RADIUS);
-		Mtx = GetBoneMatrix(enemyWk.Animation, "RightLeg");
-		InitBall(0, &enemyWk.HitBall[12], Mtx, FOOT_RADIUS);
+		for (int i = 0; i < HIT_CHECK_NUM; i++)
+		{
+			D3DXMATRIX Mtx = GetBoneMatrix(enemyWk.Animation, CharaHitPos[i]);
+			InitBall(0, &enemyWk.HitBall[i], Mtx, HitRadius[i]);
+		}
 
-		// 影の生成
-		enemyWk.IdxShadow = CreateShadow(enemyWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
-		enemyWk.SizeShadow = 25.0f;
-		enemyWk.ColShadow = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.5f);
 	}
 	else
 	{
@@ -287,8 +266,16 @@ void UpdateEnemy(void)
 		SetPhase(PhaseFinish);
 	}
 
-	// 座標移動
-	MoveEnemy();
+	// KO表示中は更新しない
+	if (*Phase == PhaseFinish && ko == false)
+	{
+
+	}
+	else
+	{
+		// 座標移動
+		MoveEnemy();
+	}
 
 	// 当たり判定用ボール座標の更新
 	D3DXMATRIX Mtx;
@@ -321,10 +308,6 @@ void UpdateEnemy(void)
 	// 2P表示の位置更新
 	UpdatePop(&enemyWk.Popup, enemyWk.HitBall[Hips].pos);
 
-	// 影の位置設定
-	SetPositionShadow(enemyWk.IdxShadow, D3DXVECTOR3(enemyWk.pos.x, 0.1f, enemyWk.pos.z));
-	SetVertexShadow(enemyWk.IdxShadow, enemyWk.SizeShadow, enemyWk.SizeShadow);
-	SetColorShadow(enemyWk.IdxShadow, enemyWk.ColShadow);
 }
 
 //=============================================================================
@@ -447,6 +430,15 @@ void MoveEnemy(void)
 		enemyWk.move.x -= sinf(enemyWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		enemyWk.move.z -= cosf(enemyWk.rot.y + D3DX_PI * VALUE_HALF) * VALUE_ROTATE;
 		break;
+	case Shoryu:
+		enemyWk.move.x -= sinf(enemyWk.rot.y) * VALUE_FRONTWALK;
+		enemyWk.move.z -= cosf(enemyWk.rot.y) * VALUE_FRONTWALK;
+		// 相手に接触していた場合、相手を押す
+		if (PEdistance <= MIN_DISTANCE)
+		{
+			playerWk->move.x -= sinf(playerWk->rot.y + D3DX_PI) * VALUE_FRONTWALK;
+			playerWk->move.z -= cosf(playerWk->rot.y + D3DX_PI) * VALUE_FRONTWALK;
+		}
 	default:
 		break;
 	}
@@ -495,29 +487,11 @@ void MoveEnemy(void)
 	if (enemyWk.Animation->CurrentAnimID == Frontwalk || enemyWk.Animation->CurrentAnimID == Backwalk ||
 		enemyWk.Animation->CurrentAnimID == Rightstep || enemyWk.Animation->CurrentAnimID == Leftstep)
 	{
-		D3DXVECTOR3 pos;
+		// 右足
+		SetWalkParticle(D3DXVECTOR3(enemyWk.HitBall[RightFoot].pos.x, -5.0f, enemyWk.HitBall[RightFoot].pos.z));
 
-		pos.x = enemyWk.HitBall[RightFoot].pos.x;
-		pos.y = -5.0f;
-		pos.z = enemyWk.HitBall[RightFoot].pos.z;
-
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, PARTICLE_TIME_C);
-
-		pos.x = enemyWk.HitBall[LeftFoot].pos.x;
-		pos.y = -5.0f;
-		pos.z = enemyWk.HitBall[LeftFoot].pos.z;
-
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-			SAND(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_C);
+		// 左足
+		SetWalkParticle(D3DXVECTOR3(enemyWk.HitBall[LeftFoot].pos.x, -5.0f, enemyWk.HitBall[LeftFoot].pos.z));
 
 	}
 

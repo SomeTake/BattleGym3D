@@ -29,14 +29,15 @@
 #define PARTICLE_TIME_C			(60)
 
 // 攻撃時
-#define ATTACK_MOVE				(1.0f)
-#define ATTACK_SIZE_A			D3DXVECTOR2(5.0f, 5.0f)
+#define ATTACK_SIZE_A			D3DXVECTOR2(5.0f, 5.0f)		// 大きさ
 #define ATTACK_SIZE_B			D3DXVECTOR2(3.0f, 3.0f)
 #define ATTACK_SIZE_C			D3DXVECTOR2(1.0f, 1.0f)
-#define ATTACK_TIME_A			(5)
-#define ATTACK_TIME_B			(8)
-#define ATTACK_TIME_C			(10)
+#define ATTACK_TIME_A			(10)							// 発生時間
+#define ATTACK_TIME_B			(15)
+#define ATTACK_TIME_C			(20)
 
+#define ATTACK_PERTICLE_NUM		(100)						// 発生する数
+#define SP_PERTICLE_NUM			(30)
 
 //*****************************************************************************
 // 構造体定義
@@ -73,5 +74,7 @@ int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, 
 PARTICLE *GetParticle(int no);																				// パーティクル構造体のゲッター
 int NumParticle(void);						// 使用している数を数える
 void SetHitParticle(D3DXVECTOR3 AttackPos);	// 攻撃ヒット時に使用するパーティクルエフェクト
+void SetWalkParticle(D3DXVECTOR3 pos);		// 移動時に使用するパーティクルエフェクト
+void SetSPattackParticle(D3DXVECTOR3 pos);	// SP攻撃時に仕様するパーティクルエフェクト
 
 #endif

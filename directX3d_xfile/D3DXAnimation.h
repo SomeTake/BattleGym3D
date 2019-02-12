@@ -33,7 +33,7 @@ struct D3DXANIMATION
 	bool						MotionEnd;		// 今再生しているアニメーションは最後かどうか
 	bool						StopMove;		// キャラが移動を停止しているかどうか
 
-												// メンバー関数
+	// メンバ関数
 	HRESULT(*InitAnimation)(D3DXANIMATION* Animation, LPCSTR SetName, int Set_No);
 	void(*UninitAnimation)(D3DXANIMATION* Animation);
 	void(*UpdateAnimation)(D3DXANIMATION* Animation, float Time);

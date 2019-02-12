@@ -88,7 +88,13 @@
 #define GetMonitorRect(rc) SystemParametersInfo(SPI_GETWORKAREA, 0, rc, 0)	// モニター矩形
 
 // 色
-#define SAND(Alpha)					D3DXCOLOR(1.00f, 0.84f, 0.56f, Alpha)	// 砂色
+#define WHITE(Alpha)				D3DXCOLOR(1.00f, 1.00f, 1.00f, Alpha)	// 白
+#define RED(Alpha)					D3DXCOLOR(1.00f, 0.00f, 0.00f, Alpha)	// 赤
+#define GREEN(Alpha)				D3DXCOLOR(0.00f, 1.00f, 0.00f, Alpha)	// 青
+#define BLUE(Alpha)					D3DXCOLOR(0.00f, 0.00f, 1.00f, Alpha)	// 青
+#define VERMILION(Alpha)			D3DXCOLOR(1.00f, 0.20f, 0.00f, Alpha)	// 朱色
+#define ORANGE(Alpha)				D3DXCOLOR(1.00f, 0.40f, 0.00f, Alpha)	// オレンジ
+#define PURPLE(Alpha)				D3DXCOLOR(0.40f, 0.00f, 0.20f, Alpha)	// 紫
 
 // 上記２Ｄポリゴン頂点フォーマットに合わせた構造体を定義
 typedef struct

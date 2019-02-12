@@ -191,6 +191,8 @@ HRESULT UpdateKeyboard(void)
 
 	// デバイスからデータを取得
 	hr = g_pDIDevKeyboard->GetDeviceState(sizeof(g_keyState), g_keyState);
+	// ファイルから引き取ってきた1F分のデータをg_keyStateに入れる
+
 	if (SUCCEEDED(hr))
 	{
 		for (int cnt = 0; cnt < NUM_KEY_MAX; cnt++)

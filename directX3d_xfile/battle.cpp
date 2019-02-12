@@ -165,7 +165,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddSpGauge(AttackChara, Data[Punchi].Damage);
 			AddSpGauge(DefendChara, Data[Punchi].Damage);
 			// エフェクト
-			//SetHitParticle(AttackChara->HitBall[LeftHand].pos);
+			SetHitParticle(AttackChara->HitBall[LeftHand].pos);
 			// スコア
 			AddScore(AttackChara, Data[Punchi].Damage);
 			// 音
@@ -197,7 +197,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddSpGauge(AttackChara, Data[Kick].Damage);
 			AddSpGauge(DefendChara, Data[Kick].Damage);
 			// エフェクト
-
+			SetHitParticle(AttackChara->HitBall[RightFoot].pos);
 			// スコア
 			AddScore(AttackChara, Data[Kick].Damage);
 			// 音
@@ -231,7 +231,8 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddSpGauge(AttackChara, Data[Shoryu].Damage);
 			AddSpGauge(DefendChara, Data[Shoryu].Damage);
 			// エフェクト
-
+			SetHitParticle(AttackChara->HitBall[LeftFoot].pos);
+			SetHitParticle(AttackChara->HitBall[RightFoot].pos);
 			// スコア
 			AddScore(AttackChara, Data[Shoryu].Damage);
 			// 音
@@ -249,7 +250,8 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 		AddSpGauge(AttackChara, Data[SPattack].Damage);
 		AddSpGauge(DefendChara, Data[SPattack].Damage);
 		// エフェクト
-
+		SetHitParticle(AttackChara->HitBall[RightFoot].pos);
+		SetHitParticle(AttackChara->HitBall[LeftFoot].pos);
 		// スコア
 		AddScore(AttackChara, Data[SPattack].Damage);
 		// 音
@@ -849,6 +851,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case SPattack:
+		SetSPattackParticle(Chara->HitBall[RightFoot].pos);
+		SetSPattackParticle(Chara->HitBall[LeftFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1676,6 +1680,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 bool CheckInput(int Input[],const int *command)
 {
 	int i = 0;
+	int j = 0;
+
 
 	// コマンドの最後を調べる
 	while (!(command[i] & INPUT_END))
@@ -1690,8 +1696,8 @@ bool CheckInput(int Input[],const int *command)
 	for (i--; i >= 0; i--)
 	{
 		int input = command[i];
+
 		// 履歴からコマンドの要素を探す
-		int j = 0;
 		while (j < INPUT_MAX && (Input[j] & input) != input)
 		{
 			j++;
