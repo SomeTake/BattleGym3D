@@ -16,6 +16,7 @@
 #include "knockout.h"
 #include "redgauge.h"
 #include "sound.h"
+#include "shadow.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -175,6 +176,9 @@ HRESULT InitPlayer(int type)
 
 	// 1P表示のビルボードを作成
 	InitPop(type, &playerWk.Popup, 0);
+
+	// 影のセット
+	playerWk.ShadowIdx = SetShadow(playerWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 
 	return S_OK;
 }
@@ -348,6 +352,12 @@ void UpdatePlayer(void)
 
 	// 1P表示の位置更新
 	UpdatePop(&playerWk.Popup, playerWk.HitBall[Hips].pos);
+
+	// 影の更新
+	SetPositionShadow(playerWk.ShadowIdx, playerWk.pos);
+	SetVertexShadow(playerWk.ShadowIdx, SHADOW_SIZE_X, SHADOW_SIZE_Z);
+	SetColorShadow(playerWk.ShadowIdx, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
 }
 
 //=============================================================================
@@ -359,44 +369,6 @@ void DrawPlayer(void)
 	D3DMATERIAL9 matDef;
 	D3DXMATRIX ScaleMatrix, RotMatrix, TransMatrix, CapsuleMatrix, BallMatrix;
 	bool RenderState = GetRenderState();
-
-
-	// 影の描画
-	playerWk.scl.y = 0.01f;
-	// ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&WorldMtxPlayer);
-
-	// スケールを反映
-	D3DXMatrixScaling(&ScaleMatrix, playerWk.scl.x, playerWk.scl.y, playerWk.scl.z);
-	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &ScaleMatrix);
-
-	// 回転を反映
-	D3DXMatrixRotationYawPitchRoll(&ScaleMatrix, playerWk.rot.y, playerWk.rot.x, playerWk.rot.z);
-	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &ScaleMatrix);
-
-	// 移動を反映
-	D3DXMatrixTranslation(&TransMatrix, playerWk.pos.x, playerWk.pos.y, playerWk.pos.z);
-	D3DXMatrixMultiply(&WorldMtxPlayer, &WorldMtxPlayer, &TransMatrix);
-
-	// ワールドマトリックスの設定
-	pDevice->SetTransform(D3DTS_WORLD, &WorldMtxPlayer);
-
-	// 現在のマテリアルを取得
-	pDevice->GetMaterial(&matDef);
-
-	// 描画モードをワイヤーフレームに切り替える
-	if (RenderState == true)
-	{
-		pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	}
-
-	// レンダリング
-	playerWk.Animation->DrawAnimation(playerWk.Animation, &WorldMtxPlayer);
-
-	// マテリアルをデフォルトに戻す
-	pDevice->SetMaterial(&matDef);
-
-	playerWk.scl.y = 1.0f;
 
 	// ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&WorldMtxPlayer);

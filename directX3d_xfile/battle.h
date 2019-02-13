@@ -71,6 +71,7 @@ typedef struct {
 	int					damagecount;		// ダメージを回復するカウント
 	int					Input[INPUT_MAX];	// 入力処理用配列
 	bool				CommandInput;		// コマンド入力をONにするフラグ（true:CommandInput、false:EasyInput）
+	int					ShadowIdx;			// 使用する影の番号
 }CHARA;
 
 // キャラクターのアニメーション番号
@@ -164,8 +165,8 @@ CMD_Kick[] = { BUTTON_B, INPUT_END | 1 },
 CMD_Guard[] = { BUTTON_Y, INPUT_END | 1 },
 CMD_Frontwalk[] = { BUTTON_RIGHT, INPUT_END | 1 },
 CMD_Backwalk[] = { BUTTON_LEFT, INPUT_END | 1 },
-CMD_Rightstep[] = { BUTTON_DOWN, BUTTON_DEFAULT, BUTTON_DOWN, INPUT_END | 10 },
-CMD_Leftstep[] = { BUTTON_UP, BUTTON_DEFAULT, BUTTON_UP, INPUT_END | 10 };
+CMD_Rightstep[] = { BUTTON_DOWN, BUTTON_DEFAULT, BUTTON_DOWN, INPUT_END | 15 },
+CMD_Leftstep[] = { BUTTON_UP, BUTTON_DEFAULT, BUTTON_UP, INPUT_END | 15 };
 
 // 当たり判定を発生させる場所
 static const char* CharaHitPos[] =

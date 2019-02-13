@@ -16,6 +16,7 @@
 #include "knockout.h"
 #include "eredgauge.h"
 #include "sound.h"
+#include "shadow.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -162,6 +163,9 @@ HRESULT InitEnemy(int type)
 	// 2P表示のビルボードを作成
 	InitPop(type, &enemyWk.Popup, 1);
 
+	// 影のセット
+	enemyWk.ShadowIdx = SetShadow(enemyWk.pos, SHADOW_SIZE_X, SHADOW_SIZE_Z);
+
 	return S_OK;
 }
 
@@ -307,6 +311,11 @@ void UpdateEnemy(void)
 
 	// 2P表示の位置更新
 	UpdatePop(&enemyWk.Popup, enemyWk.HitBall[Hips].pos);
+
+	// 影の更新
+	SetPositionShadow(enemyWk.ShadowIdx, enemyWk.pos);
+	SetVertexShadow(enemyWk.ShadowIdx, SHADOW_SIZE_X, SHADOW_SIZE_Z);
+	SetColorShadow(enemyWk.ShadowIdx, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
 }
 

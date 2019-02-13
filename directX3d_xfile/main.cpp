@@ -45,6 +45,7 @@
 #include "skybox.h"
 #include "ball.h"
 #include "battle.h"
+#include "shadow.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -431,6 +432,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitMeshWall(D3DXVECTOR3(0.0f, 0.0f, -WALL_POS), D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.25f), WALL_BLOCK_NUM_X, WALL_BLOCK_NUM_Y, WALL_SIZE_WIDTH, WALL_SIZE_HEIGHT);
 	
+	InitShadow(0);
 	InitPlayer(0);
 	InitEnemy(0);
 	InitScore(0);
@@ -530,6 +532,7 @@ void Uninit(void)
 	UninitThanks();
 	UninitParticle();
 	UninitSkyBox();
+	UninitShadow();
 }
 
 //=============================================================================
@@ -605,6 +608,7 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateCamera();
 		UpdateParticle();
 		UpdateSkyBox();
+		UpdateShadow();
 
 		break;
 
@@ -626,6 +630,7 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateParticle();
 		UpdateSkyBox();
 		UpdateTimer();
+		UpdateShadow();
 
 		break;
 
@@ -662,6 +667,7 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateCamera();
 		UpdateParticle();
 		UpdateSkyBox();
+		UpdateShadow();
 
 		break;
 
@@ -685,6 +691,7 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateERedGauge();
 		UpdateParticle();
 		UpdateSkyBox();
+		UpdateShadow();
 
 		break;
 
@@ -709,6 +716,7 @@ if (GetKeyboardTrigger(DIK_0))
 		UpdateCamera();
 		UpdateParticle();
 		UpdateSkyBox();
+		UpdateShadow();
 
 		break;
 
@@ -779,6 +787,7 @@ void Draw(int no)
 
 			//エフェクト
 			DrawParticle();
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
@@ -808,6 +817,7 @@ void Draw(int no)
 
 			//エフェクト
 			DrawParticle();
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
@@ -837,6 +847,7 @@ void Draw(int no)
 
 			//エフェクト
 			DrawParticle();
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
@@ -873,6 +884,7 @@ void Draw(int no)
 
 			//エフェクト
 			DrawParticle();
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
@@ -907,6 +919,7 @@ void Draw(int no)
 
 			//エフェクト
 			DrawParticle();
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
@@ -936,6 +949,9 @@ void Draw(int no)
 			DrawSkyBox();
 			DrawMeshField();
 			DrawMeshWall();
+
+			// エフェクト
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
@@ -970,6 +986,7 @@ void Draw(int no)
 
 			//エフェクト
 			DrawParticle();
+			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();

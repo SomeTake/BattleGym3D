@@ -183,6 +183,9 @@
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
+    <ClInclude Include="shadow.h">
+      <Filter>ヘッダー ファイル\2DUI\Battle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAllocateHierarchy.cpp">
@@ -325,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>ソース ファイル\2DUI\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
