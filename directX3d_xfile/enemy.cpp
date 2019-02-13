@@ -366,7 +366,7 @@ void DrawEnemy(void)
 	if (enemyWk.HadouBullet.use == true)
 	{
 		// 波動拳用バレットの描画
-		DrawHadou(&enemyWk.HadouBullet);
+		//DrawHadou(&enemyWk.HadouBullet);
 	}
 
 	// 2P表示用ビルボードを描画

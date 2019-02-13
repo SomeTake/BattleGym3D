@@ -488,3 +488,39 @@ void SetSPattackParticle(D3DXVECTOR3 pos)
 			ORANGE(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
 	}
 }
+
+//=============================================================================
+// 波動拳に使用するパーティクルエフェクト
+//=============================================================================
+void SetHadouParticle(D3DXVECTOR3 pos, float radius)
+{
+	D3DXVECTOR3 EffectPos;
+
+	for (int angle1 = 0; angle1 < 360; angle1 += 45)
+	{
+		for (int angle2 = 0; angle2 < 360; angle2 += 45)
+		{
+			EffectPos = pos + GetSpherePosition((float)angle1, (float)angle2, radius);
+			SetParticle(EffectPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				VERMILION(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, ATTACK_TIME_A);
+			SetParticle(EffectPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				VERMILION(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, ATTACK_TIME_B);
+			SetParticle(EffectPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				VERMILION(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, ATTACK_TIME_C);
+		}
+	}
+}
+
+//=============================================================================
+// 球体表面上の任意座標を取得する
+//=============================================================================
+D3DXVECTOR3 GetSpherePosition(float Angle1, float Angle2, float Radius)
+{
+	D3DXVECTOR3 Pos;
+	
+	Pos.x = Radius * sinf(D3DXToRadian(Angle1)) * cosf(D3DXToRadian(Angle2));
+	Pos.y = Radius * sinf(D3DXToRadian(Angle1)) * sinf(D3DXToRadian(Angle2));
+	Pos.z = Radius * cosf(D3DXToRadian(Angle1));
+	
+	return Pos;
+}

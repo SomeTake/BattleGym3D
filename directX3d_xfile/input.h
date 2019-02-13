@@ -7,7 +7,6 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -84,6 +83,6 @@ BOOL IsButtonTriggered(int padNo, DWORD button);
 BOOL IsButtonReleased(int padNo, DWORD button);
 BOOL IsButtonRepeated(int padNo, DWORD button);
 
-int GetPov(int num);
+int GetPadCount(void);				// 接続されているコントローラの数を検出
 
 #endif

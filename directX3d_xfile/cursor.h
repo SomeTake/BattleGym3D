@@ -37,6 +37,7 @@ void UpdateCursor(void);
 void DrawCursor(void);
 HRESULT MakeVertexCursor(int num);
 void SetVertexCursor(int num);
+void SetReflectCursor(int num, float per);
 CURSOR *GetCursor(int num);
 
 #endif

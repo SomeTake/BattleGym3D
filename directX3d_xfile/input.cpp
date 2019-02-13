@@ -17,7 +17,6 @@
 #define RANGE_MAX		1000			// 有効範囲の最大値
 #define RANGE_MIN		-1000			// 有効範囲の最小値
 
-
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -48,13 +47,13 @@ BYTE					g_keyStateRepeat[NUM_KEY_MAX];		// キーボードの状態を受け取るワーク
 BYTE					g_keyStateRelease[NUM_KEY_MAX];		// キーボードの状態を受け取るワーク
 int						g_keyStateRepeatCnt[NUM_KEY_MAX];	// キーボードのリピートカウンタ
 
-															//--------------------------------- mouse
+//--------------------------------- mouse
 static LPDIRECTINPUTDEVICE8 pMouse = NULL; // mouse
 
 static DIMOUSESTATE2   mouseState;		// マウスのダイレクトな状態
 static DIMOUSESTATE2   mouseTrigger;	// 押された瞬間だけON
 
-										//--------------------------------- game pad
+//--------------------------------- game pad
 
 static LPDIRECTINPUTDEVICE8	pGamePad[GAMEPADMAX] = { NULL,NULL };// パッドデバイス
 
@@ -527,13 +526,6 @@ void UpdatePad(void)
 		// 十字キー左上
 		if (dijs.rgdwPOV[0] == 31500)		padState[i] |= BUTTON_LEFTUP;
 
-		//// 十字キーデフォルト
-		//if (dijs.rgdwPOV[0] != 0 && dijs.rgdwPOV[0] != 45000 && dijs.rgdwPOV[0] != 9000 && dijs.rgdwPOV[0] != 13500 && dijs.rgdwPOV[0] != 18000
-		//	&& dijs.rgdwPOV[0] != 22500 && dijs.rgdwPOV[0] != 27000 && dijs.rgdwPOV[0] != 31500)
-		//{
-		//	padState[i] |= BUTTON_DEFAULT;
-		//}
-
 		//* Ａボタン
 		if (dijs.rgbButtons[0] & 0x80)	padState[i] |= BUTTON_A;
 		//* Ｂボタン
@@ -646,4 +638,12 @@ BOOL IsButtonRepeated(int padNo, DWORD button)
 		return (button & padRepeat[padNo]) ? true : false;
 	}
 	return false;
+}
+
+//=============================================================================
+// 接続されているコントローラの数を取得
+//=============================================================================
+int GetPadCount(void)
+{
+	return padCount;
 }

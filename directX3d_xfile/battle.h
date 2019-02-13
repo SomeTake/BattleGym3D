@@ -164,8 +164,8 @@ CMD_Kick[] = { BUTTON_B, INPUT_END | 1 },
 CMD_Guard[] = { BUTTON_Y, INPUT_END | 1 },
 CMD_Frontwalk[] = { BUTTON_RIGHT, INPUT_END | 1 },
 CMD_Backwalk[] = { BUTTON_LEFT, INPUT_END | 1 },
-CMD_Rightstep[] = { BUTTON_DEFAULT, BUTTON_DOWN, BUTTON_DEFAULT, BUTTON_DOWN, INPUT_END | 10 },
-CMD_Leftstep[] = { BUTTON_DEFAULT, BUTTON_UP, BUTTON_DEFAULT, BUTTON_UP, INPUT_END | 10 };
+CMD_Rightstep[] = { BUTTON_DOWN, BUTTON_DEFAULT, BUTTON_DOWN, INPUT_END | 10 },
+CMD_Leftstep[] = { BUTTON_UP, BUTTON_DEFAULT, BUTTON_UP, INPUT_END | 10 };
 
 // “–‚½‚è”»’è‚ğ”­¶‚³‚¹‚éêŠ
 static const char* CharaHitPos[] =
@@ -230,10 +230,11 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// UŒ‚‚ª“–‚½‚Á‚½‚Æ‚«‚
 void SubDamage(CHARA *Chara, int sub);							// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 void AddSpGauge(CHARA *Chara, int add);							// SPƒQ[ƒW‚Ì‘Œ¸
 void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// ”g“®Œ‚Ì“–‚½‚è”»’è
-void EasyInput(CHARA *Chara, int ControllerNum);				// ŠÈ’P‘€ì
 void AddScore(CHARA *Chara, int add);							// ƒXƒRƒA‚Ì’Ç‰Á
 void BattleAI(CHARA *AIChara, CHARA *AnotherChara);				// ƒoƒgƒ‹—pAI
 void SetupTutorial(CHARA *Chara, REDGAUGE *Gauge);				// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒ‚[ƒh‚Å‚ÌƒLƒƒƒ‰ƒNƒ^[‚ÌHP‚È‚Ç‚ÌŠÇ—
+
+void EasyInput(CHARA *Chara, int ControllerNum);				// ŠÈ’P‘€ì
 void CommandInput(CHARA *Chara, int ControllerNum);				// ƒRƒ}ƒ“ƒh‘€ì
 bool CheckInput(int Input[], const int *command);				// “ü—Í”»’è
 

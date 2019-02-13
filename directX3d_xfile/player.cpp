@@ -443,7 +443,7 @@ void DrawPlayer(void)
 	if (playerWk.HadouBullet.use == true)
 	{
 		// 波動拳用バレットの描画
-		DrawHadou(&playerWk.HadouBullet);
+		//DrawHadou(&playerWk.HadouBullet);
 	}
 
 	// 1P表示用ビルボードを描画

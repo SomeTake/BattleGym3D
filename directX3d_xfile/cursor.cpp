@@ -91,6 +91,13 @@ void UpdateCursor(void)
 		CursorWk[1].modeinput = true;
 	}
 
+	int PadCount = GetPadCount();
+	// 1P側しかつながっていなかった場合、2P側は自動選択
+	if (PadCount <= 1)
+	{
+		CursorWk[1].modeinput = true;
+	}
+
 	// ○を押したら選択終了
 	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C))
 	{
@@ -193,6 +200,21 @@ void UpdateCursor(void)
 	{
 		SetVertexCursor(i);
 	}
+
+	float per;
+	// 透明度の設定
+	for (int i = 0; i < CURSOR_MAX; i++)
+	{
+		if (CursorWk[i].modeinput == true)
+		{
+			per = 1.0f;
+		}
+		else
+		{
+			per = 0.8f;
+		}
+			SetReflectCursor(i, per);
+	}
 }
 
 //=============================================================================
@@ -264,6 +286,19 @@ void SetVertexCursor(int num)
 	CursorWk[num].vertexWk[1].vtx = D3DXVECTOR3(CursorWk[num].pos.x + CURSOR_SIZE_X, CursorWk[num].pos.y, CursorWk[num].pos.z);
 	CursorWk[num].vertexWk[2].vtx = D3DXVECTOR3(CursorWk[num].pos.x, CursorWk[num].pos.y + CURSOR_SIZE_Y, CursorWk[num].pos.z);
 	CursorWk[num].vertexWk[3].vtx = D3DXVECTOR3(CursorWk[num].pos.x + CURSOR_SIZE_X, CursorWk[num].pos.y + CURSOR_SIZE_Y, CursorWk[num].pos.z);
+}
+
+//=============================================================================
+// 反射光の設定 引数:int per = 透明度の％
+//=============================================================================
+void SetReflectCursor(int num, float per)
+{
+	int clear = (int)(255 * per);
+
+	CursorWk[num].vertexWk[0].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+	CursorWk[num].vertexWk[1].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+	CursorWk[num].vertexWk[2].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
+	CursorWk[num].vertexWk[3].diffuse = D3DCOLOR_RGBA(255, 255, 255, clear);
 }
 
 //=============================================================================

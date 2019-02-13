@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\System">
-      <UniqueIdentifier>{3c3003ab-251a-4090-af5d-f6e4276f7310}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\System">
       <UniqueIdentifier>{5b286252-ad80-46b7-af00-35faf47285b1}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,9 @@
     </Filter>
     <Filter Include="ソース ファイル\2DUI\Battle">
       <UniqueIdentifier>{3aaffd83-24b7-4cbb-8cee-2f5f38c76d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System">
+      <UniqueIdentifier>{3c3003ab-251a-4090-af5d-f6e4276f7310}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -73,9 +73,6 @@
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>ヘッダー ファイル\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\3D</Filter>
     </ClInclude>
     <ClInclude Include="blackscreen.h">
@@ -183,6 +180,9 @@
     <ClInclude Include="AI.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAllocateHierarchy.cpp">
@@ -225,9 +225,6 @@
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="light.cpp">
-      <Filter>ソース ファイル\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\3D</Filter>
     </ClCompile>
     <ClCompile Include="meshfield.cpp">
@@ -324,6 +321,9 @@
       <Filter>ソース ファイル\2DUI</Filter>
     </ClCompile>
     <ClCompile Include="AI.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>

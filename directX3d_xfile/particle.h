@@ -18,7 +18,7 @@
 #define	VALUE_MOVE_PARTICLE		(3.00f)								// 移動速度
 #define RAND_RANGE				(500)								// ランダムの範囲
 #define CIRCLE_RADIUS			(100.0f)							// 円の半径
-#define	MAX_PARTICLE			(8192)								// パーティクル最大数
+#define	MAX_PARTICLE			(16384)								// パーティクル最大数
 
 // 足元の砂煙
 #define PARTICLE_SIZE_A			D3DXVECTOR2(10.0f, 10.0f)
@@ -72,9 +72,11 @@ void SetColorParticle(int nIdxParticle, D3DXCOLOR col);
 
 int SetParticle(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR col, float fWidth, float fHeight, int Time);	// パーティクル発生用(場所, 移動量, 色, 幅, 高さ, 時間)
 PARTICLE *GetParticle(int no);																				// パーティクル構造体のゲッター
-int NumParticle(void);						// 使用している数を数える
-void SetHitParticle(D3DXVECTOR3 AttackPos);	// 攻撃ヒット時に使用するパーティクルエフェクト
-void SetWalkParticle(D3DXVECTOR3 pos);		// 移動時に使用するパーティクルエフェクト
-void SetSPattackParticle(D3DXVECTOR3 pos);	// SP攻撃時に仕様するパーティクルエフェクト
+int NumParticle(void);														// 使用している数を数える
+void SetHitParticle(D3DXVECTOR3 AttackPos);									// 攻撃ヒット時に使用するパーティクルエフェクト
+void SetWalkParticle(D3DXVECTOR3 pos);										// 移動時に使用するパーティクルエフェクト
+void SetSPattackParticle(D3DXVECTOR3 pos);									// SP攻撃時に仕様するパーティクルエフェクト
+void SetHadouParticle(D3DXVECTOR3 pos, float radius);						// 波動拳に使用するパーティクルエフェクト
+D3DXVECTOR3 GetSpherePosition(float Angle1, float Angle2, float Radius);	// 球体表面上の任意座標を取得する
 
 #endif
