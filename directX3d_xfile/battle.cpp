@@ -148,6 +148,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			|| DefendChara->Animation->CurrentAnimID == Downpose || DefendChara->Animation->CurrentAnimID == Getup)
 		{
 			// エフェクト
+			SetGuardParticle(AttackChara->HitBall[LeftHand].pos);
 
 			// スコア
 			AddScore(AttackChara, Data[Punchi].Damage);
@@ -180,6 +181,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			|| DefendChara->Animation->CurrentAnimID == Downpose || DefendChara->Animation->CurrentAnimID == Getup)
 		{
 			// エフェクト
+			SetGuardParticle(AttackChara->HitBall[RightFoot].pos);
 
 			// スコア
 			AddScore(AttackChara, Data[Kick].Damage);
@@ -214,7 +216,8 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// ダメージ
 			SubDamage(DefendChara, (int)(Data[Shoryu].Damage * 0.1f));
 			// エフェクト
-
+			SetGuardParticle(AttackChara->HitBall[RightFoot].pos);
+			SetGuardParticle(AttackChara->HitBall[LeftFoot].pos);
 			// スコア
 			AddScore(AttackChara, Data[Shoryu].Damage);
 			AddScore(DefendChara, Data[Shoryu].Damage);
@@ -312,6 +315,8 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 		if (HitBC(AttackChara->HadouBullet.pos, DefendChara->HadouBullet.pos, AttackChara->HadouBullet.scl.x, DefendChara->HadouBullet.scl.x) == true)
 		{
 			// エフェクト
+			SetHitParticle(AttackChara->HadouBullet.pos);
+			SetHitParticle(DefendChara->HadouBullet.pos);
 			// 使用フラグの変更
 			AttackChara->HadouBullet.use = false;
 			DefendChara->HadouBullet.use = false;
@@ -337,6 +342,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 				SubDamage(DefendChara, (int)(Data[Hadou].Damage * 0.1f));
 
 				// エフェクト
+				SetGuardParticle(DefendChara->HitBall[i].pos);
 
 				// スコア
 				AddScore(AttackChara, Data[Hadou].Damage);
@@ -353,6 +359,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 				SubDamage(DefendChara, Data[Hadou].Damage);
 
 				// エフェクト
+				SetHitParticle(AttackChara->HadouBullet.pos);
 
 				// スコア
 				AddScore(AttackChara, Data[Hadou].Damage);
@@ -1473,22 +1480,6 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Rightstep:
-		// SP技
-		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
-		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
-		}
-		// 波動拳
-		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
-		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
-		}
-		// 昇竜拳
-		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
-		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
-		}
-
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1497,22 +1488,6 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Leftstep:
-		// SP技
-		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
-		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
-		}
-		// 波動拳
-		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
-		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
-		}
-		// 昇竜拳
-		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
-		{
-			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
-		}
-
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1634,6 +1609,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case SPattack:
+		SetSPattackParticle(Chara->HitBall[RightFoot].pos);
+		SetSPattackParticle(Chara->HitBall[LeftFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{

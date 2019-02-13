@@ -78,5 +78,6 @@ void SetWalkParticle(D3DXVECTOR3 pos);										// ˆÚ“®‚Ég—p‚·‚éƒp[ƒeƒBƒNƒ‹ƒ
 void SetSPattackParticle(D3DXVECTOR3 pos);									// SPUŒ‚‚Éd—l‚·‚éƒp[ƒeƒBƒNƒ‹ƒGƒtƒFƒNƒg
 void SetHadouParticle(D3DXVECTOR3 pos, float radius);						// ”g“®Œ‚Ég—p‚·‚éƒp[ƒeƒBƒNƒ‹ƒGƒtƒFƒNƒg
 D3DXVECTOR3 GetSpherePosition(float Angle1, float Angle2, float Radius);	// ‹…‘Ì•\–Êã‚Ì”CˆÓÀ•W‚ğæ“¾‚·‚é
+void SetGuardParticle(D3DXVECTOR3 pos);										// ƒK[ƒh‚Ég—p‚·‚éƒp[ƒeƒBƒNƒ‹ƒGƒtƒFƒNƒg
 
 #endif

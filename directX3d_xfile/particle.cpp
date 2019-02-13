@@ -524,3 +524,21 @@ D3DXVECTOR3 GetSpherePosition(float Angle1, float Angle2, float Radius)
 	
 	return Pos;
 }
+
+//=============================================================================
+// ガード時に使用するパーティクルエフェクト
+//=============================================================================
+void SetGuardParticle(D3DXVECTOR3 DefendPos)
+{
+	D3DXVECTOR3 move;
+
+	for (int i = 0; i < ATTACK_PERTICLE_NUM; i++)
+	{
+		move.x = (float)(rand() % 5 - 2);
+		move.y = (float)(rand() % 5 - 2);
+		move.z = (float)(rand() % 5 - 2);
+
+		SetParticle(DefendPos, D3DXVECTOR3(move.x, move.y, move.z),
+			WHITE(0.5f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_C);
+	}
+}
