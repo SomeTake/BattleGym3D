@@ -73,7 +73,7 @@ bool RenderWireframe = false;						// ワイヤーフレームで描画
 LPDIRECT3D9			g_pD3D = NULL;					// Direct3D オブジェクト
 LPDIRECT3DDEVICE9	g_pD3DDevice = NULL;			// Deviceオブジェクト(描画に必要)
 
-int ePhase = PhaseGame;						// ゲームの開始位置&シーン遷移
+int ePhase = PhaseCompanyLogo;						// ゲームの開始位置&シーン遷移
 int PlayerMode = 1;									// プレイヤー人数
 
 MATRIX MatrixState;									// マトリクス

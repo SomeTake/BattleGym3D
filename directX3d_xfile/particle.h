@@ -36,8 +36,10 @@
 #define ATTACK_TIME_B			(15)
 #define ATTACK_TIME_C			(20)
 
-#define ATTACK_PERTICLE_NUM		(100)						// 発生する数
-#define SP_PERTICLE_NUM			(30)
+#define HIT_PARTICLE_NUM		(100)						// 発生する数
+#define SP_PARTICLE_NUM			(30)
+#define ATTACK_PARTICLE_NUM		(30)
+#define MOVE_PARTICLE_NUM		(10)
 
 //*****************************************************************************
 // 構造体定義
@@ -80,5 +82,6 @@ void SetHadouParticle(D3DXVECTOR3 pos, float radius);						// 波動拳に使用するパ
 D3DXVECTOR3 GetSpherePosition(float Angle1, float Angle2, float Radius);	// 球体表面上の任意座標を取得する
 void SetGuardParticle(D3DXVECTOR3 pos);										// ガード時に使用するパーティクルエフェクト
 void SetAttackParticle(D3DXVECTOR3 pos);									// パンチに使用するパーティクルエフェクト
+void SetShoryuParticle(D3DXVECTOR3 pos);									// 昇竜拳に使用するパーティクルエフェクト
 
 #endif

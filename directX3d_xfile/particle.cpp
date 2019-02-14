@@ -445,7 +445,7 @@ void SetHitParticle(D3DXVECTOR3 AttackPos)
 {
 	D3DXVECTOR3 move;
 
-	for (int i = 0; i < ATTACK_PERTICLE_NUM; i++)
+	for (int i = 0; i < HIT_PARTICLE_NUM; i++)
 	{
 		move.x = (float)(rand() % 10 - 5);
 		move.y = (float)(rand() % 10 - 5);
@@ -461,12 +461,21 @@ void SetHitParticle(D3DXVECTOR3 AttackPos)
 //=============================================================================
 void SetWalkParticle(D3DXVECTOR3 pos)
 {
-	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		WHITE(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, PARTICLE_TIME_A);
-	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		WHITE(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, PARTICLE_TIME_B);
-	SetParticle(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-		WHITE(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, PARTICLE_TIME_C);
+	D3DXVECTOR3 NewPos = pos;
+	for (int i = 0; i < MOVE_PARTICLE_NUM; i++)
+	{
+		int size = rand() % 10;
+		NewPos.x += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.y += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.z += (float)(rand() % 20 - 10) * 0.1f;
+
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), (float)size, (float)size, PARTICLE_TIME_A);
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), (float)size * 0.5f, (float)size * 0.5f, PARTICLE_TIME_B);
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SAND(0.15f), (float)size * 0.1f, (float)size * 0.1f, PARTICLE_TIME_C);
+	}
 }
 
 //=============================================================================
@@ -474,17 +483,18 @@ void SetWalkParticle(D3DXVECTOR3 pos)
 //=============================================================================
 void SetSPattackParticle(D3DXVECTOR3 pos)
 {
-	for (int i = 0; i < SP_PERTICLE_NUM; i++)
+	D3DXVECTOR3 NewPos = pos;
+	for (int i = 0; i < SP_PARTICLE_NUM; i++)
 	{
-		pos.x += (float)(rand() % 20 - 10) * 0.1f;
-		pos.y += (float)(rand() % 20 - 10) * 0.1f;
-		pos.z += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.x += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.y += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.z += (float)(rand() % 20 - 10) * 0.1f;
 
-		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
 			RED(0.50f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
 			VERMILION(0.30f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
 			ORANGE(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
 	}
 }
@@ -494,18 +504,18 @@ void SetSPattackParticle(D3DXVECTOR3 pos)
 //=============================================================================
 void SetHadouParticle(D3DXVECTOR3 pos, float radius)
 {
-	D3DXVECTOR3 EffectPos;
+	D3DXVECTOR3 NewPos;
 
 	for (int angle1 = 0; angle1 < 360; angle1 += 45)
 	{
 		for (int angle2 = 0; angle2 < 360; angle2 += 45)
 		{
-			EffectPos = pos + GetSpherePosition((float)angle1, (float)angle2, radius);
-			SetParticle(EffectPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			NewPos = pos + GetSpherePosition((float)angle1, (float)angle2, radius);
+			SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				VERMILION(0.50f), PARTICLE_SIZE_A.x, PARTICLE_SIZE_A.y, ATTACK_TIME_A);
-			SetParticle(EffectPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				VERMILION(0.30f), PARTICLE_SIZE_B.x, PARTICLE_SIZE_B.y, ATTACK_TIME_B);
-			SetParticle(EffectPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				VERMILION(0.15f), PARTICLE_SIZE_C.x, PARTICLE_SIZE_C.y, ATTACK_TIME_C);
 		}
 	}
@@ -532,7 +542,7 @@ void SetGuardParticle(D3DXVECTOR3 DefendPos)
 {
 	D3DXVECTOR3 move;
 
-	for (int i = 0; i < ATTACK_PERTICLE_NUM; i++)
+	for (int i = 0; i < ATTACK_PARTICLE_NUM; i++)
 	{
 		move.x = (float)(rand() % 5 - 2);
 		move.y = (float)(rand() % 5 - 2);
@@ -548,17 +558,39 @@ void SetGuardParticle(D3DXVECTOR3 DefendPos)
 //=============================================================================
 void SetAttackParticle(D3DXVECTOR3 pos)
 {
-	for (int i = 0; i < SP_PERTICLE_NUM; i++)
+	D3DXVECTOR3 NewPos = pos;
+	for (int i = 0; i < ATTACK_PARTICLE_NUM; i++)
 	{
-		pos.x += (float)(rand() % 20 - 10) * 0.1f;
-		pos.y += (float)(rand() % 20 - 10) * 0.1f;
-		pos.z += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.x += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.y += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.z += (float)(rand() % 20 - 10) * 0.1f;
 
-		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
 			BLUE(0.50f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
 			DEEPSKYBLUE(0.30f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
-		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
 			CYAN(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+	}
+}
+
+//=============================================================================
+// 昇竜拳に使用するパーティクルエフェクト
+//=============================================================================
+void SetShoryuParticle(D3DXVECTOR3 pos)
+{
+	D3DXVECTOR3 NewPos = pos;
+	for (int i = 0; i < ATTACK_PARTICLE_NUM; i++)
+	{
+		NewPos.x += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.y += (float)(rand() % 20 - 10) * 0.1f;
+		NewPos.z += (float)(rand() % 20 - 10) * 0.1f;
+
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			RED(0.50f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			VERMILION(0.30f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+		SetParticle(NewPos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+			ORANGE(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
 	}
 }

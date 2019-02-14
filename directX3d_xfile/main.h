@@ -97,6 +97,7 @@
 #define VERMILION(Alpha)			D3DXCOLOR(1.00f, 0.20f, 0.00f, Alpha)	// 朱色
 #define ORANGE(Alpha)				D3DXCOLOR(1.00f, 0.40f, 0.00f, Alpha)	// オレンジ
 #define PURPLE(Alpha)				D3DXCOLOR(0.40f, 0.00f, 0.20f, Alpha)	// 紫
+#define SAND(Alpha)					D3DXCOLOR(1.00f, 0.85f, 0.73f, Alpha)	// 砂
 
 // 上記２Ｄポリゴン頂点フォーマットに合わせた構造体を定義
 typedef struct

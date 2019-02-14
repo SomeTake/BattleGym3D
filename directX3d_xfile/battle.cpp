@@ -589,6 +589,8 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		}
 		break;
 	case Shoryu:
+		SetShoryuParticle(AIChara->HitBall[RightFoot].pos);
+		SetShoryuParticle(AIChara->HitBall[LeftFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (AIChara->Animation->MotionEnd == true)
 		{
@@ -1155,6 +1157,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Shoryu:
+		SetShoryuParticle(Chara->HitBall[RightFoot].pos);
+		SetShoryuParticle(Chara->HitBall[LeftFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1609,6 +1613,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Shoryu:
+		SetShoryuParticle(Chara->HitBall[RightFoot].pos);
+		SetShoryuParticle(Chara->HitBall[LeftFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
