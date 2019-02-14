@@ -90,8 +90,10 @@
 // 色
 #define WHITE(Alpha)				D3DXCOLOR(1.00f, 1.00f, 1.00f, Alpha)	// 白
 #define RED(Alpha)					D3DXCOLOR(1.00f, 0.00f, 0.00f, Alpha)	// 赤
-#define GREEN(Alpha)				D3DXCOLOR(0.00f, 1.00f, 0.00f, Alpha)	// 青
+#define GREEN(Alpha)				D3DXCOLOR(0.00f, 1.00f, 0.00f, Alpha)	// 緑
 #define BLUE(Alpha)					D3DXCOLOR(0.00f, 0.00f, 1.00f, Alpha)	// 青
+#define DEEPSKYBLUE(Alpha)			D3DXCOLOR(0.00f, 0.75f, 1.00f, Alpha)	// ディープスカイブルー
+#define CYAN(Alpha)					D3DXCOLOR(0.00f, 1.00f, 1.00f, Alpha)	// シアン
 #define VERMILION(Alpha)			D3DXCOLOR(1.00f, 0.20f, 0.00f, Alpha)	// 朱色
 #define ORANGE(Alpha)				D3DXCOLOR(1.00f, 0.40f, 0.00f, Alpha)	// オレンジ
 #define PURPLE(Alpha)				D3DXCOLOR(0.40f, 0.00f, 0.20f, Alpha)	// 紫

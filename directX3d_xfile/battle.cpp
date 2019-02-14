@@ -556,6 +556,7 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		}
 		break;
 	case Punchi:
+		SetAttackParticle(AIChara->HitBall[LeftHand].pos);
 		// アニメーション終了で待機に戻る
 		if (AIChara->Animation->MotionEnd == true)
 		{
@@ -564,6 +565,7 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		}
 		break;
 	case Kick:
+		SetAttackParticle(AIChara->HitBall[RightFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (AIChara->Animation->MotionEnd == true)
 		{
@@ -595,6 +597,8 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		}
 		break;
 	case SPattack:
+		SetSPattackParticle(AIChara->HitBall[RightFoot].pos);
+		SetSPattackParticle(AIChara->HitBall[LeftFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (AIChara->Animation->MotionEnd == true)
 		{
@@ -1118,6 +1122,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Punchi:
+		SetAttackParticle(Chara->HitBall[LeftHand].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1126,6 +1131,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Kick:
+		SetAttackParticle(Chara->HitBall[RightFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1570,6 +1576,7 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Punchi:
+		SetAttackParticle(Chara->HitBall[LeftHand].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{
@@ -1578,6 +1585,7 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		}
 		break;
 	case Kick:
+		SetAttackParticle(Chara->HitBall[RightFoot].pos);
 		// アニメーション終了で待機に戻る
 		if (Chara->Animation->MotionEnd == true)
 		{

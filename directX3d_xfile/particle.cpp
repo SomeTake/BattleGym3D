@@ -542,3 +542,23 @@ void SetGuardParticle(D3DXVECTOR3 DefendPos)
 			WHITE(0.5f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_C);
 	}
 }
+
+//=============================================================================
+// パンチ、キック時に使用するパーティクルエフェクト
+//=============================================================================
+void SetAttackParticle(D3DXVECTOR3 pos)
+{
+	for (int i = 0; i < SP_PERTICLE_NUM; i++)
+	{
+		pos.x += (float)(rand() % 20 - 10) * 0.1f;
+		pos.y += (float)(rand() % 20 - 10) * 0.1f;
+		pos.z += (float)(rand() % 20 - 10) * 0.1f;
+
+		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+			BLUE(0.50f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+			DEEPSKYBLUE(0.30f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+		SetParticle(pos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
+			CYAN(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+	}
+}

@@ -79,5 +79,6 @@ void SetSPattackParticle(D3DXVECTOR3 pos);									// SP攻撃時に仕様するパーティ
 void SetHadouParticle(D3DXVECTOR3 pos, float radius);						// 波動拳に使用するパーティクルエフェクト
 D3DXVECTOR3 GetSpherePosition(float Angle1, float Angle2, float Radius);	// 球体表面上の任意座標を取得する
 void SetGuardParticle(D3DXVECTOR3 pos);										// ガード時に使用するパーティクルエフェクト
+void SetAttackParticle(D3DXVECTOR3 pos);									// パンチに使用するパーティクルエフェクト
 
 #endif
