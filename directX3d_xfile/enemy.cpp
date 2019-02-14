@@ -155,6 +155,9 @@ HRESULT InitEnemy(int type)
 	else
 	{
 		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Idle, Data[Idle].Spd);
+
+		// 前の影を削除
+		DeleteShadow(enemyWk.ShadowIdx);
 	}
 
 	// 波動拳用バレットをセット

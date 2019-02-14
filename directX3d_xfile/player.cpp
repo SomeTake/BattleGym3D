@@ -169,6 +169,9 @@ HRESULT InitPlayer(int type)
 	else
 	{
 		playerWk.Animation->ChangeAnimation(playerWk.Animation, Idle, Data[Idle].Spd);
+
+		// 前の影を削除
+		DeleteShadow(playerWk.ShadowIdx);
 	}
 
 	// 波動拳用バレットをセット

@@ -177,9 +177,6 @@
     <ClInclude Include="cursor.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>ヘッダー ファイル\System</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
@@ -322,9 +319,6 @@
     </ClCompile>
     <ClCompile Include="cursor.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
-    </ClCompile>
-    <ClCompile Include="AI.cpp">
-      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\System</Filter>
