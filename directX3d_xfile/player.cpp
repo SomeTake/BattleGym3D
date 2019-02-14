@@ -357,7 +357,7 @@ void UpdatePlayer(void)
 	UpdatePop(&playerWk.Popup, playerWk.HitBall[Hips].pos);
 
 	// âeÇÃçXêV
-	SetPositionShadow(playerWk.ShadowIdx, playerWk.pos);
+	SetPositionShadow(playerWk.ShadowIdx, D3DXVECTOR3(playerWk.HitBall[Hips].pos.x, 0.1f, playerWk.HitBall[Hips].pos.z));
 	SetVertexShadow(playerWk.ShadowIdx, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 	SetColorShadow(playerWk.ShadowIdx, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 

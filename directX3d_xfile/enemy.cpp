@@ -316,7 +316,7 @@ void UpdateEnemy(void)
 	UpdatePop(&enemyWk.Popup, enemyWk.HitBall[Hips].pos);
 
 	// âeÇÃçXêV
-	SetPositionShadow(enemyWk.ShadowIdx, enemyWk.pos);
+	SetPositionShadow(enemyWk.ShadowIdx, D3DXVECTOR3(enemyWk.HitBall[Hips].pos.x, 0.1f, enemyWk.HitBall[Hips].pos.z));
 	SetVertexShadow(enemyWk.ShadowIdx, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 	SetColorShadow(enemyWk.ShadowIdx, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
