@@ -103,7 +103,7 @@ void UpdateCursor(void)
 	{
 		if (CursorWk[0].modeinput == false)
 		{
-			PlaySound(SE_SELECT1, 0, 0);
+			PlaySound(SE_SELECT1);
 			CursorWk[0].modeinput = true;
 		}
 	}
@@ -111,7 +111,7 @@ void UpdateCursor(void)
 	{
 		if (CursorWk[1].modeinput == false)
 		{
-			PlaySound(SE_SELECT1, 0, 0);
+			PlaySound(SE_SELECT1);
 			CursorWk[1].modeinput = true;
 		}
 	}
@@ -121,7 +121,7 @@ void UpdateCursor(void)
 	{
 		if (GetKeyboardTrigger(DIK_BACK))
 		{
-			PlaySound(SE_SELECT1, 0, 0);
+			PlaySound(SE_SELECT1);
 			CursorWk[0].modeinput = false;
 			CursorWk[1].modeinput = false;
 		}
@@ -140,14 +140,14 @@ void UpdateCursor(void)
 	// —¼•û“ü—Í‚ªI‚í‚Á‚½‚çƒV[ƒ“‘JˆÚ
 	if (CursorWk[0].modeinput == true && CursorWk[1].modeinput == true)
 	{
-		StopSound(BGM_TITLE, 0);
+		StopSound(BGM_TITLE);
 		ReInit();
 
 		switch (NextPhase)
 		{
 		case NextTutorial:
 			SetPhase(PhaseTutorial);
-			PlaySound(BGM_TUTORIAL, 1, 1);
+			PlaySound(BGM_TUTORIAL);
 			break;
 		case NextTraining:
 			SetPhase(PhaseCountdown);
@@ -166,13 +166,13 @@ void UpdateCursor(void)
 	{
 		if (GetKeyboardTrigger(DIK_RIGHT) || IsButtonTriggered(0, BUTTON_RIGHT))
 		{
-			PlaySound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0);
 			CursorWk[0].pos = D3DXVECTOR3(CURSOR_POS_X_B, CURSOR_POS_Y, 0.0f);
 			playerWk->CommandInput = true;
 		}
 		else if (GetKeyboardTrigger(DIK_LEFT) || IsButtonTriggered(0, BUTTON_LEFT))
 		{
-			PlaySound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0);
 			CursorWk[0].pos = D3DXVECTOR3(CURSOR_POS_X_A, CURSOR_POS_Y, 0.0f);
 			playerWk->CommandInput = false;
 		}
@@ -183,13 +183,13 @@ void UpdateCursor(void)
 	{
 		if (GetKeyboardTrigger(DIK_D) || IsButtonTriggered(1, BUTTON_RIGHT))
 		{
-			PlaySound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0);
 			CursorWk[1].pos = D3DXVECTOR3(CURSOR_POS_X_B, CURSOR_POS_Y, 0.0f);
 			enemyWk->CommandInput = true;
 		}
 		else if (GetKeyboardTrigger(DIK_A) || IsButtonTriggered(1, BUTTON_LEFT))
 		{
-			PlaySound(SE_SELECT0, 0, 0);
+			PlaySound(SE_SELECT0);
 			CursorWk[1].pos = D3DXVECTOR3(CURSOR_POS_X_A, CURSOR_POS_Y, 0.0f);
 			enemyWk->CommandInput = false;
 		}

@@ -60,7 +60,7 @@ void UninitDrawgame(void)
 //=============================================================================
 void UpdateDrawgame(void)
 {
-	StopSound(BGM_BATTLE, 0);
+	StopSound(BGM_BATTLE);
 	static int sceneframe = 0;
 
 	// ƒV[ƒ“‘JˆÚ—LŒø‚É‚È‚é‚Ü‚Å‚ÌŠÔ

@@ -96,7 +96,7 @@ void UpdateSpmax(void)
 		//MAXÇ…Ç»Ç¡ÇΩèuä‘âπÇñ¬ÇÁÇ∑
 		if (soundflag == false && phase == PhaseGame)
 		{
-			PlaySound(SE_EFFECT0, 0, 0);
+			PlaySound(SE_EFFECT0);
 			soundflag = true;
 		}
 	}
@@ -116,7 +116,7 @@ void UpdateSpmax(void)
 		//MAXÇ…Ç»Ç¡ÇΩèuä‘âπÇñ¬ÇÁÇ∑
 		if (esoundflag == false && phase == PhaseGame)
 		{
-			PlaySound(SE_EFFECT0, 0, 0);
+			PlaySound(SE_EFFECT0);
 			esoundflag = true;
 		}
 	}

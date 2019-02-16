@@ -89,7 +89,7 @@ void UpdateKnockout(void)
 	CHARA *player = GetPlayer();
 	CHARA *enemy = GetEnemy();
 
-	StopSound(BGM_BATTLE, 0);
+	StopSound(BGM_BATTLE);
 
 	static int sceneframe = 0;
 	static int pushframe = 0;
@@ -107,7 +107,7 @@ void UpdateKnockout(void)
 		if (GetKeyboardTrigger(DIK_RETURN))
 		{// Enter押したら、ステージを切り替える
 			SetPhase(PhaseResult);
-			PlaySound(SE_WINNER0, 1, 0);
+			PlaySound(SE_WINNER0);
 			sceneframe = 0;
 			pushframe = 0;
 		}
@@ -115,7 +115,7 @@ void UpdateKnockout(void)
 		else if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_M) || IsButtonTriggered(1, BUTTON_C))
 		{
 			SetPhase(PhaseResult);
-			PlaySound(SE_WINNER0, 1, 0);
+			PlaySound(SE_WINNER0);
 			sceneframe = 0;
 			pushframe = 0;
 		}

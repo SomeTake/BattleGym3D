@@ -154,7 +154,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddScore(AttackChara, Data[Punchi].Damage);
 			AddScore(DefendChara, Data[Punchi].Damage);
 			// 音
-			PlaySound(SE_DEFEND0, 0, 0);
+			PlaySound(SE_DEFEND0);
 		}
 		else
 		{
@@ -170,7 +170,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// スコア
 			AddScore(AttackChara, Data[Punchi].Damage);
 			// 音
-			PlaySound(SE_HIT0, 0, 0);
+			PlaySound(SE_HIT0);
 		}
 		//　ヒットフラグの変更
 		AttackChara->HitFrag = true;
@@ -187,7 +187,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddScore(AttackChara, Data[Kick].Damage);
 			AddScore(DefendChara, Data[Kick].Damage);
 			// 音
-			PlaySound(SE_DEFEND0, 0, 0);
+			PlaySound(SE_DEFEND0);
 		}
 		else
 		{
@@ -203,7 +203,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// スコア
 			AddScore(AttackChara, Data[Kick].Damage);
 			// 音
-			PlaySound(SE_HIT0, 0, 0);
+			PlaySound(SE_HIT0);
 		}
 		//　ヒットフラグの変更
 		AttackChara->HitFrag = true;
@@ -222,7 +222,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			AddScore(AttackChara, Data[Shoryu].Damage);
 			AddScore(DefendChara, Data[Shoryu].Damage);
 			// 音
-			PlaySound(SE_DEFEND0, 0, 0);
+			PlaySound(SE_DEFEND0);
 		}
 		else
 		{
@@ -239,7 +239,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// スコア
 			AddScore(AttackChara, Data[Shoryu].Damage);
 			// 音
-			PlaySound(SE_HIT1, 0, 0);
+			PlaySound(SE_HIT1);
 		}
 		//　ヒットフラグの変更
 		AttackChara->HitFrag = true;
@@ -258,7 +258,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 		// スコア
 		AddScore(AttackChara, Data[SPattack].Damage);
 		// 音
-		PlaySound(SE_HIT1, 0, 0);
+		PlaySound(SE_HIT1);
 		//　ヒットフラグの変更
 		AttackChara->HitFrag = true;
 		break;
@@ -326,7 +326,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 			AddScore(DefendChara, Data[Hadou].Damage);
 
 			// 音
-			PlaySound(SE_HIT1, 0, 0);
+			PlaySound(SE_HIT1);
 		}
 	}
 	// 弾と相手キャラとの当たり判定
@@ -349,7 +349,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 				AddScore(DefendChara, Data[Hadou].Damage);
 
 				// 音
-				PlaySound(SE_DEFEND0, 0, 0);
+				PlaySound(SE_DEFEND0);
 			}
 			else
 			{
@@ -365,7 +365,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 				AddScore(AttackChara, Data[Hadou].Damage);
 
 				// 音
-				PlaySound(SE_HIT0, 0, 0);
+				PlaySound(SE_HIT0);
 			}
 			// SPゲージ増減
 			AddSpGauge(DefendChara, Data[Hadou].Damage);
@@ -694,8 +694,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerNum, BUTTON_M))
 		{
 			SetPhase(PhaseTitle);
-			StopSound(BGM_TUTORIAL, 0);
-			PlaySound(BGM_TITLE, 1, 1);
+			StopSound(BGM_TUTORIAL);
+			PlaySound(BGM_TITLE);
 			ReInit();
 		}
 	}
@@ -704,7 +704,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerNum, BUTTON_M))
 		{
 			SetPhase(PhasePause);
-			StopSound(BGM_BATTLE, 0);
+			StopSound(BGM_BATTLE);
 		}
 	}
 	else if (*phase == PhaseTraining)
@@ -712,7 +712,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerNum, BUTTON_M))
 		{
 			SetPhase(PhaseTrainingPause);
-			StopSound(BGM_TRAINING, 0);
+			StopSound(BGM_TRAINING);
 		}
 	}
 

@@ -267,9 +267,9 @@ void UpdateEnemy(void)
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose, Data[Downpose].Spd);
 		}
-		PlaySound(SE_KO, 0, 0);
-		StopSound(BGM_BATTLE, 0);
-		StopSound(BGM_TRAINING, 0);
+		PlaySound(SE_KO);
+		StopSound(BGM_BATTLE);
+		StopSound(BGM_TRAINING);
 		SetPhase(PhaseFinish);
 	}
 

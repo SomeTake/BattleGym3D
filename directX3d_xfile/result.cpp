@@ -65,7 +65,7 @@ void UpdateResult(void)
 	 //ゲームループのための再初期化
 		ReInit();
 		SetPhase(PhaseTitle);
-		PlaySound(BGM_TITLE, 1, 1);
+		PlaySound(BGM_TITLE);
 	}
 	// ゲームパッドで移動処理
 	else if (IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_M) || IsButtonTriggered(1, BUTTON_C))
@@ -73,7 +73,7 @@ void UpdateResult(void)
 		//ゲームループのための再初期化
 		ReInit();
 		SetPhase(PhaseTitle);
-		PlaySound(BGM_TITLE, 1, 1);
+		PlaySound(BGM_TITLE);
 	}
 }
 

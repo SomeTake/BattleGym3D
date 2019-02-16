@@ -542,7 +542,6 @@ void Update(void)
 {
 #ifdef _DEBUG
 	UpdateDebugProc();
-
 #endif
 
 	CHARA *playerWk = GetPlayer();

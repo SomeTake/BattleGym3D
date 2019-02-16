@@ -84,8 +84,8 @@ void UpdateTutorial(void)
 	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_M) || IsButtonTriggered(1, BUTTON_M))
 	{
 		SetPhase(PhaseTitle);
-		StopSound(BGM_TUTORIAL, 0);
-		PlaySound(BGM_TITLE, 1, 1);
+		StopSound(BGM_TUTORIAL);
+		PlaySound(BGM_TITLE);
 		ReInit();
 	}
 }

@@ -82,7 +82,7 @@ void UpdateCountdown(void)
 	//カウントダウン音
 	if (flag == false)
 	{
-		PlaySound(SE_COUNTDOWN, 0, 0);
+		PlaySound(SE_COUNTDOWN);
 		flag = true;
 	}
 
@@ -113,13 +113,13 @@ void UpdateCountdown(void)
 	{
 		if (next == NextGame)
 		{
-			PlaySound(BGM_BATTLE, 1, 1);
+			PlaySound(BGM_BATTLE);
 			SetPhase(PhaseGame);
 			flag = false;
 		}
 		else if (next == NextTraining)
 		{
-			PlaySound(BGM_TRAINING, 1, 1);
+			PlaySound(BGM_TRAINING);
 			SetPhase(PhaseTraining);
 			flag = false;
 		}
