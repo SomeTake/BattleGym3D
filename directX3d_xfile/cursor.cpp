@@ -45,7 +45,7 @@ HRESULT InitCursor(int type)
 
 	for (int i = 0; i < CURSOR_MAX; i++)
 	{
-		CursorWk[i].pos = D3DXVECTOR3(CURSOR_POS_X_A, CURSOR_POS_Y, 0.0f);
+		CursorWk[i].pos = D3DXVECTOR3(CURSOR_POS_X_EASY, CURSOR_POS_Y, 0.0f);
 		CursorWk[i].modeinput = false;
 		// 頂点情報の作成
 		MakeVertexCursor(i);
@@ -80,8 +80,9 @@ void UpdateCursor(void)
 
 #ifdef _DEBUG
 	// デバッグ用
-	PrintDebugProc("1Pのモード選択%s", CursorWk[0].modeinput ? "完了" : "未完了");
-	PrintDebugProc("2Pのモード選択%s", CursorWk[1].modeinput ? "完了" : "未完了");
+	PrintDebugProc("1Pのモード選択%s\n", CursorWk[0].modeinput ? "完了" : "未完了");
+	PrintDebugProc("2Pのモード選択%s\n", CursorWk[1].modeinput ? "完了" : "未完了");
+	PrintDebugProc("1Pカーソル位置 X:%f Y:%f\n", CursorWk[0].pos.x, CursorWk[1].pos.y);
 
 #endif
 
@@ -99,6 +100,7 @@ void UpdateCursor(void)
 	}
 
 	// ○を押したら選択終了
+	// 1P
 	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C))
 	{
 		if (CursorWk[0].modeinput == false)
@@ -107,7 +109,8 @@ void UpdateCursor(void)
 			CursorWk[0].modeinput = true;
 		}
 	}
-	else if (GetKeyboardTrigger(DIK_SPACE) || IsButtonTriggered(1, BUTTON_C))
+	// 2P
+	if (GetKeyboardTrigger(DIK_SPACE) || IsButtonTriggered(1, BUTTON_C))
 	{
 		if (CursorWk[1].modeinput == false)
 		{
@@ -141,6 +144,25 @@ void UpdateCursor(void)
 	if (CursorWk[0].modeinput == true && CursorWk[1].modeinput == true)
 	{
 		StopSound(BGM_TITLE);
+		// カーソル位置によって入力モードを決定
+		// 1P
+		if (CursorWk[0].pos.x == CURSOR_POS_X_COMMAND)
+		{
+			playerWk->CommandInput = true;
+		}
+		else
+		{
+			playerWk->CommandInput = false;
+		}
+		// 2P
+		if (CursorWk[1].pos.x == CURSOR_POS_X_COMMAND)
+		{
+			enemyWk->CommandInput = true;
+		}
+		else
+		{
+			enemyWk->CommandInput = false;
+		}
 		ReInit();
 
 		switch (NextPhase)
@@ -167,14 +189,12 @@ void UpdateCursor(void)
 		if (GetKeyboardTrigger(DIK_RIGHT) || IsButtonTriggered(0, BUTTON_RIGHT))
 		{
 			PlaySound(SE_SELECT0);
-			CursorWk[0].pos = D3DXVECTOR3(CURSOR_POS_X_B, CURSOR_POS_Y, 0.0f);
-			playerWk->CommandInput = true;
+			CursorWk[0].pos = D3DXVECTOR3(CURSOR_POS_X_COMMAND, CURSOR_POS_Y, 0.0f);
 		}
 		else if (GetKeyboardTrigger(DIK_LEFT) || IsButtonTriggered(0, BUTTON_LEFT))
 		{
 			PlaySound(SE_SELECT0);
-			CursorWk[0].pos = D3DXVECTOR3(CURSOR_POS_X_A, CURSOR_POS_Y, 0.0f);
-			playerWk->CommandInput = false;
+			CursorWk[0].pos = D3DXVECTOR3(CURSOR_POS_X_EASY, CURSOR_POS_Y, 0.0f);
 		}
 	}
 
@@ -184,14 +204,12 @@ void UpdateCursor(void)
 		if (GetKeyboardTrigger(DIK_D) || IsButtonTriggered(1, BUTTON_RIGHT))
 		{
 			PlaySound(SE_SELECT0);
-			CursorWk[1].pos = D3DXVECTOR3(CURSOR_POS_X_B, CURSOR_POS_Y, 0.0f);
-			enemyWk->CommandInput = true;
+			CursorWk[1].pos = D3DXVECTOR3(CURSOR_POS_X_COMMAND, CURSOR_POS_Y, 0.0f);
 		}
 		else if (GetKeyboardTrigger(DIK_A) || IsButtonTriggered(1, BUTTON_LEFT))
 		{
 			PlaySound(SE_SELECT0);
-			CursorWk[1].pos = D3DXVECTOR3(CURSOR_POS_X_A, CURSOR_POS_Y, 0.0f);
-			enemyWk->CommandInput = false;
+			CursorWk[1].pos = D3DXVECTOR3(CURSOR_POS_X_EASY, CURSOR_POS_Y, 0.0f);
 		}
 	}
 
@@ -211,7 +229,7 @@ void UpdateCursor(void)
 		}
 		else
 		{
-			per = 0.8f;
+			per = 0.5f;
 		}
 			SetReflectCursor(i, per);
 	}
@@ -224,12 +242,13 @@ void DrawCursor(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 	int NextPhase = GetNextPhase();
+	int PadCount = GetPadCount();
 
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
-	// トレーニングモードでは2P側は選択しない
-	if (NextPhase != NextTraining)
+	// トレーニングモードとコントローラ接続していないチュートリアルモードでは2P側は選択しない
+	if (NextPhase != NextTraining && PadCount == GAMEPADMAX)
 	{
 		// 2P側
 		// テクスチャの設定

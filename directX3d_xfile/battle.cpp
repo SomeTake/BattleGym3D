@@ -1221,6 +1221,37 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 //=============================================================================
 void CommandInput(CHARA *Chara, int ControllerNum)
 {
+	int *phase = GetPhase();
+
+	// ポーズ画面へ
+	if (*phase == PhaseTutorial)
+	{
+		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerNum, BUTTON_M))
+		{
+			SetPhase(PhaseTitle);
+			StopSound(BGM_TUTORIAL);
+			PlaySound(BGM_TITLE);
+			ReInit();
+		}
+	}
+	else if (*phase == PhaseGame)
+	{
+		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerNum, BUTTON_M))
+		{
+			SetPhase(PhasePause);
+			StopSound(BGM_BATTLE);
+		}
+	}
+	else if (*phase == PhaseTraining)
+	{
+		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(ControllerNum, BUTTON_M))
+		{
+			SetPhase(PhaseTrainingPause);
+			StopSound(BGM_TRAINING);
+		}
+	}
+
+
 	int input = 0;
 
 	// 押したボタンに応じて、ビットをオンにする
@@ -1321,12 +1352,14 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
 		}
 		// 波動拳
-		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		else if ((CheckInput(Chara->Input, CMD_Hadou) == true || CheckInput(Chara->Input, CMD_Hadou1) == true) 
+			&& Chara->HadouBullet.use == false)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
 		}
 		// 昇竜拳
-		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true || CheckInput(Chara->Input, CMD_Shoryu1) == true
+			|| CheckInput(Chara->Input, CMD_Shoryu2) == true || CheckInput(Chara->Input, CMD_Shoryu3) == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
 		}
@@ -1379,12 +1412,14 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
 		}
 		// 波動拳
-		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		else if ((CheckInput(Chara->Input, CMD_Hadou) == true || CheckInput(Chara->Input, CMD_Hadou1) == true)
+			&& Chara->HadouBullet.use == false)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
 		}
 		// 昇竜拳
-		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true || CheckInput(Chara->Input, CMD_Shoryu1) == true
+			|| CheckInput(Chara->Input, CMD_Shoryu2) == true || CheckInput(Chara->Input, CMD_Shoryu3) == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
 		}
@@ -1441,12 +1476,14 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
 		}
 		// 波動拳
-		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		else if ((CheckInput(Chara->Input, CMD_Hadou) == true || CheckInput(Chara->Input, CMD_Hadou1) == true)
+			&& Chara->HadouBullet.use == false)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
 		}
 		// 昇竜拳
-		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true || CheckInput(Chara->Input, CMD_Shoryu1) == true
+			|| CheckInput(Chara->Input, CMD_Shoryu2) == true || CheckInput(Chara->Input, CMD_Shoryu3) == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
 		}
@@ -1518,12 +1555,14 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 			Chara->Animation->ChangeAnimation(Chara->Animation, Throw, Data[Throw].Spd);
 		}
 		// 波動拳
-		else if (CheckInput(Chara->Input, CMD_Hadou) == true && Chara->HadouBullet.use == false)
+		else if ((CheckInput(Chara->Input, CMD_Hadou) == true || CheckInput(Chara->Input, CMD_Hadou1) == true)
+			&& Chara->HadouBullet.use == false)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Hadou, Data[Hadou].Spd);
 		}
 		// 昇竜拳
-		else if (CheckInput(Chara->Input, CMD_Shoryu) == true)
+		else if (CheckInput(Chara->Input, CMD_Shoryu) == true || CheckInput(Chara->Input, CMD_Shoryu1) == true
+			|| CheckInput(Chara->Input, CMD_Shoryu2) == true || CheckInput(Chara->Input, CMD_Shoryu3) == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Shoryu, Data[Shoryu].Spd);
 		}
@@ -1551,6 +1590,7 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		if (Chara->Animation->MotionEnd == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HadouBullet.frame = 0;
 			Chara->HitFrag = false;
 		}
 		break;
@@ -1576,6 +1616,7 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		if (Chara->Animation->MotionEnd == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
+			Chara->HadouBullet.frame = 0;
 			Chara->HitFrag = false;
 		}
 		break;

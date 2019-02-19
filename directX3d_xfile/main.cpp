@@ -784,13 +784,15 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			//エフェクト
-			DrawParticle();
+			// 影
 			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			// エフェクト
+			DrawParticle();
 
 			//画面上のUI
 			DrawRedGauge();
@@ -814,13 +816,15 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			//エフェクト
-			DrawParticle();
+			// 影
 			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			// エフェクト
+			DrawParticle();
 
 			//画面上のUI
 			DrawRedGauge();
@@ -844,13 +848,15 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			//エフェクト
-			DrawParticle();
+			// 影
 			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			// エフェクト
+			DrawParticle();
 
 			//画面上のUI
 			DrawScore();
@@ -881,13 +887,15 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			//エフェクト
-			DrawParticle();
+			// 影
 			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			// エフェクト
+			DrawParticle();
 
 			//画面上のUI
 			DrawRedGauge();
@@ -916,13 +924,15 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			//エフェクト
-			DrawParticle();
+			// 影
 			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			// エフェクト
+			DrawParticle();
 
 			//画面上のUI
 			DrawScore();
@@ -949,7 +959,7 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			// エフェクト
+			// 影
 			DrawShadow();
 
 			// キャラクター等
@@ -983,13 +993,15 @@ void Draw(int no)
 			DrawMeshField();
 			DrawMeshWall();
 
-			//エフェクト
-			DrawParticle();
+			// 影
 			DrawShadow();
 
 			// キャラクター等
 			DrawEnemy();
 			DrawPlayer();
+
+			// エフェクト
+			DrawParticle();
 
 			//画面上のUI
 			DrawScore();

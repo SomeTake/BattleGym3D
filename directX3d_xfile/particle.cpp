@@ -134,6 +134,7 @@ void UpdateParticle(void)
 				// 全て透明になったら使用をやめる
 				particle->col.a = 0.0f;
 				particle->bUse = false;
+				particle->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 			// 色の設定
 			SetColorParticle(nCntParticle,
@@ -145,6 +146,7 @@ void UpdateParticle(void)
 			if (particle->time <= 0)
 			{
 				particle->bUse = false;
+				particle->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 
 		}
@@ -566,11 +568,11 @@ void SetAttackParticle(D3DXVECTOR3 pos)
 		NewPos.z += (float)(rand() % 20 - 10) * 0.1f;
 
 		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
-			BLUE(0.50f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
+			RED(0.50f), ATTACK_SIZE_A.x, ATTACK_SIZE_A.y, ATTACK_TIME_A);
 		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
-			DEEPSKYBLUE(0.30f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
+			VERMILION(0.30f), ATTACK_SIZE_B.x, ATTACK_SIZE_B.y, ATTACK_TIME_B);
 		SetParticle(NewPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f),
-			CYAN(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
+			ORANGE(0.15f), ATTACK_SIZE_C.x, ATTACK_SIZE_C.y, ATTACK_TIME_C);
 	}
 }
 
