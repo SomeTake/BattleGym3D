@@ -44,7 +44,7 @@
 #define BUTTON_LEFTDOWN	(BUTTON_RIGHTDOWN<<1)
 #define BUTTON_LEFTUP	(BUTTON_LEFTDOWN<<1)
 
-#define BUTTON_DEFAULT	(BUTTON_LEFTUP)		// 十字キーデフォルト状態
+#define BUTTON_DEFAULT	(BUTTON_LEFTUP<<1)		// 十字キーデフォルト状態
 
 #define INPUT_END		(BUTTON_DEFAULT<<1)	// 入力終了
 
