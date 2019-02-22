@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "sound.h"
 #include "particle.h"
+#include "game.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -276,6 +277,9 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 	default:
 		break;
 	}
+
+	// ヒットストップ処理を入れる
+	SetHitStop();
 }
 //=============================================================================
 // ダメージを与える（コマンド入力の場合ダメージを1.1倍にする）
@@ -391,6 +395,9 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 
 			//　使用フラグの変更
 			AttackChara->HadouBullet.use = false;
+
+			// ヒットストップ処理を入れる
+			SetHitStop();
 			break;
 		}
 	}

@@ -17,6 +17,7 @@
 #include "eredgauge.h"
 #include "sound.h"
 #include "shadow.h"
+#include "game.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -242,8 +243,8 @@ void UpdateEnemy(void)
 		BattleAI(&enemyWk, playerWk);
 	}
 
-	// KO表示中は更新しない
-	if (*Phase == PhaseFinish && ko == false)
+	// KO表示中orヒットストップ中は更新しない
+	if ((*Phase == PhaseFinish && ko == false) || GetHitStop() == true)
 	{
 
 	}
@@ -251,6 +252,12 @@ void UpdateEnemy(void)
 	{
 		// アニメーションを更新
 		enemyWk.Animation->UpdateAnimation(enemyWk.Animation, TIME_PER_FRAME);
+	}
+
+	// KOボイス
+	if ((*Phase == PhaseGame || *Phase == PhaseTraining) && enemyWk.HPzan == 0)
+	{
+		PlaySound(SE_KO);
 	}
 
 	// 勝利時
@@ -267,14 +274,16 @@ void UpdateEnemy(void)
 		{
 			enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Downpose, Data[Downpose].Spd);
 		}
-		PlaySound(SE_KO);
 		StopSound(BGM_BATTLE);
 		StopSound(BGM_TRAINING);
-		SetPhase(PhaseFinish);
+		if (*Phase != PhaseFinish)
+		{
+			SetPhase(PhaseFinish);
+		}
 	}
 
-	// KO表示中は更新しない
-	if (*Phase == PhaseFinish && ko == false)
+	// KO表示中orヒットストップ中は更新しない
+	if ((*Phase == PhaseFinish && ko == false) || GetHitStop() == true)
 	{
 
 	}

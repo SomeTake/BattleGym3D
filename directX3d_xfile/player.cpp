@@ -17,6 +17,7 @@
 #include "redgauge.h"
 #include "sound.h"
 #include "shadow.h"
+#include "game.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -282,8 +283,8 @@ void UpdatePlayer(void)
 		}
 	}
 
-	// KO表示中は更新しない
-	if (*Phase == PhaseFinish && ko == false)
+	// KO表示中orヒットストップ中は更新しない
+	if ((*Phase == PhaseFinish && ko == false) || GetHitStop() == true)
 	{
 
 	}
@@ -299,6 +300,12 @@ void UpdatePlayer(void)
 		playerWk.Animation->ChangeAnimation(playerWk.Animation, Win, Data[Win].Spd);
 	}
 
+	// KOボイス
+	if ((*Phase == PhaseGame || *Phase == PhaseTraining) && playerWk.HPzan == 0)
+	{
+		PlaySound(SE_KO);
+	}
+
 	// 敗北時HP0になったらダウン
 	if (playerWk.HPzan <= 0 && *Phase != PhaseTutorial)
 	{
@@ -308,14 +315,16 @@ void UpdatePlayer(void)
 		{
 			playerWk.Animation->ChangeAnimation(playerWk.Animation, Downpose, Data[Downpose].Spd);
 		}
-		PlaySound(SE_KO);
 		StopSound(BGM_BATTLE);
 		StopSound(BGM_TRAINING);
-		SetPhase(PhaseFinish);
+		if (*Phase != PhaseFinish)
+		{
+			SetPhase(PhaseFinish);
+		}
 	}
 
-	// KO表示中は更新しない
-	if (*Phase == PhaseFinish && ko == false)
+	// KO表示中orヒットストップ中は更新しない
+	if ((*Phase == PhaseFinish && ko == false) || GetHitStop() == true)
 	{
 
 	}

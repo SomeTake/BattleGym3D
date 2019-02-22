@@ -46,6 +46,7 @@
 #include "ball.h"
 #include "battle.h"
 #include "shadow.h"
+#include "game.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -590,46 +591,15 @@ if (GetKeyboardTrigger(DIK_0))
 		break;
 
 	case PhaseTutorial:
-		UpdatePlayer();
-		UpdateEnemy();
-		UpdateGauge();
-		UpdateEGauge();
-		UpdateFrame();
-		UpdateSpGauge();
-		UpdateESpGauge();
-		UpdateFrameSpgauge();
-		UpdateSpmax();
-		UpdateRedGauge();
-		UpdateERedGauge();
 		UpdateTutorial();
-		UpdateMeshField();
-		UpdateMeshWall();
-		UpdateCamera();
-		UpdateParticle();
-		UpdateSkyBox();
-		UpdateShadow();
-
+		UpdateGame();
 		break;
 
 	case PhaseTraining:
-		UpdatePlayer();
-		UpdateEnemy();
-		UpdateGauge();
-		UpdateEGauge();
-		UpdateFrame();
-		UpdateSpGauge();
-		UpdateESpGauge();
-		UpdateFrameSpgauge();
-		UpdateSpmax();
-		UpdateRedGauge();
-		UpdateERedGauge();
-		UpdateMeshField();
-		UpdateMeshWall();
-		UpdateCamera();
-		UpdateParticle();
-		UpdateSkyBox();
 		UpdateTimer();
-		UpdateShadow();
+		UpdateGame();
+		UpdateScore();
+		UpdateEScore();
 
 		break;
 
@@ -646,76 +616,28 @@ if (GetKeyboardTrigger(DIK_0))
 		break;
 
 	case PhaseCountdown:
-		UpdatePlayer();
-		UpdateEnemy();
 		UpdateScore();
 		UpdateEScore();
-		UpdateGauge();
-		UpdateEGauge();
-		UpdateFrame();
-		UpdateSpGauge();
-		UpdateESpGauge();
 		UpdateTimer();
-		UpdateFrameSpgauge();
-		UpdateSpmax();
-		UpdateRedGauge();
-		UpdateERedGauge();
 		UpdateCountdown();
-		UpdateMeshField();
-		UpdateMeshWall();
-		UpdateCamera();
-		UpdateParticle();
-		UpdateSkyBox();
-		UpdateShadow();
+		UpdateGame();
 
 		break;
 
 	case PhaseGame:
-		UpdateMeshField();
-		UpdateMeshWall();
-		UpdatePlayer();
-		UpdateEnemy();
-		UpdateCamera();
 		UpdateScore();
 		UpdateEScore();
-		UpdateGauge();
-		UpdateEGauge();
-		UpdateFrame();
-		UpdateSpGauge();
-		UpdateESpGauge();
 		UpdateTimer();
-		UpdateFrameSpgauge();
-		UpdateSpmax();
-		UpdateRedGauge();
-		UpdateERedGauge();
-		UpdateParticle();
-		UpdateSkyBox();
-		UpdateShadow();
+		UpdateGame();
 
 		break;
 
 	case PhaseFinish:
-		UpdatePlayer();
-		UpdateEnemy();
 		UpdateScore();
 		UpdateEScore();
-		UpdateGauge();
-		UpdateEGauge();
-		UpdateFrame();
-		UpdateSpGauge();
-		UpdateESpGauge();
-		UpdateTimer();
-		UpdateFrameSpgauge();
-		UpdateSpmax();
-		UpdateRedGauge();
-		UpdateERedGauge();
+		UpdateGame();
 		UpdateKnockout();
-		UpdateMeshField();
-		UpdateMeshWall();
-		UpdateCamera();
-		UpdateParticle();
-		UpdateSkyBox();
-		UpdateShadow();
+		UpdateTimer();
 
 		break;
 
@@ -779,100 +701,21 @@ void Draw(int no)
 			break;
 
 		case PhaseTraining:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
+			DrawGame();
 
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			// エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
 			DrawTimer();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
-
 			break;
 
 		case PhaseTutorial:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
-
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			// エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
+			DrawGame();
 
 			DrawTutorial();
 			break;
 
 		case PhasePause:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
+			DrawGame();
 
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			// エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawScore();
-			DrawEScore();
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
 			DrawTimer();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
 
 			//ポーズ画面
 			DrawBlackscreen();
@@ -882,34 +725,9 @@ void Draw(int no)
 			break;
 
 		case PhaseTrainingPause:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
-
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			// エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
+			DrawGame();
+			
 			DrawTimer();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
 
 			//ポーズ画面
 			DrawBlackscreen();
@@ -919,105 +737,24 @@ void Draw(int no)
 			break;
 
 		case PhaseCountdown:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
+			DrawGame();
 
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			// エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawScore();
-			DrawEScore();
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
 			DrawTimer();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
 
 			DrawCountdown();
 			break;
 
 		case PhaseGame:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
+			DrawGame();
 
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			//エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawScore();
-			DrawEScore();
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
 			DrawTimer();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
 
 			break;
 
 		case PhaseFinish:
-			//BG
-			DrawSkyBox();
-			DrawMeshField();
-			DrawMeshWall();
+			DrawGame();
 
-			// 影
-			DrawShadow();
-
-			// キャラクター等
-			DrawEnemy();
-			DrawPlayer();
-
-			// エフェクト
-			DrawParticle();
-
-			//画面上のUI
-			DrawScore();
-			DrawEScore();
-			DrawRedGauge();
-			DrawERedGauge();
-			DrawGauge();
-			DrawEGauge();
-			DrawFrame();
 			DrawTimer();
-
-			//画面下のUI
-			DrawSpGauge();
-			DrawESpGauge();
-			DrawFrameSpgauge();
-			DrawSpmax();
 
 			DrawKnockout();
 			break;

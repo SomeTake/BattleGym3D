@@ -160,6 +160,7 @@
     <ClInclude Include="evaluation.h" />
     <ClInclude Include="frame.h" />
     <ClInclude Include="framespgauge.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="gauge.h" />
     <ClInclude Include="hadou.h" />
     <ClInclude Include="Icon.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="frame.cpp" />
     <ClCompile Include="framespgauge.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="gauge.cpp" />
     <ClCompile Include="hadou.cpp" />
     <ClCompile Include="input.cpp" />

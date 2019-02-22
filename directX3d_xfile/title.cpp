@@ -9,6 +9,7 @@
 #include "inputselect.h"
 #include "modeselect.h"
 #include "cursor.h"
+#include "sound.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
