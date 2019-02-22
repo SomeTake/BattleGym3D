@@ -232,7 +232,7 @@ static float HitRadius[] =
 bool HitBC(D3DXVECTOR3 AttackPos, D3DXVECTOR3 DefendPos, float AttackRange, float DefendRange);	// バウンディングサークル当たり判定
 bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara);		// キャラクター同士の当たり判定
 void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// 攻撃が当たったときの動き
-void SubDamage(CHARA *Chara, int sub);							// ダメージを与える
+void SubDamage(CHARA *Chara, int sub, bool AtkCharaInput);		// ダメージを与える
 void AddSpGauge(CHARA *Chara, int add);							// SPゲージの増減
 void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// 波動拳の当たり判定
 void AddScore(CHARA *Chara, int add);							// スコアの追加

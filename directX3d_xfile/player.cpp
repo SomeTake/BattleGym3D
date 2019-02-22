@@ -241,8 +241,8 @@ void UpdatePlayer(void)
 	// —¼•û‘Ì—ÍMAX
 	else if (GetKeyboardTrigger(DIK_5))
 	{
-		SubDamage(&playerWk, -FULL_HP);
-		SubDamage(enemyWk, -FULL_HP);
+		SubDamage(&playerWk, -FULL_HP, false);
+		SubDamage(enemyWk, -FULL_HP, false);
 	}
 
 	// “ü—Íƒ‚[ƒh‚ÌØ‘Ö

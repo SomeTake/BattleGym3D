@@ -49,9 +49,9 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 { "data/SE/countdown0.wav", false, 1.00f },
 // BGM
 { "data/BGM/title.wav", true, 0.50f },
-{ "data/BGM/tutorial.wav", true, 0.10f },
-{ "data/BGM/training.wav", true, 0.10f },
-{ "data/BGM/battle.wav", true, 0.10f }
+{ "data/BGM/tutorial.wav", true, 0.50f },
+{ "data/BGM/training.wav", true, 0.50f },
+{ "data/BGM/battle.wav", true, 0.50f }
 };
 
 //=============================================================================

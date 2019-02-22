@@ -161,7 +161,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// 敵のモーション変更
 			DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Damage, Data[Damage].Spd);
 			// ダメージ
-			SubDamage(DefendChara, Data[Punchi].Damage);
+			SubDamage(DefendChara, Data[Punchi].Damage, AttackChara->CommandInput);
 			// SPゲージ増減
 			AddSpGauge(AttackChara, Data[Punchi].Damage);
 			AddSpGauge(DefendChara, Data[Punchi].Damage);
@@ -194,7 +194,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// 敵のモーション変更
 			DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Damage, Data[Damage].Spd);
 			// ダメージ
-			SubDamage(DefendChara, Data[Kick].Damage);
+			SubDamage(DefendChara, Data[Kick].Damage, AttackChara->CommandInput);
 			// SPゲージ増減
 			AddSpGauge(AttackChara, Data[Kick].Damage);
 			AddSpGauge(DefendChara, Data[Kick].Damage);
@@ -214,7 +214,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			|| DefendChara->Animation->CurrentAnimID == Downpose || DefendChara->Animation->CurrentAnimID == Getup)
 		{
 			// ダメージ
-			SubDamage(DefendChara, (int)(Data[Shoryu].Damage * 0.1f));
+			SubDamage(DefendChara, (int)(Data[Shoryu].Damage * 0.1f), AttackChara->CommandInput);
 			// エフェクト
 			SetGuardParticle(AttackChara->HitBall[RightFoot].pos);
 			SetGuardParticle(AttackChara->HitBall[LeftFoot].pos);
@@ -229,7 +229,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 			// 敵のモーション変更
 			DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Down, Data[Down].Spd);
 			// ダメージ
-			SubDamage(DefendChara, Data[Shoryu].Damage);
+			SubDamage(DefendChara, Data[Shoryu].Damage, AttackChara->CommandInput);
 			// SPゲージ増減
 			AddSpGauge(AttackChara, Data[Shoryu].Damage);
 			AddSpGauge(DefendChara, Data[Shoryu].Damage);
@@ -248,7 +248,7 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 		// 敵のモーション変更
 		DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Down, Data[Down].Spd);
 		// ダメージ
-		SubDamage(DefendChara, Data[SPattack].Damage);
+		SubDamage(DefendChara, Data[SPattack].Damage, AttackChara->CommandInput);
 		// SPゲージ増減
 		AddSpGauge(AttackChara, Data[SPattack].Damage);
 		AddSpGauge(DefendChara, Data[SPattack].Damage);
@@ -262,17 +262,35 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 		//　ヒットフラグの変更
 		AttackChara->HitFrag = true;
 		break;
+	case Throw:
+		// ダメージ
+		SubDamage(DefendChara, Data[Throw].Damage, AttackChara->CommandInput);
+		// SPゲージ増減
+		AddSpGauge(AttackChara, Data[Throw].Damage);
+		AddSpGauge(DefendChara, Data[Throw].Damage);
+		// スコア
+		AddScore(AttackChara, Data[Throw].Damage);
+		// ヒットフラグの変更
+		AttackChara->HitFrag = true;
+		break;
 	default:
 		break;
 	}
 }
 //=============================================================================
-// ダメージを与える
-// 引数:CHARA:与える対象のキャラクタ sub :減少させる点数。マイナスも可能、初期化などに。
+// ダメージを与える（コマンド入力の場合ダメージを1.1倍にする）
+// 引数:CHARA:与える対象のキャラクタ sub :減少させる点数。マイナスも可能、初期化などに。 AtkCharaInput:攻撃側の操作モード
 //=============================================================================
-void SubDamage(CHARA *Chara, int sub)
+void SubDamage(CHARA *Chara, int sub, bool AtkCharaInput)
 {
-	Chara->HPzan -= sub;
+	if (AtkCharaInput == true)
+	{
+		Chara->HPzan -= (int)(sub * 1.1f);
+	}
+	else
+	{
+		Chara->HPzan -= sub;
+	}
 
 	//カンスト処理
 	if (Chara->HPzan < 0)
@@ -339,7 +357,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 				|| DefendChara->Animation->CurrentAnimID == Downpose || DefendChara->Animation->CurrentAnimID == Getup)
 			{
 				// ダメージ
-				SubDamage(DefendChara, (int)(Data[Hadou].Damage * 0.1f));
+				SubDamage(DefendChara, (int)(Data[Hadou].Damage * 0.1f), AttackChara->CommandInput);
 
 				// エフェクト
 				SetGuardParticle(DefendChara->HitBall[i].pos);
@@ -356,7 +374,7 @@ void HitHadou(CHARA *AttackChara, CHARA *DefendChara)
 				// 敵のモーション変更
 				DefendChara->Animation->ChangeAnimation(DefendChara->Animation, Damage, Data[Damage].Spd);
 				// ダメージ
-				SubDamage(DefendChara, Data[Hadou].Damage);
+				SubDamage(DefendChara, Data[Hadou].Damage, AttackChara->CommandInput);
 
 				// エフェクト
 				SetHitParticle(AttackChara->HadouBullet.pos);
@@ -638,7 +656,6 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		// 一定時間経過で相手の投げアニメーションに合わせてダウンモーションに移行
 		if (AIChara->framecount == THROW_FRAME)
 		{
-			SubDamage(AIChara, Data[Throw].Damage);
 			AIChara->Animation->ChangeAnimation(AIChara->Animation, Down, Data[Down].Spd);
 			AIChara->framecount = 0;
 		}
@@ -812,25 +829,29 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		// 移動
 		// 前
 		if (GetKeyboardPress(ControllerNum == 0 ? DIK_RIGHT : DIK_A)
-			|| IsButtonPressed(ControllerNum, BUTTON_RIGHT) || IsButtonPressed(ControllerNum, STICK_RIGHT))
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? BUTTON_RIGHT : BUTTON_LEFT)
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? STICK_RIGHT : STICK_LEFT))
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Frontwalk, Data[Frontwalk].Spd);
 		}
 		// 後ろ
 		else if (GetKeyboardPress(ControllerNum == 0 ? DIK_LEFT : DIK_D)
-			|| IsButtonPressed(ControllerNum, BUTTON_LEFT) || IsButtonPressed(ControllerNum, STICK_LEFT))
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? BUTTON_LEFT : BUTTON_RIGHT)
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? STICK_LEFT : STICK_RIGHT))
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Backwalk, Data[Backwalk].Spd);
 		}
 		// 手前
 		else if (GetKeyboardPress(ControllerNum == 0 ? DIK_DOWN : DIK_S)
-			|| IsButtonPressed(ControllerNum, BUTTON_DOWN) || IsButtonPressed(ControllerNum, STICK_DOWN))
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? BUTTON_DOWN : BUTTON_UP) 
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? STICK_DOWN : STICK_UP))
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Rightstep, Data[Rightstep].Spd);
 		}
 		// 奥
 		else if (GetKeyboardPress(ControllerNum == 0 ? DIK_UP : DIK_W)
-			|| IsButtonPressed(ControllerNum, BUTTON_UP) || IsButtonPressed(ControllerNum, STICK_UP))
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? BUTTON_UP : BUTTON_DOWN)
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? STICK_UP : STICK_DOWN))
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Leftstep, Data[Leftstep].Spd);
 		}
@@ -890,7 +911,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 	case Frontwalk:
 		// 前
 		if (GetKeyboardPress(ControllerNum == 0 ? DIK_RIGHT : DIK_A)
-			|| IsButtonPressed(ControllerNum, BUTTON_RIGHT) || IsButtonPressed(ControllerNum, STICK_RIGHT))
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? BUTTON_RIGHT : BUTTON_LEFT)
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? STICK_RIGHT : STICK_LEFT))
 		{
 
 		}
@@ -956,7 +978,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 	case Backwalk:
 		// 後ろ
 		if (GetKeyboardPress(ControllerNum == 0 ? DIK_LEFT : DIK_D)
-			|| IsButtonPressed(ControllerNum, BUTTON_LEFT) || IsButtonPressed(ControllerNum, STICK_LEFT))
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? BUTTON_LEFT : BUTTON_RIGHT)
+			|| IsButtonPressed(ControllerNum, ControllerNum == 0 ? STICK_LEFT : STICK_RIGHT))
 		{
 
 		}
@@ -1206,7 +1229,6 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		// 一定時間経過で相手の投げアニメーションに合わせてダウンモーションに移行
 		if (Chara->framecount == THROW_FRAME)
 		{
-			SubDamage(Chara, Data[Throw].Damage);
 			Chara->Animation->ChangeAnimation(Chara->Animation, Down, Data[Down].Spd);
 			Chara->framecount = 0;
 		}
@@ -1699,7 +1721,6 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		// 一定時間経過で相手の投げアニメーションに合わせてダウンモーションに移行
 		if (Chara->framecount == THROW_FRAME)
 		{
-			SubDamage(Chara, Data[Throw].Damage);
 			Chara->Animation->ChangeAnimation(Chara->Animation, Down, Data[Down].Spd);
 			Chara->framecount = 0;
 		}
