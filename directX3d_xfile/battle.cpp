@@ -491,6 +491,8 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 				case 5:
 					if (AIChara->SP == FULL_SPGAUGE)
 					{
+						// SPゲージ消費
+						AddSpGauge(AIChara, -FULL_SPGAUGE);
 						AIChara->Animation->ChangeAnimation(AIChara->Animation, SPattack, Data[SPattack].Spd);
 					}
 					break;
@@ -630,8 +632,6 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 		if (AIChara->Animation->MotionEnd == true)
 		{
 			AIChara->Animation->ChangeAnimation(AIChara->Animation, Idle, Data[Idle].Spd);
-			// SPゲージ消費
-			AddSpGauge(AIChara, -FULL_SPGAUGE);
 			// モーション座標にキャラクター座標を合わせる
 			AIChara->pos = D3DXVECTOR3(AIChara->HitBall[Hips].pos.x, 0.0f, AIChara->HitBall[Hips].pos.z);
 			AIChara->HitFrag = false;
@@ -773,6 +773,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 					if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O)
 						|| IsButtonTriggered(ControllerNum, BUTTON_C))
 					{
+						// SPゲージ消費
+						AddSpGauge(Chara, -FULL_SPGAUGE);
 						Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 						Chara->graceflag = false;
 						Chara->graceframe = 0;
@@ -785,6 +787,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 					if (GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L)
 						|| IsButtonTriggered(ControllerNum, BUTTON_X))
 					{
+						// SPゲージ消費
+						AddSpGauge(Chara, -FULL_SPGAUGE);
 						Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 						Chara->graceflag = false;
 						Chara->graceframe = 0;
@@ -875,6 +879,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
 				|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// パンチ
@@ -941,6 +947,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
 				|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// パンチ
@@ -1008,6 +1016,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
 				|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// パンチ
@@ -1087,6 +1097,8 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 			((GetKeyboardTrigger(ControllerNum == 0 ? DIK_H : DIK_O) && GetKeyboardTrigger(ControllerNum == 0 ? DIK_N : DIK_L))
 				|| (IsButtonTriggered(ControllerNum, BUTTON_C) && IsButtonTriggered(ControllerNum, BUTTON_X))))
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// パンチ
@@ -1203,8 +1215,6 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		if (Chara->Animation->MotionEnd == true)
 		{
 			Chara->Animation->ChangeAnimation(Chara->Animation, Idle, Data[Idle].Spd);
-			// SPゲージ消費
-			AddSpGauge(Chara, -FULL_SPGAUGE);
 			// モーション座標にキャラクター座標を合わせる
 			Chara->pos = D3DXVECTOR3(Chara->HitBall[Hips].pos.x, 0.0f, Chara->HitBall[Hips].pos.z);
 			Chara->HitFrag = false;
@@ -1373,6 +1383,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		// SP技
 		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// 投げ
@@ -1433,6 +1445,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		// SP技
 		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// 投げ
@@ -1497,6 +1511,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		// SP技
 		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// 投げ
@@ -1576,6 +1592,8 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 		// SP技
 		if (CheckInput(Chara->Input, CMD_SPattack) == true && Chara->SP == FULL_SPGAUGE)
 		{
+			// SPゲージ消費
+			AddSpGauge(Chara, -FULL_SPGAUGE);
 			Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 		}
 		// 投げ

@@ -126,32 +126,34 @@ enum CharaStateNum
 // バトル用データ構造体
 typedef struct
 {
-	int Damage;			// そのモーションによって与えるダメージ量（SPゲージ、スコアなども）
-	float Spd;			// アニメーションを再生するスピード
-	float ShiftTime;	// アニメーションの切り替え時間
+	int Damage;					// そのモーションによって与えるダメージ量（SPゲージ、スコアなども）
+	float Spd;					// アニメーションを再生するスピード
+	float ShiftTime;			// アニメーションの切り替え時間
+	int CollisionStartTime;		// 攻撃当たり判定の発生する時間
+	int CollisionFinishTime;	// 攻撃当たり判定の終了する時間
 }BATTLEDATA;
 
 // バトル用データ構造体配列
 static BATTLEDATA Data[AnimMax] = {
-	{0, 1.5f, 0.1f },	// Idle
-{ 0, 2.0f, 0.1f },		// Frontwalk
-{ 0, 2.0f, 0.1f },		// Backwalk
-{ 0, 2.0f, 0.1f },		// Rightstep
-{ 0, 2.0f, 0.1f },		// Leftstep
-{ 0, 1.0f, 0.1f },		// Guard
-{ 0, 1.5f, 0.1f },		// Damage
-{ 0, 1.5f, 0.1f },		// Down
-{ 0, 1.0f, 0.1f },		// Downpose
-{ 0, 1.5f, 0.1f },		// Getup
-{ 40, 2.5f, 0.1f },		// Punchi
-{ 50, 2.5f, 0.1f },		// Kick
-{ 100, 3.0f, 0.1f },	// Hadou
-{ 120, 2.0f, 0.1f },	// Shoryu
-{ 400, 1.5f, 0.1f },	// SPattack
-{ 150, 1.0f, 0.1f },	// Throw
-{ 0, 2.0f, 0.1f },		// Win
-{ 0, 1.5f, 0.1f },		// Miss
-{ 0, 1.0f, 0.1f },		// Throwpose
+	{0, 1.5f, 0.1f, 0, 0 },		// Idle
+{ 0, 2.0f, 0.1f, 0, 0 },		// Frontwalk
+{ 0, 2.0f, 0.1f, 0, 0 },		// Backwalk
+{ 0, 2.0f, 0.1f, 0, 0 },		// Rightstep
+{ 0, 2.0f, 0.1f, 0, 0 },		// Leftstep
+{ 0, 1.0f, 0.1f, 0, 0 },		// Guard
+{ 0, 1.5f, 0.1f, 0, 0 },		// Damage
+{ 0, 1.5f, 0.1f, 0, 0 },		// Down
+{ 0, 1.0f, 0.1f, 0, 0 },		// Downpose
+{ 0, 1.5f, 0.1f, 0, 0 },		// Getup
+{ 40, 2.5f, 0.1f, 0, 0 },		// Punchi
+{ 50, 2.5f, 0.1f, 0, 0 },		// Kick
+{ 100, 3.0f, 0.1f, 0, 0 },		// Hadou
+{ 120, 2.0f, 0.1f, 0, 0 },		// Shoryu
+{ 400, 1.5f, 0.1f, 0, 0 },		// SPattack
+{ 150, 1.0f, 0.1f, 0, 0 },		// Throw
+{ 0, 2.0f, 0.1f, 0, 0 },		// Win
+{ 0, 1.5f, 0.1f, 0, 0 },		// Miss
+{ 0, 1.0f, 0.1f, 0, 0 },		// Throwpose
 };
 
 // コマンド表（優先度高い順）
