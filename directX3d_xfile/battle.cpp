@@ -430,6 +430,18 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 	float PEdist = GetPEdistance();
 	bool AttackFlag = false;
 
+	// UŒ‚Žž‚Ì“–‚½‚è”»’è”­¶ˆ—
+	if (AIChara->Animation->CurrentAnimID == Punchi || AIChara->Animation->CurrentAnimID == Kick
+		|| AIChara->Animation->CurrentAnimID == Hadou || AIChara->Animation->CurrentAnimID == Shoryu
+		|| AIChara->Animation->CurrentAnimID == SPattack)
+	{
+		AIChara->framecount++;
+		if (AIChara->Animation->MotionEnd == true)
+		{
+			AIChara->framecount = 0;
+		}
+	}
+
 	// ‘ŠŽè‚ÌUŒ‚”»’è
 	if (AnotherChara->Animation->CurrentAnimID == Punchi
 		|| AnotherChara->Animation->CurrentAnimID == Kick
@@ -740,6 +752,17 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 		}
 	}
 
+	// UŒ‚Žž‚Ì“–‚½‚è”»’è”­¶ˆ—
+	if (Chara->Animation->CurrentAnimID == Punchi || Chara->Animation->CurrentAnimID == Kick
+		|| Chara->Animation->CurrentAnimID == Hadou || Chara->Animation->CurrentAnimID == Shoryu
+		|| Chara->Animation->CurrentAnimID == SPattack)
+	{
+		Chara->framecount++;
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->framecount = 0;
+		}
+	}
 
 	if (Chara->graceflag == true)
 	{
@@ -1374,6 +1397,19 @@ void CommandInput(CHARA *Chara, int ControllerNum)
 
 	// ”z—ñ0”Ô‚É¡“ü—Í‚µ‚½‚à‚Ì‚ð“ü‚ê‚é
 	Chara->Input[0] = input;
+
+
+	// UŒ‚Žž‚Ì“–‚½‚è”»’è”­¶ˆ—
+	if (Chara->Animation->CurrentAnimID == Punchi || Chara->Animation->CurrentAnimID == Kick
+		|| Chara->Animation->CurrentAnimID == Hadou || Chara->Animation->CurrentAnimID == Shoryu
+		|| Chara->Animation->CurrentAnimID == SPattack)
+	{
+		Chara->framecount++;
+		if (Chara->Animation->MotionEnd == true)
+		{
+			Chara->framecount = 0;
+		}
+	}
 
 	switch (Chara->Animation->CurrentAnimID)
 	{

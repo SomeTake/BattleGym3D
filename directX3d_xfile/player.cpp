@@ -262,6 +262,7 @@ void UpdatePlayer(void)
 	PrintDebugProc("プレイヤー入力猶予フラグ %s\n", playerWk.graceflag ? "ON" : "OFF");
 	PrintDebugProc("使用しているパーティクルの数 %d\n", Num);
 	PrintDebugProc("現在の入力モード Player:%s 切り替え9キー\n", playerWk.CommandInput ? "CommandInput" : "EasyInput");
+	PrintDebugProc("モーション時間 %d\n", playerWk.framecount);
 #endif
 	// チュートリアル用
 	if (*Phase == PhaseTutorial)
@@ -343,13 +344,17 @@ void UpdatePlayer(void)
 	}
 
 	// 当たり判定
-	if (playerWk.HitFrag == false)
+	if (playerWk.framecount >= Data[playerWk.Animation->CurrentAnimID].CollisionStartTime
+		&& playerWk.framecount <= Data[playerWk.Animation->CurrentAnimID].CollisionFinishTime)
 	{
-		// キャラクター同士の当たり判定
-		if (HitCheckCToC(&playerWk, enemyWk) == true)
+		if (playerWk.HitFrag == false)
 		{
-			// 当たった後の動き
-			HitAction(&playerWk, enemyWk);
+			// キャラクター同士の当たり判定
+			if (HitCheckCToC(&playerWk, enemyWk) == true)
+			{
+				// 当たった後の動き
+				HitAction(&playerWk, enemyWk);
+			}
 		}
 	}
 

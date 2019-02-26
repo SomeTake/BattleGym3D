@@ -64,13 +64,18 @@ typedef struct {
 	HADOU				HadouBullet;		// 波動拳構造体
 	int					score;				// スコア
 	POP					Popup;				// 1Por2P表示のビルボード
-	int					framecount;			// アニメーションの途中で処理をするためタイミングを測るカウンタ
+	int					framecount;			// アニメーションの途中で当たり判定を発生させるタイミングを測るカウンタ（アニメーションが切り替わったら0に戻す）
+	int					damagecount;		// ダメージを回復するカウント
+
+	// 入力モード
+	bool				CommandInput;		// コマンド入力をONにするフラグ（true:CommandInput、false:EasyInput）
+	// EasyInput
 	int					gracetype;			// 入力猶予の種類
 	int					graceframe;			// 入力猶予の時間
 	bool				graceflag;			// 入力猶予の有効フラグ
-	int					damagecount;		// ダメージを回復するカウント
+	// CommandInput
 	int					Input[INPUT_MAX];	// 入力処理用配列
-	bool				CommandInput;		// コマンド入力をONにするフラグ（true:CommandInput、false:EasyInput）
+
 	int					ShadowIdx;			// 使用する影の番号
 }CHARA;
 
@@ -145,11 +150,11 @@ static BATTLEDATA Data[AnimMax] = {
 { 0, 1.5f, 0.1f, 0, 0 },		// Down
 { 0, 1.0f, 0.1f, 0, 0 },		// Downpose
 { 0, 1.5f, 0.1f, 0, 0 },		// Getup
-{ 40, 2.5f, 0.1f, 0, 0 },		// Punchi
-{ 50, 2.5f, 0.1f, 0, 0 },		// Kick
-{ 100, 3.0f, 0.1f, 0, 0 },		// Hadou
-{ 120, 2.0f, 0.1f, 0, 0 },		// Shoryu
-{ 400, 1.5f, 0.1f, 0, 0 },		// SPattack
+{ 40, 2.5f, 0.1f, 10, 20 },		// Punchi
+{ 50, 2.5f, 0.1f, 15, 30 },		// Kick
+{ 100, 3.0f, 0.1f, 25, 0 },		// Hadou
+{ 120, 2.0f, 0.1f, 5, 20 },		// Shoryu
+{ 400, 1.5f, 0.1f, 30, 150 },		// SPattack
 { 150, 1.0f, 0.1f, 0, 0 },		// Throw
 { 0, 2.0f, 0.1f, 0, 0 },		// Win
 { 0, 1.5f, 0.1f, 0, 0 },		// Miss

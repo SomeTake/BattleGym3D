@@ -302,13 +302,17 @@ void UpdateEnemy(void)
 	}
 
 	// 当たり判定
-	if (enemyWk.HitFrag == false)
+	if (enemyWk.framecount >= Data[enemyWk.Animation->CurrentAnimID].CollisionStartTime
+		&& enemyWk.framecount <= Data[enemyWk.Animation->CurrentAnimID].CollisionFinishTime)
 	{
-		// キャラクター同士の当たり判定
-		if (HitCheckCToC(&enemyWk, playerWk) == true)
+		if (enemyWk.HitFrag == false)
 		{
-			// 当たった後の動き
-			HitAction(&enemyWk, playerWk);
+			// キャラクター同士の当たり判定
+			if (HitCheckCToC(&enemyWk, playerWk) == true)
+			{
+				// 当たった後の動き
+				HitAction(&enemyWk, playerWk);
+			}
 		}
 	}
 
