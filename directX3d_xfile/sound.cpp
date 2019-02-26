@@ -240,7 +240,16 @@ HRESULT PlaySound(SOUND_LABEL label)
 	buffer.AudioBytes = g_aSizeAudio[label];
 	buffer.pAudioData = g_apDataAudio[label];
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopCount = 0;
+	
+	// ƒ‹[ƒv‚Ì‰Â”Ûİ’è
+	if (g_aParam[label].bLoop == true)
+	{
+		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+	else
+	{
+		buffer.LoopCount = 0;
+	}
 
 	// ó‘Ôæ“¾
 	g_apSourceVoice[label]->GetState(&xa2state);
