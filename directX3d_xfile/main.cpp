@@ -851,6 +851,7 @@ MATRIX *GetMatrix(void)
 void ReInit(void)
 {
 	// ƒ‚ƒfƒ‹‚Ì‰Šú‰»
+	InitShadow(1);
 	InitPlayer(1);
 	InitEnemy(1);
 	InitMeshField(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 10, 10, 100, 100, 1);
