@@ -131,6 +131,7 @@ enum
 {
 	PhaseCompanyLogo,			// 会社ロゴ画面
 	PhaseTitle,					// タイトル画面
+	PhaseReplay,				// タイトル画面を操作しないとリプレイを表示
 	PhaseTutorial,				// チュートリアル
 	PhaseTraining,				// トレーニングモード
 	PhasePause,					// ポーズ画面

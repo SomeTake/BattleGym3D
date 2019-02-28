@@ -221,7 +221,7 @@ void UpdateEnemy(void)
 		SetupTutorial(&enemyWk, RedWk);
 	}
 
-	if (*Phase != PhaseCountdown && *Phase != PhaseTraining && enemyWk.HPzan > 0)
+	if ((*Phase == PhaseGame || *Phase == PhaseTutorial) && enemyWk.HPzan > 0)
 	{
 		// “ü—ÍØ‘Ö
 		if (enemyWk.CommandInput == false)

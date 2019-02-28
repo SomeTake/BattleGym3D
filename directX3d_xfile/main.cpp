@@ -590,6 +590,10 @@ if (GetKeyboardTrigger(DIK_0))
 
 		break;
 
+	case PhaseReplay:
+		UpdateGame();
+		break;
+
 	case PhaseTutorial:
 		UpdateTutorial();
 		UpdateGame();
@@ -698,6 +702,10 @@ void Draw(int no)
 			DrawBlackscreen();
 			DrawModeselect();
 			DrawTitle();
+			break;
+
+		case PhaseReplay:
+			DrawGame();
 			break;
 
 		case PhaseTraining:

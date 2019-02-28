@@ -88,11 +88,23 @@ void UpdateModeselect(void)
 	int phase = *GetPhase();
 	CURSOR *CursorWk = GetCursor(0);
 
+	static int TitleCount = 0;
+
 	switch (phase)
 	{
 	case PhaseTitle:
 		if (selectok == false)
 		{
+			TitleCount++;
+
+			// リプレイ画面へ
+			if (TitleCount == TITLE_TIME)
+			{
+				TitleCount = 0;
+				SetPhase(PhaseReplay);
+				StopSound(BGM_TITLE);
+			}
+
 			//カーソル上下移動
 			if (GetKeyboardRepeat(DIK_UP) || IsButtonTriggered(0, BUTTON_UP) || IsButtonTriggered(0, STICK_UP)
 				|| IsButtonTriggered(1, BUTTON_UP) || IsButtonTriggered(1, STICK_UP))
@@ -147,6 +159,7 @@ void UpdateModeselect(void)
 			//モードセレクト
 			if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C) || IsButtonTriggered(1, BUTTON_C))
 			{
+				TitleCount = 0;
 				PlaySound(SE_SELECT1);
 
 				switch (titleselect)

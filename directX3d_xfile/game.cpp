@@ -24,6 +24,7 @@
 #include "skybox.h"
 #include "shadow.h"
 #include "particle.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -60,24 +61,32 @@ void UninitGame(void)
 //=============================================================================
 void UpdateGame(void)
 {
+	int Phase = *GetPhase();
+	static int ReplayCount = 0;
+
 	// データ更新
 	UpdatePlayer();
 	UpdateEnemy();
-	UpdateGauge();
-	UpdateEGauge();
-	UpdateFrame();
-	UpdateSpGauge();
-	UpdateESpGauge();
-	UpdateFrameSpgauge();
-	UpdateSpmax();
-	UpdateRedGauge();
-	UpdateERedGauge();
 	UpdateMeshField();
 	UpdateMeshWall();
 	UpdateCamera();
 	UpdateParticle();
 	UpdateSkyBox();
 	UpdateShadow();
+
+	// UIはリプレイでは使用しない
+	if (Phase != PhaseReplay)
+	{
+		UpdateGauge();
+		UpdateEGauge();
+		UpdateFrame();
+		UpdateSpGauge();
+		UpdateESpGauge();
+		UpdateFrameSpgauge();
+		UpdateSpmax();
+		UpdateRedGauge();
+		UpdateERedGauge();
+	}
 
 	// ヒットストップ処理
 	static int timer = 0;
@@ -91,6 +100,28 @@ void UpdateGame(void)
 			HitStop = false;
 		}
 	}
+
+	// リプレイ画面からタイトル画面へ戻る処理
+	if (Phase == PhaseReplay)
+	{
+		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_X) || IsButtonTriggered(1, BUTTON_X))
+		{
+			SetPhase(PhaseTitle);
+			PlaySound(BGM_TITLE);
+			ReplayCount = 0;
+		}
+
+		ReplayCount++;
+
+		if (ReplayCount == REC_TIME)
+		{
+			SetPhase(PhaseTitle);
+			PlaySound(BGM_TITLE);
+			ReplayCount = 0;
+		}
+
+	}
+
 }
 
 //=============================================================================
@@ -98,6 +129,8 @@ void UpdateGame(void)
 //=============================================================================
 void DrawGame(void)
 {
+	int Phase = *GetPhase();
+
 	//BG
 	DrawSkyBox();
 	DrawMeshField();
@@ -113,18 +146,22 @@ void DrawGame(void)
 	// エフェクト
 	DrawParticle();
 
-	//画面上のUI
-	DrawRedGauge();
-	DrawERedGauge();
-	DrawGauge();
-	DrawEGauge();
-	DrawFrame();
+	// UIはリプレイでは使用しない
+	if (Phase != PhaseReplay)
+	{
+		//画面上のUI
+		DrawRedGauge();
+		DrawERedGauge();
+		DrawGauge();
+		DrawEGauge();
+		DrawFrame();
 
-	//画面下のUI
-	DrawSpGauge();
-	DrawESpGauge();
-	DrawFrameSpgauge();
-	DrawSpmax();
+		//画面下のUI
+		DrawSpGauge();
+		DrawESpGauge();
+		DrawFrameSpgauge();
+		DrawSpmax();
+	}
 
 }
 

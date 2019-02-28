@@ -268,7 +268,7 @@ void UpdatePlayer(void)
 		SetupTutorial(&playerWk, RedWk);
 	}
 
-	if (*Phase != PhaseCountdown && playerWk.HPzan > 0)
+	if ((*Phase == PhaseGame || *Phase == PhaseTraining || *Phase == PhaseTutorial) && playerWk.HPzan > 0)
 	{
 		// “ü—ÍØ‘Ö
 		if (playerWk.CommandInput == false)
