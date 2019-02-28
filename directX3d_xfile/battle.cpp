@@ -287,25 +287,29 @@ void HitAction(CHARA *AttackChara, CHARA *DefendChara)
 //=============================================================================
 void SubDamage(CHARA *Chara, int sub, bool AtkCharaInput)
 {
-	if (AtkCharaInput == true)
-	{
-		Chara->HPzan -= (int)(sub * 1.1f);
-	}
-	else
-	{
-		Chara->HPzan -= sub;
-	}
+	int *Phase = GetPhase();
 
-	//カンスト処理
-	if (Chara->HPzan < 0)
+	if (*Phase != PhaseReplay)
 	{
-		Chara->HPzan = 0;
-	}
-	else if (Chara->HPzan >= FULL_HP)
-	{
-		Chara->HPzan = FULL_HP;
-	}
+		if (AtkCharaInput == true)
+		{
+			Chara->HPzan -= (int)(sub * 1.1f);
+		}
+		else
+		{
+			Chara->HPzan -= sub;
+		}
 
+		//カンスト処理
+		if (Chara->HPzan < 0)
+		{
+			Chara->HPzan = 0;
+		}
+		else if (Chara->HPzan >= FULL_HP)
+		{
+			Chara->HPzan = FULL_HP;
+		}
+	}
 }
 
 

@@ -6,6 +6,8 @@
 //=============================================================================
 #include "main.h"
 #include "input.h"
+#include "battle.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -57,13 +59,12 @@ static DIMOUSESTATE2   mouseTrigger;	// 押された瞬間だけON
 
 static LPDIRECTINPUTDEVICE8	pGamePad[GAMEPADMAX] = { NULL,NULL };// パッドデバイス
 
-static DWORD	padState[GAMEPADMAX];	// パッド情報（複数対応）
-static DWORD	padRepeat[GAMEPADMAX];
+static DWORD	padState[GAMEPADMAX];		// パッド情報（複数対応）
 static DWORD	padTrigger[GAMEPADMAX];
-static int		padCount = 0;			// 検出したパッドの数
+static DWORD	padLockTrigger[GAMEPADMAX];	// リプレイ中で上のパッドトリガー配列が使用できない場合に使う
+static int		padCount = 0;				// 検出したパッドの数
 
-static int padRepeatCount1[GAMEPADMAX][4];
-static int padRepeatCount2[GAMEPADMAX];
+static int ReplayTime = 0;
 
 //=============================================================================
 // 入力処理の初期化
@@ -478,6 +479,14 @@ void UpdatePad(void)
 	DIJOYSTATE2		dijs;
 	int				i;
 
+	int *Phase = GetPhase();
+	static int ReplayInput[GAMEPADMAX][REC_TIME] = { NULL };	// リプレイ保存用の配列
+
+	if (*Phase == PhaseGame || *Phase == PhaseTraining || *Phase == PhaseReplay)
+	{
+		ReplayTime == (REC_TIME - 1) ? ReplayTime = 0 : ReplayTime++;				// リプレイ保存用配列の更新
+	}
+
 	for (i = 0; i<padCount; i++)
 	{
 		DWORD lastPadState;
@@ -547,46 +556,23 @@ void UpdatePad(void)
 		//* Ｍボタン
 		if (dijs.rgbButtons[9] & 0x80)	padState[i] |= BUTTON_M;
 
+		// 通常時
+		if (*Phase == PhaseTraining || *Phase == PhaseGame)
+		{
+			ReplayInput[i][ReplayTime] = padState[i];
+		}
+		// リプレイ時
+		else if (*Phase == PhaseReplay)
+		{
+			padLockTrigger[i] = ((lastPadState ^ padState[i])	// 前回と違っていて
+				& padState[i]);					// しかも今ONのやつ
+
+			padState[i] = ReplayInput[i][ReplayTime];
+		}
+
 		// Trigger設定
 		padTrigger[i] = ((lastPadState ^ padState[i])	// 前回と違っていて
 			& padState[i]);					// しかも今ONのやつ
-
-		// Repeat
-		padTrigger[i] = padTrigger[i];
-		// 押されているボタンのリピートカウンタを回す　押されていないボタンは0に戻す
-		//padState[i] & BUTTON_UP    ? padRepeatCount1[i][0]++ : padRepeatCount1[i][0] = 0;
-		//padState[i] & BUTTON_DOWN  ? padRepeatCount1[i][0]++ : padRepeatCount1[i][0] = 0;
-		//padState[i] & BUTTON_RIGHT ? padRepeatCount1[i][0]++ : padRepeatCount1[i][0] = 0;
-		//padState[i] & BUTTON_LEFT  ? padRepeatCount1[i][0]++ : padRepeatCount1[i][0] = 0;
-		//for (int j = 0; j < 4; j++)
-		//{
-		//	if (padRepeatCount1[i][j] >= REPEAT_FRAME)
-		//	{
-		//		padRepeatCount2[i]++;
-		//		{
-		//			padRepeatCount2[i]++;
-		//			if (padRepeatCount2[i] >= REPEAT_TIME)
-		//			{
-		//				padRepeatCount2[i] = 0;
-		//				padRepeat[i] = padState[i];
-		//			}
-		//		}
-		//	}
-		//}
-
-		if (padState[i])
-		{
-			padRepeatCount2[i]++;
-			if (padRepeatCount2[i] >= REPEAT_FRAME)
-			{
-				padRepeat[i] = padState[i];
-			}
-		}
-		else
-		{
-			padRepeatCount2[i] = 0;
-			padRepeat[i] = 0;
-		}
 
 	}
 
@@ -603,9 +589,9 @@ BOOL IsButtonTriggered(int padNo, DWORD button)
 	return (button & padTrigger[padNo]);
 }
 
-int GetPov(int num)
+BOOL IsButtonLockTriggered(int padNo, DWORD button)
 {
-	return POV[num];
+	return (button & padLockTrigger[padNo]);
 }
 
 BOOL IsButtonReleased(int padNo, DWORD button)
@@ -628,22 +614,18 @@ BOOL IsButtonReleased(int padNo, DWORD button)
 	return false;
 }
 
-BOOL IsButtonRepeated(int padNo, DWORD button)
-{
-	static int count = 0;
-	count++;
-	if (count == REPEAT_TIME)
-	{
-		count = 0;
-		return (button & padRepeat[padNo]) ? true : false;
-	}
-	return false;
-}
-
 //=============================================================================
 // 接続されているコントローラの数を取得
 //=============================================================================
 int GetPadCount(void)
 {
 	return padCount;
+}
+
+//=============================================================================
+// リプレイを再生するタイミングを取得
+//=============================================================================
+int GetReplayTime(void)
+{
+	return ReplayTime;
 }

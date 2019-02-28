@@ -63,6 +63,8 @@ void UpdateGame(void)
 {
 	int Phase = *GetPhase();
 	static int ReplayCount = 0;
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 
 	// データ更新
 	UpdatePlayer();
@@ -104,11 +106,22 @@ void UpdateGame(void)
 	// リプレイ画面からタイトル画面へ戻る処理
 	if (Phase == PhaseReplay)
 	{
-		if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_X) || IsButtonTriggered(1, BUTTON_X))
+		if (GetKeyboardTrigger(DIK_RETURN))
 		{
 			SetPhase(PhaseTitle);
 			PlaySound(BGM_TITLE);
 			ReplayCount = 0;
+		}
+
+		for (int i = 0; i < GAMEPADMAX; i++)
+		{
+			// PS4コン○ボタンが押されたらタイトル画面へ戻る
+			if (IsButtonLockTriggered(i, BUTTON_C))
+			{
+				SetPhase(PhaseTitle);
+				PlaySound(BGM_TITLE);
+				ReplayCount = 0;
+			}
 		}
 
 		ReplayCount++;

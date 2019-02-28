@@ -221,7 +221,7 @@ void UpdateEnemy(void)
 		SetupTutorial(&enemyWk, RedWk);
 	}
 
-	if ((*Phase == PhaseGame || *Phase == PhaseTutorial) && enemyWk.HPzan > 0)
+	if (*Phase != PhaseCountdown && *Phase != PhaseTraining && enemyWk.HPzan > 0)
 	{
 		// 入力切替
 		if (enemyWk.CommandInput == false)
@@ -261,11 +261,15 @@ void UpdateEnemy(void)
 	if (*Phase == PhaseFinish && enemyWk.HPzan > playerWk->HPzan && enemyWk.Animation->CurrentAnimID == Idle)
 	{
 		enemyWk.Animation->ChangeAnimation(enemyWk.Animation, Win, Data[Win].Spd);
+		int time = (GetReplayTime() == (REC_TIME - 1) ? 0 : GetReplayTime() + 1);
+		enemyWk.ReplayPos = enemyWk.RecPos[time];
 	}
 	// 敗北時HP0になったらダウン
 	if (enemyWk.HPzan <= 0 && *Phase != PhaseTutorial)
 	{
 		enemyWk.HPzan = 0;
+		int time = (GetReplayTime() == (REC_TIME - 1) ? 0 : GetReplayTime() + 1);
+		enemyWk.ReplayPos = enemyWk.RecPos[time];
 		// 強制的にアニメーション変更
 		if (enemyWk.Animation->CurrentAnimID != Downpose)
 		{
@@ -330,6 +334,14 @@ void UpdateEnemy(void)
 	SetVertexShadow(enemyWk.ShadowIdx, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 	SetColorShadow(enemyWk.ShadowIdx, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
+	// リプレイ用の座標を保存
+	if (*Phase == PhaseGame || *Phase == PhaseTraining)
+	{
+		static int RecTime = 0;
+		RecTime == (REC_TIME - 1) ? RecTime = 0 : RecTime++;
+
+		enemyWk.RecPos[RecTime] = enemyWk.pos;
+	}
 }
 
 //=============================================================================

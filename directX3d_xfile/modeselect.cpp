@@ -9,6 +9,8 @@
 #include "input.h"
 #include "sound.h"
 #include "cursor.h"
+#include "player.h"
+#include "enemy.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -87,6 +89,8 @@ void UpdateModeselect(void)
 {
 	int phase = *GetPhase();
 	CURSOR *CursorWk = GetCursor(0);
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 
 	static int TitleCount = 0;
 
@@ -103,6 +107,10 @@ void UpdateModeselect(void)
 				TitleCount = 0;
 				SetPhase(PhaseReplay);
 				StopSound(BGM_TITLE);
+
+				// 位置を合わせる
+				playerWk->pos = playerWk->ReplayPos;
+				enemyWk->pos = enemyWk->ReplayPos;
 			}
 
 			//カーソル上下移動

@@ -8,6 +8,8 @@
 #include "company.h"
 #include "sound.h"
 #include "input.h"
+#include "player.h"
+#include "enemy.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -58,6 +60,12 @@ void UninitCompany(void)
 //=============================================================================
 void UpdateCompany(void)
 {
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
+
+	playerWk->ReplayPos = FIRST_PLAYER_POS;
+	enemyWk->ReplayPos = FIRST_ENEMY_POS;
+
 	static float per = 0.0f;
 	static int frame = 0;
 

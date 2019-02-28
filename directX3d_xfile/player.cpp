@@ -268,7 +268,7 @@ void UpdatePlayer(void)
 		SetupTutorial(&playerWk, RedWk);
 	}
 
-	if ((*Phase == PhaseGame || *Phase == PhaseTraining || *Phase == PhaseTutorial) && playerWk.HPzan > 0)
+	if (*Phase != PhaseCountdown && playerWk.HPzan > 0)
 	{
 		// 入力切替
 		if (playerWk.CommandInput == false)
@@ -296,6 +296,8 @@ void UpdatePlayer(void)
 	if (*Phase == PhaseFinish && playerWk.HPzan > enemyWk->HPzan && playerWk.Animation->CurrentAnimID == Idle)
 	{
 		playerWk.Animation->ChangeAnimation(playerWk.Animation, Win, Data[Win].Spd);
+		int time = (GetReplayTime() == (REC_TIME - 1) ? 0 : GetReplayTime() + 1);
+		playerWk.ReplayPos = playerWk.RecPos[time];
 	}
 
 	// KOボイス
@@ -308,6 +310,8 @@ void UpdatePlayer(void)
 	if (playerWk.HPzan <= 0 && *Phase != PhaseTutorial)
 	{
 		playerWk.HPzan = 0;
+		int time = (GetReplayTime() == (REC_TIME - 1) ? 0 : GetReplayTime() + 1);
+		playerWk.ReplayPos = playerWk.RecPos[time];
 		// 強制的にアニメーション変更
 		if (playerWk.Animation->CurrentAnimID != Downpose)
 		{
@@ -371,6 +375,15 @@ void UpdatePlayer(void)
 	SetPositionShadow(playerWk.ShadowIdx, D3DXVECTOR3(playerWk.HitBall[Hips].pos.x, 0.1f, playerWk.HitBall[Hips].pos.z));
 	SetVertexShadow(playerWk.ShadowIdx, SHADOW_SIZE_X, SHADOW_SIZE_Z);
 	SetColorShadow(playerWk.ShadowIdx, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// リプレイ用の座標を保存
+	if (*Phase == PhaseGame || *Phase == PhaseTraining)
+	{
+		static int RecTime = 0;
+		RecTime == (REC_TIME - 1) ? RecTime = 0 : RecTime++;
+		
+		playerWk.RecPos[RecTime] = playerWk.pos;
+	}
 
 }
 
