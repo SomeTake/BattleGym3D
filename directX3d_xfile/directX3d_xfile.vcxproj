@@ -177,6 +177,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="pop.h" />
     <ClInclude Include="redgauge.h" />
+    <ClInclude Include="replay.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="resultstar.h" />
     <ClInclude Include="score.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="pop.cpp" />
     <ClCompile Include="redgauge.cpp" />
+    <ClCompile Include="replay.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="resultstar.cpp" />
     <ClCompile Include="score.cpp" />

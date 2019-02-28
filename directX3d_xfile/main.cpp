@@ -47,6 +47,7 @@
 #include "battle.h"
 #include "shadow.h"
 #include "game.h"
+#include "replay.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -464,6 +465,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitThanks(0);
 	InitParticle(0);
 	InitSkyBox(0);
+	InitReplay(0);
 
 	return S_OK;
 }
@@ -534,6 +536,7 @@ void Uninit(void)
 	UninitParticle();
 	UninitSkyBox();
 	UninitShadow();
+	UninitReplay();
 }
 
 //=============================================================================
@@ -543,35 +546,16 @@ void Update(void)
 {
 #ifdef _DEBUG
 	UpdateDebugProc();
-#endif
-
-	CHARA *playerWk = GetPlayer();
-	CHARA *enemyWk = GetEnemy();
-
-	////画面分割数の入力
-	//if (GetKeyboardTrigger(DIK_1))
-	//{
-	//	PlayerMode = 1;
-	//}
-	//else if (GetKeyboardTrigger(DIK_2))
-	//{
-	//	PlayerMode = 2;
-	//}
-	//else if (GetKeyboardTrigger(DIK_3))
-	//{
-	//	PlayerMode = 3;
-	//}
-	//else if (GetKeyboardTrigger(DIK_4))
-	//{
-	//	PlayerMode = 4;
-	//}
-	
 	// 描画モードの切り替え
-if (GetKeyboardTrigger(DIK_0))
+	if (GetKeyboardTrigger(DIK_0))
 	{
 		RenderWireframe = RenderWireframe ? false : true;
 	}
 
+#endif
+
+	CHARA *playerWk = GetPlayer();
+	CHARA *enemyWk = GetEnemy();
 
 	// 入力更新
 	UpdateInput();
@@ -592,6 +576,7 @@ if (GetKeyboardTrigger(DIK_0))
 
 	case PhaseReplay:
 		UpdateGame();
+		UpdateReplay();
 		break;
 
 	case PhaseTutorial:
@@ -706,6 +691,7 @@ void Draw(int no)
 
 		case PhaseReplay:
 			DrawGame();
+			DrawReplay();
 			break;
 
 		case PhaseTraining:
@@ -890,6 +876,7 @@ void ReInit(void)
 	InitCompany(1);
 	InitThanks(1);
 	InitSkyBox(1);
+	InitReplay(1);
 }
 
 //=====================================================================================================

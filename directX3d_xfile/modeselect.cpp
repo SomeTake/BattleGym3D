@@ -11,6 +11,7 @@
 #include "cursor.h"
 #include "player.h"
 #include "enemy.h"
+#include "replay.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
@@ -392,7 +393,14 @@ void UpdateModeselect(void)
 	}
 	if (phase == PhaseTitle)
 	{
-		SetReflectModeselect(1);
+		static int i = 0, reflect = 0;
+		i++;
+		if (i == FLASHING_TIME)
+		{
+			reflect == 0 ? reflect = 1 : reflect = 0;
+			i = 0;
+		}
+		SetReflectModeselect((float)reflect);
 	}
 
 	SetTextureModeselect(0);
