@@ -99,6 +99,8 @@ static const char* CharaStateAnim[] =
 	"downpose",			// ダウン状態
 	"getup",			// 起き上がり
 	"punchi",			// パンチ
+	"straight",			// パンチ追撃１
+	"upper",			// パンチ追撃２
 	"kick",				// キック
 	"hadou",			// 波動拳。やたら発生が遅い
 	"shoryu",			// 昇竜拳。バックフリップ
@@ -123,6 +125,8 @@ enum CharaStateNum
 	Downpose,
 	Getup,
 	Punchi,
+	Straight,
+	Upper,
 	Kick,
 	Hadou,
 	Shoryu,
@@ -157,15 +161,19 @@ static BATTLEDATA Data[AnimMax] = {
 { 0, 1.0f, 0.1f, 0, 0 },		// Downpose
 { 0, 1.5f, 0.1f, 0, 0 },		// Getup
 { 40, 2.5f, 0.1f, 10, 20 },		// Punchi
+{ 50, 1.5f, 0.1f, 10, 20 },		// Straight
+{ 60, 2.0f, 0.1f, 15, 30 },		// Upper
 { 50, 2.5f, 0.1f, 15, 30 },		// Kick
 { 100, 3.0f, 0.1f, 25, 0 },		// Hadou
 { 120, 2.0f, 0.1f, 5, 20 },		// Shoryu
-{ 400, 1.5f, 0.1f, 30, 150 },		// SPattack
+{ 400, 1.5f, 0.1f, 30, 150 },	// SPattack
 { 150, 1.0f, 0.1f, 0, 0 },		// Throw
 { 0, 2.0f, 0.1f, 0, 0 },		// Win
 { 0, 1.5f, 0.1f, 0, 0 },		// Miss
 { 0, 1.0f, 0.1f, 0, 0 },		// Throwpose
 };
+
+
 
 // コマンド表（優先度高い順）
 static const int
@@ -178,6 +186,8 @@ CMD_Shoryu2[] = { BUTTON_RIGHTDOWN, BUTTON_DOWN, BUTTON_RIGHTDOWN, BUTTON_B, INP
 CMD_Shoryu3[] = { BUTTON_RIGHTDOWN, BUTTON_DOWN, BUTTON_RIGHTDOWN | BUTTON_B, INPUT_END | 15 },
 CMD_Throw[] = { BUTTON_A | BUTTON_B, INPUT_END | 3 },
 CMD_Punchi[] = { BUTTON_A, INPUT_END | 1 },
+CMD_Straight[] = { BUTTON_A, INPUT_END | 1 },
+CMD_Upper[] = { BUTTON_A, INPUT_END | 1 },
 CMD_Kick[] = { BUTTON_B, INPUT_END | 1 },
 CMD_Guard[] = { BUTTON_Y, INPUT_END | 1 },
 CMD_Frontwalk[] = { BUTTON_RIGHT, INPUT_END | 1 },
@@ -242,13 +252,18 @@ static float HitRadius[] =
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-bool HitBC(D3DXVECTOR3 AttackPos, D3DXVECTOR3 DefendPos, float AttackRange, float DefendRange);	// バウンディングサークル当たり判定
+// 当たり判定
+bool HitSphere(D3DXVECTOR3 AttackPos, D3DXVECTOR3 DefendPos, float AttackRange, float DefendRange);	// 当たり判定
 bool HitCheckCToC(CHARA *AttackChara, CHARA *DefendChara);		// キャラクター同士の当たり判定
-void HitAction(CHARA *AttackChara, CHARA *DefendChara);			// 攻撃が当たったときの動き
+void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// 波動拳の当たり判定
+void UpdateAttackCollision(CHARA *Chara);						// 攻撃モーションに合わせた当たり判定発生フレームの更新
+
+// ダメージ等数値系
 void SubDamage(CHARA *Chara, int sub, bool AtkCharaInput);		// ダメージを与える
 void AddSpGauge(CHARA *Chara, int add);							// SPゲージの増減
-void HitHadou(CHARA *AttackChara, CHARA *DefendChara);			// 波動拳の当たり判定
 void AddScore(CHARA *Chara, int add);							// スコアの追加
+
+// 操作
 void BattleAI(CHARA *AIChara, CHARA *AnotherChara);				// バトル用AI
 void SetupTutorial(CHARA *Chara, REDGAUGE *Gauge);				// チュートリアルモードでのキャラクターのHPなどの管理
 

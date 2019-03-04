@@ -189,6 +189,9 @@
     <ClInclude Include="replay.h">
       <Filter>ヘッダー ファイル\2DUI</Filter>
     </ClInclude>
+    <ClInclude Include="action.h">
+      <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAllocateHierarchy.cpp">
@@ -337,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="replay.cpp">
       <Filter>ソース ファイル\2DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="action.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

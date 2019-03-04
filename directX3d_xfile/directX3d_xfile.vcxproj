@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="action.h" />
     <ClInclude Include="ball.h" />
     <ClInclude Include="battle.h" />
     <ClInclude Include="blackscreen.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="winner.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="action.cpp" />
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="battle.cpp" />
     <ClCompile Include="blackscreen.cpp" />

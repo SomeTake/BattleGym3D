@@ -18,6 +18,7 @@
 #include "sound.h"
 #include "shadow.h"
 #include "game.h"
+#include "action.h"
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -98,6 +99,16 @@ HRESULT InitEnemy(int type)
 		{
 			return E_FAIL;
 		}
+		// ストレート（追撃パンチ１）
+		if (FAILED(SetupCallbackKeyframes(enemyWk.Animation, CharaStateAnim[Straight])))
+		{
+			return E_FAIL;
+		}
+		// アッパー（追撃パンチ２）
+		if (FAILED(SetupCallbackKeyframes(enemyWk.Animation, CharaStateAnim[Upper])))
+		{
+			return E_FAIL;
+		}
 		// キック
 		if (FAILED(SetupCallbackKeyframes(enemyWk.Animation, CharaStateAnim[Kick])))
 		{
@@ -140,7 +151,7 @@ HRESULT InitEnemy(int type)
 		enemyWk.Animation->CurrentAnimID = Idle;
 		
 		// アニメーション間の補完を設定
-		for (int i = 0; i < AnimMax; i++)
+		for (int i = 0; i < enemyWk.Animation->AnimSetNum; i++)
 		{
 			enemyWk.Animation->SetShiftTime(enemyWk.Animation, i, Data[i].ShiftTime);
 		}
