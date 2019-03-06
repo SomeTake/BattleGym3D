@@ -252,7 +252,7 @@ void UpdateAttackCollision(CHARA *Chara)
 			Chara->framecount = 0;
 		}
 	}
-	else
+	else if(Chara->Animation->CurrentAnimID == Damage || Chara->Animation->CurrentAnimID == Down)
 	{
 		Chara->framecount = 0;
 	}
