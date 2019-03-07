@@ -334,21 +334,7 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 	bool AttackFlag = false;
 
 	// UŒ‚Žž‚Ì“–‚½‚è”»’è”­¶ˆ—
-	if (AIChara->Animation->CurrentAnimID == Punchi || AIChara->Animation->CurrentAnimID == Straight
-		|| AIChara->Animation->CurrentAnimID == Upper || AIChara->Animation->CurrentAnimID == Kick
-		|| AIChara->Animation->CurrentAnimID == Hadou || AIChara->Animation->CurrentAnimID == Shoryu
-		|| AIChara->Animation->CurrentAnimID == SPattack)
-	{
-		AIChara->framecount++;
-		if (AIChara->Animation->MotionEnd == true)
-		{
-			AIChara->framecount = 0;
-		}
-	}
-	else
-	{
-		AIChara->framecount = 0;
-	}
+	UpdateAttackCollision(AIChara);
 
 	// ‘ŠŽè‚ÌUŒ‚”»’è
 	if (AnotherChara->Animation->CurrentAnimID == Punchi
@@ -413,6 +399,7 @@ void BattleAI(CHARA *AIChara, CHARA *AnotherChara)
 					{
 						// SPƒQ[ƒWÁ”ï
 						AddSpGauge(AIChara, -FULL_SPGAUGE);
+						PlaySound(SE_EFFECT0);
 						AIChara->Animation->ChangeAnimation(AIChara->Animation, SPattack, Data[SPattack].Spd);
 					}
 					break;
@@ -633,6 +620,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 					{
 						// SPƒQ[ƒWÁ”ï
 						AddSpGauge(Chara, -FULL_SPGAUGE);
+						PlaySound(SE_EFFECT0);
 						Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 						Chara->graceflag = false;
 						Chara->graceframe = 0;
@@ -647,6 +635,7 @@ void EasyInput(CHARA *Chara, int ControllerNum)
 					{
 						// SPƒQ[ƒWÁ”ï
 						AddSpGauge(Chara, -FULL_SPGAUGE);
+						PlaySound(SE_EFFECT0);
 						Chara->Animation->ChangeAnimation(Chara->Animation, SPattack, Data[SPattack].Spd);
 						Chara->graceflag = false;
 						Chara->graceframe = 0;
